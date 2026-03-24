@@ -63,6 +63,14 @@ Each mission must identify its primary learning concept and should not depend on
 
 The mission screen should include these core areas.
 
+For the early missions, the layout should prioritize readability over visual density:
+
+- the main area should emphasize the map and simulation
+- the lower area should hold the code entry surface
+- a side area should show status and command reference information
+
+This layout should help the learner connect code, robot state, and movement on the map without competing visual priorities.
+
 ### 1. Mission Briefing Panel
 
 This panel should show:
@@ -105,7 +113,29 @@ This panel should show:
 
 The simulation should make robot behavior legible at a glance.
 
-### 5. Feedback Panel
+In early missions, this should be the dominant panel in the layout.
+
+### 5. Status Panel
+
+This panel should show the current visible state of the active CORE unit.
+
+Examples:
+
+- whether the CORE unit is offline, connected, or active
+- battery level
+- connection state
+- mission-relevant status such as docked or undocked
+
+Status changes caused by learner code should be visible here.
+
+For example:
+
+- before `CORE.connect()`, the CORE status may show `Offline` or `Standby`
+- after `CORE.connect()`, the status should visibly change to `Online`
+
+This panel should help the learner understand that commands affect not only position but also robot state.
+
+### 6. Feedback Panel
 
 This panel should show:
 
@@ -173,6 +203,8 @@ The playback should:
 - be slow enough to make cause and effect understandable
 
 For the MVP, the playback can be lightweight and step-based rather than highly animated.
+
+Visible status changes should update as part of the same playback cycle when appropriate.
 
 ## Mission Outcome Rules
 

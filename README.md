@@ -10,6 +10,8 @@ This project is currently in the specification phase.
 
 The intended product is a browser-based game in which players write Java code in a built-in interface, run their solution, watch the resulting actions play out on screen, and receive feedback on whether the mission objective was achieved.
 
+The first mission specification now defines a small maintenance room scenario in which the player wakes a docked CORE unit, moves it across the room, and repairs a damaged relay.
+
 ## Documentation
 
 - [Agent Guide](AGENTS.md)
