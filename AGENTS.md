@@ -57,9 +57,10 @@ Student-facing code must remain small, readable, and safe to change without requ
 Until a later spec says otherwise:
 
 - Use Java as both the implementation language and the learner language.
-- Prefer a console-first MVP to validate gameplay and learning flow before investing in graphics.
+- Build for a browser-based player experience.
+- Prefer backend-rendered web delivery when it keeps the stack simpler.
 - Keep external dependencies light.
-- Favor simple build and run steps suitable for classrooms.
+- Favor simple build and run steps for contributors and simple browser access for learners.
 
 ## Educational Rules
 
@@ -85,6 +86,16 @@ Before implementing a feature, identify which existing spec governs it. If none 
 - Separate confirmed decisions from open questions.
 - Update the relevant spec in the same change as any behavior-changing implementation.
 
+## Architectural Decisions
+
+Architectural and technical decisions should be recorded as ADRs under `docs/adr/`.
+
+- Create a new ADR when making a meaningful technical, architectural, or workflow decision.
+- Use Michael Nygard's ADR format with these sections: `Status`, `Context`, `Decision`, and `Consequences`.
+- Keep ADRs short and focused on the decision, its context, and its consequences.
+- Prefer immutable ADRs: supersede an older ADR with a new one instead of rewriting history.
+- Link implementation work and tasks back to the relevant ADRs when applicable.
+
 ## Task Tracking
 
 Work should be tracked with Markdown task files under `docs/tasks/`.
@@ -93,6 +104,21 @@ Work should be tracked with Markdown task files under `docs/tasks/`.
 - Link each task to the relevant spec documents when applicable.
 - Do not start meaningful implementation work until the task is clear enough to execute.
 - Update task files as work progresses rather than treating them as disposable notes.
+
+## Trigger Phrases
+
+### `commit changes`
+
+When asked to `commit changes`, use this workflow:
+
+1. Compile the project and run tests when the repository contains code.
+2. Prepare a two-part commit message:
+   - a short subject starting with a present-tense verb
+   - a longer body describing the business reason for the change
+3. Commit only the files related to the current task.
+4. Exclude unrelated pending changes from the commit.
+5. Show the commit message.
+6. Ask for confirmation before pushing upstream.
 
 ## Implementation Rules
 
