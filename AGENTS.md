@@ -14,7 +14,7 @@ All project decisions should protect both goals. If a choice improves the game b
 This project uses iterative spec-driven development.
 
 1. Write or update the relevant spec before implementation.
-2. Create or update the relevant task in `docs/tasks/`.
+2. Create or update the relevant task in `docs/tasks/backlog/`, `docs/tasks/in-progress/`, or `docs/tasks/done/`.
 3. Build a small vertical slice.
 4. Test whether the slice is fun, understandable, and technically sound.
 5. Refine the spec and task based on what was learned.
@@ -99,6 +99,12 @@ Architectural and technical decisions should be recorded as ADRs under `docs/adr
 ## Task Tracking
 
 Work should be tracked with Markdown task files under `docs/tasks/`.
+
+Task directories:
+
+- `docs/tasks/in-progress/` for work currently being executed
+- `docs/tasks/backlog/` for planned work that is not started yet
+- `docs/tasks/done/` for completed tasks kept as project history
 
 - Use task files to describe concrete units of work.
 - Link each task to the relevant spec documents when applicable.
