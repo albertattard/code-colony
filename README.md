@@ -13,8 +13,8 @@ The intended product is a browser-based game in which players write Java code in
 ## Documentation
 
 - [Agent Guide](AGENTS.md)
-- [Product Spec](docs/product-spec.md)
-- [Learning Spec](docs/learning-spec.md)
+- [Product Spec](docs/spec/product-spec.md)
+- [Learning Spec](docs/spec/learning-spec.md)
 
 ## License
 
