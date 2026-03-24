@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned
+Done
 
 ## Summary
 
@@ -49,12 +49,16 @@ This task should not include:
 
 ## Acceptance Criteria
 
-- The project builds and runs locally.
-- The application serves a browser page for the initial mission shell.
-- The page reflects the gameplay layout defined in the gameplay spec.
-- The page includes placeholders for all core mission interaction areas.
-- The implementation remains thin and does not prematurely commit to engine internals.
+- [x] The project builds and runs locally.
+- [x] The application serves a browser page for the initial mission shell.
+- [x] The page reflects the gameplay layout defined in the gameplay spec.
+- [x] The page includes placeholders for all core mission interaction areas.
+- [x] The implementation remains thin and does not prematurely commit to engine internals.
 
 ## Notes
 
 This task establishes the application shell only. Deeper execution and simulation concerns should be handled in later tasks and ADRs.
+
+Verification completed with:
+
+- `mvn -Dmaven.repo.local=/tmp/code-colony-m2 test`

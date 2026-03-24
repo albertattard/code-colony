@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${missionTitle} + ' | Code Colony'">Code Colony</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+<main class="layout">
+    <header class="panel mission-header">
+        <div class="header-copy">
+            <p class="eyebrow">Code Colony</p>
+            <h1 th:text="${missionTitle}">Mission 01: Wake The CORE</h1>
+            <p class="lead" th:text="${missionSummary}">Wake the docked CORE unit, move it to the relay cabinet, and restore relay access.</p>
+        </div>
+        <div class="header-objective">
+            <p class="objective-label">Primary objective</p>
+            <p class="objective-text" th:text="${missionObjective}">Connect to CORE-01, move one tile right, and repair the damaged relay.</p>
+        </div>
+    </header>
+
+    <section class="panel grid-panel">
+        <div class="section-header">
+            <h2>Maintenance Room Grid</h2>
+            <span class="panel-badge">3 x 3 room</span>
+        </div>
+        <div class="grid-shell">
+            <div class="mission-grid">
+                <div class="grid-tile"
+                     th:each="tile : ${gridTiles}"
+                     th:classappend="' tile-' + ${tile.cellType}">
+                    <span class="tile-label" th:text="${tile.shortLabel}">.</span>
+                    <span class="tile-name" th:text="${tile.fullLabel}">Walkable floor tile</span>
+                </div>
+            </div>
+            <div class="grid-legend">
+                <p class="legend-line"><strong>C</strong> Docked CORE unit</p>
+                <p class="legend-line"><strong>R</strong> Damaged relay cabinet</p>
+                <p class="legend-line"><strong>.</strong> Walkable floor tile</p>
+                <p class="legend-line"><strong>W</strong> Wall or machinery edge</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel code-panel">
+        <div class="section-header">
+            <h2>Code Console</h2>
+            <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
+        </div>
+        <form th:action="@{/missions/wake-the-core/run}"
+              method="post"
+              hx-post="/missions/wake-the-core/run"
+              hx-target="#mission-results"
+              hx-swap="outerHTML">
+            <label class="code-label" for="code">Learner-editable snippet</label>
+            <textarea id="code" name="code" spellcheck="false" th:text="${code}"></textarea>
+            <div class="inline-reference">
+                <h3>Available Commands</h3>
+                <dl class="command-list">
+                    <div class="command-entry" th:each="command : ${availableCommands}">
+                        <dt th:text="${command.signature}">CORE.connect()</dt>
+                        <dd th:text="${command.description}">Establishes a connection.</dd>
+                    </div>
+                </dl>
+            </div>
+            <ul class="hint-list">
+                <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
+            </ul>
+            <div class="actions">
+                <button class="primary-action" type="submit">Run</button>
+            </div>
+        </form>
+    </section>
+
+    <div id="mission-results"
+         th:replace="~{fragments/mission-panels :: resultPanels(runResult=${runResult})}">
+    </div>
+</main>
+</body>
+</html>

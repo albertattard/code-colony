@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="resultPanels (runResult)" id="mission-results" class="results-grid">
+    <section class="panel status-panel" th:classappend="${runResult.success} ? ' success' : ''">
+        <div class="section-header">
+            <h2>CORE Status</h2>
+            <span class="status-pill" th:text="${runResult.coreStatus.state}"
+                  th:classappend="${#strings.equals(runResult.coreStatus.state, 'Online')} ? ' online' : ' offline'">Offline</span>
+        </div>
+        <dl class="status-list">
+            <div class="status-row">
+                <dt>Battery</dt>
+                <dd th:text="${runResult.coreStatus.battery}">Full</dd>
+            </div>
+            <div class="status-row">
+                <dt>Dock</dt>
+                <dd th:text="${runResult.coreStatus.dock}">Connected</dd>
+            </div>
+            <div class="status-row">
+                <dt>Position</dt>
+                <dd th:text="${runResult.coreStatus.position}">B1</dd>
+            </div>
+        </dl>
+        <p class="status-note" th:text="${runResult.coreStatus.note}">Standby</p>
+    </section>
+
+    <section class="panel feedback-panel">
+        <h2 th:text="${runResult.headline}">Awaiting Run</h2>
+        <p class="panel-summary" th:text="${runResult.summary}">Feedback summary</p>
+        <ol class="event-list">
+            <li th:each="event : ${runResult.simulationEvents}" th:text="${event}">Simulation event</li>
+        </ol>
+        <ul class="feedback-list">
+            <li th:each="item : ${runResult.feedbackItems}" th:text="${item}">Feedback item</li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>
