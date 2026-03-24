@@ -13,8 +13,7 @@ The intended product is a browser-based game in which players write Java code in
 ## Documentation
 
 - [Agent Guide](AGENTS.md)
-- [Product Spec](docs/spec/product-spec.md)
-- [Learning Spec](docs/spec/learning-spec.md)
+- [Specifications](docs/spec/README.md)
 - [Architecture Decision Records](docs/adr/README.md)
 - `docs/tasks/` for backlog, in-progress, and completed task documents
 

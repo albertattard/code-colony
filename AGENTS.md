@@ -74,8 +74,7 @@ Until a later spec says otherwise:
 
 Current spec documents:
 
-- `docs/spec/product-spec.md`
-- `docs/spec/learning-spec.md`
+- `docs/spec/README.md`
 
 Before implementing a feature, identify which existing spec governs it. If none exists, write the missing spec first unless the change is trivial.
 
