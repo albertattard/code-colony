@@ -131,6 +131,9 @@ When asked to `commit changes`, use this workflow:
 - Prefer deterministic mission behavior where possible.
 - Build for observability: logs, turn summaries, and visible state changes should help learners debug their code.
 - Write tests around engine behavior and mission rules, especially where student code interacts with the system.
+- Tag browser end-to-end tests with `@Tag("e2e")`.
+- Keep `mvn test` focused on fast unit and integration feedback by excluding `e2e` tests.
+- Run browser end-to-end tests with `mvn verify`.
 - Prefer `final` for variables, parameters, and fields unless mutation is required.
 
 ## Code Standards
