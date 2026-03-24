@@ -22,8 +22,10 @@ Task files should:
 
 ### Backlog
 
-- [Task 0001: Create Browser Application Skeleton](backlog/0001-create-browser-application-skeleton.md)
+- None
 
 ### Done
 
-- None
+- [Task 0001: Create Browser Application Skeleton](done/0001-create-browser-application-skeleton.md)
+- [Task 0002: Add Browser Smoke Tests](done/0002-add-browser-smoke-tests.md)
+- [Task 0003: Align Current Code With Coding Standards](done/0003-align-current-code-with-coding-standards.md)
