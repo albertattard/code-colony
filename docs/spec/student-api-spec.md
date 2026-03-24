@@ -60,15 +60,19 @@ This keeps the experience focused on behavior rather than Java project structure
 
 ## Execution Context
 
-When the learner runs their code, the system should execute it in a predefined context that gives access to a robot control object.
+When the learner runs their code, the system should execute it in a predefined context that gives access to the student-facing `CORE` API.
 
-For the MVP, the learner-facing model should assume a single pre-provided object:
+Each learner run should execute in its own worker JVM process.
+
+In early missions, the learner should not need to construct objects manually. The game should expose a static entry point:
 
 ```java
-core
+CORE.connect()
 ```
 
-This object represents the current CORE unit and exposes the allowed mission actions and environment checks.
+This method establishes a connection to a mission-defined CORE unit and returns a learner-facing `CORE` instance for later interaction when the mission requires it.
+
+Internally, the static `CORE` API may delegate to a run-scoped mission simulator attached for that worker JVM. The learner should not need to see or understand that runtime structure.
 
 ## API Design Principles
 
@@ -86,12 +90,16 @@ The student API should support these categories of interaction.
 
 These methods cause the CORE unit to do something in the world.
 
-Examples:
+Entry point examples:
 
-- `core.moveNorth()`
-- `core.moveSouth()`
-- `core.moveEast()`
-- `core.moveWest()`
+- `CORE.connect()`
+- `CORE.connect(1)`
+
+Instance action examples:
+
+- `core.move()`
+- `core.rotateClockwise()`
+- `core.rotateCounterClockwise()`
 - `core.repair()`
 - `core.activate()`
 - `core.scan()`
@@ -104,8 +112,7 @@ These methods let the learner inspect the current situation.
 
 Examples:
 
-- `core.canMoveNorth()`
-- `core.canMoveEast()`
+- `core.canMove()`
 - `core.isDamagedSystemHere()`
 - `core.isAtGoal()`
 - `core.isPathClear()`
@@ -128,12 +135,21 @@ Early missions should use these sparingly.
 
 The game should use a layered API model:
 
-- a small common set of CORE commands
+- a small common set of `CORE` entry points
+- a small common set of instance commands on connected CORE objects
 - an optional mission-specific subset or helpers
 
 This lets the game teach progressively without exposing the full long-term API from the start.
 
 The browser UI should clearly show which commands are available in the current mission.
+
+Later missions may introduce:
+
+- `var core = CORE.connect();`
+- `CORE.connect(int number)` to connect to a specific mission-defined CORE
+- instance methods such as `move()`, `rotateClockwise()`, `rotateCounterClockwise()`, and `repair()`
+
+Internally, later instance methods may issue commands against the run's mission simulator, which then applies world rules and records mission events. This is an implementation detail and should not complicate the learner-facing API.
 
 ## Java Features By Stage
 
@@ -146,6 +162,7 @@ Early missions should optimize for:
 - sequential method calls
 - short `if` statements
 - minimal syntax
+- a single obvious entry point into the student API
 
 Early missions should avoid requiring:
 
@@ -209,6 +226,8 @@ After execution, the game should explain:
 - what the robot did
 - what remains to be solved if the objective failed
 
+Mission feedback should be based on observed execution behavior, such as commands accepted by the simulator and events produced during the run, rather than on source-text matching.
+
 ## Stability Rules
 
 - The learner-facing object name should remain stable unless there is a strong reason to change it.
@@ -220,26 +239,29 @@ After execution, the game should explain:
 An early mission may present code like:
 
 ```java
-core.moveEast();
-core.moveEast();
-
-if (core.isDamagedSystemHere()) {
-    core.repair();
-}
+CORE.connect();
 ```
 
-The learner writes code, clicks run, watches the CORE unit act on screen, and receives feedback about whether the repair objective was completed.
+Later missions may present code like:
+
+```java
+var core = CORE.connect();
+core.rotateClockwise();
+core.move();
+```
+
+The learner writes code, clicks run, watches the CORE unit act on screen, and receives feedback about whether the mission objective was completed.
 
 ## Consequences
 
 - The browser experience stays simple because the learner edits only the relevant code.
 - The game can teach Java concepts gradually without exposing full project structure.
 - The backend remains responsible for wrapping, compiling, and executing learner code safely.
+- Each learner run can keep a static entry point such as `CORE.connect()` without leaking state across runs because execution happens in a fresh worker JVM.
 - The design favors beginner clarity over full Java freedom.
 
 ## Open Questions
 
 - Whether the visible editing surface should always show `run()` or sometimes show only the statements inside it
 - When simple helper methods should first be introduced to learners
-- Whether action methods should remain directional, such as `moveNorth()`, or later evolve toward more abstract movement commands
 - Whether mission-specific helper methods should be shown inline or in a separate command reference

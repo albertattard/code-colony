@@ -22,7 +22,7 @@ Task files should:
 
 ### Backlog
 
-- None
+- [Task 0004: Implement First Learner Execution Slice](backlog/0004-implement-first-learner-execution-slice.md)
 
 ### Done
 

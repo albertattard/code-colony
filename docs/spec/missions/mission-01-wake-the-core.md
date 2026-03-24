@@ -10,19 +10,19 @@ Its purpose is to establish the player's initial understanding of the game world
 
 The player has restored enough access to open a maintenance room with standby power. Inside the room, one CORE unit is still plugged into a charging dock and fully charged. A damaged relay cabinet in the same room blocks wider access to the colony network.
 
-The player must establish a connection to the CORE unit, move it across the maintenance room, and repair the relay.
+The player must establish a connection to the CORE unit.
 
 ## Learning Objective
 
 Primary learning objective:
 
-- sequence of instructions
+- calling a method to trigger an action
 
 Supporting learning objective:
 
 - understanding that control begins by connecting to a robot
 
-This mission should teach that code issues actions in order and that those actions directly change the world on screen.
+This mission should teach that code can trigger a direct and visible change in the world.
 
 ## Player Fantasy
 
@@ -41,7 +41,7 @@ This is not a danger-driven opening. It is a restoration-driven opening.
 
 Suggested briefing:
 
-> Standby power is active in Maintenance Room A1. One CORE unit remains docked and fully charged. Re-establish a control link, move the unit to the damaged relay cabinet, and restore relay access.
+> Standby power is active in Maintenance Room A1. One CORE unit remains docked and fully charged. Re-establish a control link and bring the unit online.
 
 Mission text should be short and should not overwhelm the learner with story details.
 
@@ -153,14 +153,6 @@ This mission should expose only a very small set of commands.
 Required commands:
 
 - `CORE.connect()`
-- `core.moveRight()`
-- `core.repair()`
-
-Optional commands if needed for consistency or UI completeness:
-
-- `core.moveLeft()`
-- `core.moveUp()`
-- `core.moveDown()`
 
 The command list shown in the UI should prioritize only what the player actually needs to solve the mission.
 
@@ -171,71 +163,63 @@ This mission introduces the idea that the player must first establish a connecti
 The intended learner code shape is:
 
 ```java
-var core = CORE.connect();
-core.moveRight();
-core.repair();
+CORE.connect();
 ```
 
-This should be the first time the learner sees:
-
-- a variable created from a method result
-- actions called on the connected robot object
-
-The mission should keep this syntax visible and simple. If needed, the starter code may already include the first line and ask the learner to complete the rest.
+This mission should teach that a single line of Java can trigger a meaningful state change in the world.
 
 Running `CORE.connect()` should also produce a visible status transition in the UI from offline to online.
+
+The learner does not need to store the result of `CORE.connect()` in a variable in this mission.
 
 ## Starter Code
 
 Recommended starter code for the first version:
 
 ```java
-var core = CORE.connect();
-
-// Move to the damaged relay.
-
-// Repair the relay.
+CORE.connect();
 ```
 
 Alternative starter code for a more guided version:
 
 ```java
-var core = CORE.connect();
-core.moveRight();
-core.repair();
+CORE.connect();
 ```
 
-The preferred option depends on how guided the first classroom experience should be.
+This mission should stay fully guided and minimal.
 
 ## Success Conditions
 
 The mission succeeds when:
 
 - the player establishes a connection to the CORE unit
-- the CORE unit reaches the relay tile
-- the relay cabinet is repaired
 
-The repair should visibly change the room state.
+The connection should visibly change the room state.
+
+This should be validated from simulator-observed execution behavior. A successful run records one successful connect action and no duplicate-connect error.
 
 Examples:
 
-- the relay warning light turns green
-- a room status indicator changes to online
-- a short success message confirms wider access is restored
+- the CORE status changes from offline to online
+- the dock indicator changes state
+- a short success message confirms that the control link was established
 
 ## Failure Conditions
 
 The mission run fails when:
 
 - the learner code does not compile
-- the learner finishes execution without repairing the relay
+- the learner finishes execution without connecting to the CORE unit
+- the learner attempts to connect more than once
+
+This should be validated from execution results rather than by checking the submitted source text directly.
 
 Invalid actions should not immediately end the run unless the resulting behavior becomes impossible to complete.
 
 Examples:
 
-- calling `repair()` while not on the relay tile
-- moving into a blocked direction
+- not calling `CORE.connect()`
+- calling `CORE.connect()` more than once
 
 These should produce readable feedback rather than abrupt punishment.
 
@@ -250,14 +234,14 @@ The learner should see compiler feedback that points only to the visible code ar
 The learner should see a step-by-step explanation such as:
 
 - `Connected to CORE-01`
-- `Moved right to relay tile`
-- `Repair successful`
+
+If the learner attempts to connect more than once, the feedback should explain that the CORE is already connected.
 
 ### Mission Feedback
 
 The learner should see a short mission summary such as:
 
-- `Relay restored. Maintenance Room A1 is back online.`
+- `Control link established. CORE-01 is online.`
 
 If the mission fails, the learner should see what remains incomplete.
 
@@ -278,7 +262,7 @@ The map should remain visible while the player edits and runs code.
 ## Design Constraints
 
 - The room must stay small enough to understand at a glance.
-- The mission must be solvable with very few lines of code.
+- The mission must be solvable with a single method call.
 - The visuals must support directional reasoning.
 - The first mission should introduce control, not complexity.
 
