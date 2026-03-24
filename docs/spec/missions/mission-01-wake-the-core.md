@@ -106,9 +106,12 @@ The first mission should use a top-down view, not an isometric view, so directio
 
 The intended mission screen layout for this mission is:
 
-- the top or main area shows the 3x3 top-down room view
-- the lower area shows the code entry surface
-- a side panel shows CORE status and mission command information
+- a header spans the top of the page
+- the main area shows the 3x3 top-down room view
+- the lower-left area shows the code entry surface
+- the lower-right area shows the CORE status panel
+
+For this mission, the command reference should be integrated with the code area so the learner can see the available commands while writing code.
 
 This layout should support a clear reading order:
 
@@ -125,6 +128,7 @@ The panel should show at least:
 - connection state
 - battery state
 - whether the unit is docked or active
+- current position when relevant
 
 Suggested initial state:
 

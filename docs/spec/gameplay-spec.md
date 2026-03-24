@@ -65,9 +65,10 @@ The mission screen should include these core areas.
 
 For the early missions, the layout should prioritize readability over visual density:
 
-- the main area should emphasize the map and simulation
-- the lower area should hold the code entry surface
-- a side area should show status and command reference information
+- a header spans the top of the mission screen
+- the main area emphasizes the map and simulation
+- the lower area holds the code entry surface
+- a side area beside the lower section shows CORE status information
 
 This layout should help the learner connect code, robot state, and movement on the map without competing visual priorities.
 
@@ -82,6 +83,8 @@ This panel should show:
 
 The briefing should be concise and readable in one sitting.
 
+For early missions, this panel may be presented as a header rather than as a separate boxed sidebar.
+
 ### 2. Command Reference Panel
 
 This panel should show:
@@ -91,6 +94,8 @@ This panel should show:
 - any mission-specific constraints
 
 The command reference should reflect only what the learner can actually use in that mission.
+
+In early missions, this reference may sit inside the code area rather than occupying a separate major panel.
 
 ### 3. Code Panel
 
