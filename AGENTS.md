@@ -131,6 +131,16 @@ When asked to `commit changes`, use this workflow:
 - Prefer deterministic mission behavior where possible.
 - Build for observability: logs, turn summaries, and visible state changes should help learners debug their code.
 - Write tests around engine behavior and mission rules, especially where student code interacts with the system.
+- Prefer `final` for variables, parameters, and fields unless mutation is required.
+
+## Code Standards
+
+- Keep methods small and focused on one responsibility.
+- Prefer clear domain names over generic names such as `data`, `manager`, or `util`.
+- Keep web controllers thin and move game logic out of the web layer.
+- Prefer composition over deep inheritance.
+- Prefer immutable data and value objects where practical.
+- Treat error messages and feedback text as part of the product, not incidental implementation detail.
 
 ## Review Rules
 
