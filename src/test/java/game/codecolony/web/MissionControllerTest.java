@@ -47,6 +47,11 @@ class MissionControllerTest {
         assertThat(body).contains("Mission 01: Wake The CORE");
         assertThat(body).contains("Maintenance Room Grid");
         assertThat(body).contains("Code Console");
+        assertThat(body).contains("Mission Briefing");
+        assertThat(body).contains("Standby power has returned to Maintenance Room A1.");
+        assertThat(body).contains("Use CORE.connect(); to bring the docked CORE online.");
+        assertThat(body).contains("data-briefing-modal");
+        assertThat(body).contains("data-briefing-open");
         assertThat(body).contains("CORE Status");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
         assertThat(body).doesNotContain("Battery</dt>");

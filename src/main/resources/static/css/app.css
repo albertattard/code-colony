@@ -28,6 +28,10 @@ body {
     background: linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
 }
 
+body.modal-open {
+    overflow: hidden;
+}
+
 .layout {
     max-width: 76rem;
     margin: 0 auto;
@@ -166,6 +170,57 @@ h1 {
     margin-top: 0;
 }
 
+.briefing-modal-shell {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+}
+
+.briefing-modal-shell[hidden] {
+    display: none;
+}
+
+.briefing-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(33, 27, 21, 0.48);
+}
+
+.briefing-modal {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 38rem);
+    display: grid;
+    gap: 1rem;
+    box-shadow: 0 1rem 2rem rgba(33, 27, 21, 0.18);
+}
+
+.briefing-modal h2 {
+    margin: 0;
+}
+
+.briefing-objective,
+.briefing-hint {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.briefing-code {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    overflow-x: auto;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font: 1rem/1.5 "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+.briefing-actions {
+    margin-top: 0;
+}
+
 .status-pill {
     display: inline-flex;
     align-items: center;
@@ -289,10 +344,22 @@ textarea {
     color: var(--accent-dark);
 }
 
+.secondary-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+
 .actions {
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
+}
+
+.briefing-trigger {
+    margin-top: 0.9rem;
 }
 
 .primary-action {

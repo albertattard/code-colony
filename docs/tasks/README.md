@@ -22,7 +22,7 @@ Task files should:
 
 ### Backlog
 
-- [Task 0006: Add Reopenable Mission Briefing Modal](backlog/0006-add-reopenable-mission-briefing-modal.md)
+- [Task 0007: Externalize Briefing And Lore Content](backlog/0007-externalize-briefing-and-lore-content.md)
 
 ### Done
 
@@ -31,3 +31,4 @@ Task files should:
 - [Task 0003: Align Current Code With Coding Standards](done/0003-align-current-code-with-coding-standards.md)
 - [Task 0004: Implement First Learner Execution Slice](done/0004-implement-first-learner-execution-slice.md)
 - [Task 0005: Add Game Intro Screen](done/0005-add-game-intro-screen.md)
+- [Task 0006: Add Reopenable Mission Briefing Modal](done/0006-add-reopenable-mission-briefing-modal.md)

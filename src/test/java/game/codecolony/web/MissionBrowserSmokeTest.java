@@ -11,9 +11,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Response;
+import com.microsoft.playwright.options.WaitForSelectorState;
 
 @Tag("e2e")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -63,6 +65,15 @@ class MissionBrowserSmokeTest {
         page.waitForURL("**/missions/wake-the-core");
 
         assertThat(page.locator("h1").textContent()).contains("Mission 01: Wake The CORE");
+        assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
+        assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Mission Briefing");
+        assertThat(page.locator("[data-briefing-modal]").textContent()).contains("CORE.connect();");
+        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Close Briefing"))
+                .click();
+        page.locator("[data-briefing-modal]")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertThat(page.locator("[data-briefing-modal]").isVisible()).isFalse();
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
@@ -72,6 +83,19 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("textarea[name='code']").inputValue()).isEmpty();
 
         page.locator("textarea[name='code']").fill("CORE.connect();");
+        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Briefing"))
+                .click();
+        page.locator("[data-briefing-modal]")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
+        assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("CORE.connect();");
+        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Close Briefing"))
+                .click();
+        page.locator("[data-briefing-modal]")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+
         final Response response = page.waitForResponse(
                 runResponse -> runResponse.url().contains("/missions/wake-the-core/run"),
                 () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,

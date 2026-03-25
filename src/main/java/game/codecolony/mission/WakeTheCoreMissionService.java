@@ -13,6 +13,10 @@ public class WakeTheCoreMissionService {
     private static final String SUMMARY =
             "Standby power is active in Maintenance Room A1. Re-establish a control link and bring the docked CORE online.";
     private static final String OBJECTIVE = "Call CORE.connect(); to bring CORE-01 online.";
+    private static final String BRIEFING_HEADING = "Mission Briefing";
+    private static final String BRIEFING_CONTEXT =
+            "Standby power has returned to Maintenance Room A1. One CORE unit is still docked, charged, and waiting for a control link.";
+    private static final String BRIEFING_HINT = "Use CORE.connect(); to bring the docked CORE online.";
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
@@ -44,6 +48,9 @@ public class WakeTheCoreMissionService {
                 TITLE,
                 SUMMARY,
                 OBJECTIVE,
+                BRIEFING_HEADING,
+                BRIEFING_CONTEXT,
+                BRIEFING_HINT,
                 HINTS,
                 COMMANDS,
                 GRID,
@@ -57,6 +64,9 @@ public class WakeTheCoreMissionService {
                 TITLE,
                 SUMMARY,
                 OBJECTIVE,
+                BRIEFING_HEADING,
+                BRIEFING_CONTEXT,
+                BRIEFING_HINT,
                 HINTS,
                 COMMANDS,
                 GRID,
@@ -66,6 +76,7 @@ public class WakeTheCoreMissionService {
     }
 
     public record MissionPage(String missionTitle, String missionSummary, String missionObjective,
+                              String briefingHeading, String briefingContext, String briefingHint,
                               List<String> missionHints, List<CommandReference> availableCommands,
                               List<GridTile> gridTiles, String code, WakeTheCoreRunResult runResult) {
     }

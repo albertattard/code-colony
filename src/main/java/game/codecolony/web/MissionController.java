@@ -40,6 +40,9 @@ public class MissionController {
         model.addAttribute("missionTitle", missionPage.missionTitle());
         model.addAttribute("missionSummary", missionPage.missionSummary());
         model.addAttribute("missionObjective", missionPage.missionObjective());
+        model.addAttribute("briefingHeading", missionPage.briefingHeading());
+        model.addAttribute("briefingContext", missionPage.briefingContext());
+        model.addAttribute("briefingHint", missionPage.briefingHint());
         model.addAttribute("missionHints", missionPage.missionHints());
         model.addAttribute("availableCommands", missionPage.availableCommands());
         model.addAttribute("gridTiles", missionPage.gridTiles());

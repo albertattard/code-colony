@@ -2,7 +2,7 @@
 
 ## Status
 
-Backlog
+Done
 
 ## Summary
 
@@ -46,12 +46,12 @@ This task should not include:
 
 ## Acceptance Criteria
 
-- [ ] Mission 01 opens with a briefing modal visible.
-- [ ] The modal shows the mission title, short context, objective, and a hint for `CORE.connect();`.
-- [ ] The player can close the modal and continue using the mission screen.
-- [ ] The mission screen shows a visible `Briefing` action that reopens the same modal.
-- [ ] Reopening the briefing does not clear the current editor contents.
-- [ ] Automated tests cover the briefing modal flow for Mission 01.
+- [x] Mission 01 opens with a briefing modal visible.
+- [x] The modal shows the mission title, short context, objective, and a hint for `CORE.connect();`.
+- [x] The player can close the modal and continue using the mission screen.
+- [x] The mission screen shows a visible `Briefing` action that reopens the same modal.
+- [x] Reopening the briefing does not clear the current editor contents.
+- [x] Automated tests cover the briefing modal flow for Mission 01.
 
 ## Notes
 
