@@ -56,6 +56,7 @@ class MissionControllerTest {
         assertThat(body).contains("CORE Status");
         assertThat(body).contains("Unit");
         assertThat(body).contains("CORE-01");
+        assertThat(body).doesNotContain("Program Output");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
         assertThat(body).doesNotContain("Battery</dt>");
         assertThat(body).doesNotContain("Power</dt>");
@@ -67,7 +68,10 @@ class MissionControllerTest {
 
     @Test
     void runEndpointReturnsMissionResultFragmentForHtmx() throws IOException, InterruptedException {
-        final String formBody = "code=" + URLEncoder.encode("CORE.connect();", StandardCharsets.UTF_8);
+        final String formBody = "code=" + URLEncoder.encode("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """, StandardCharsets.UTF_8);
         final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/wake-the-core/run"))
                 .header("HX-Request", "true")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -85,6 +89,9 @@ class MissionControllerTest {
         assertThat(response.body()).contains("0 / 5");
         assertThat(response.body()).contains("Health");
         assertThat(response.body()).contains("1 / 5");
+        assertThat(response.body()).contains("Program Output");
+        assertThat(response.body()).contains("stdout");
+        assertThat(response.body()).contains("Hello!!");
     }
 
     private URI baseUri(final String path) {

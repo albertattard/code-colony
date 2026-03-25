@@ -7,9 +7,15 @@
         </section>
     </div>
     <div id="mission-feedback" class="feedback-slot">
-        <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}">
-        </section>
+        <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
     </div>
+</th:block>
+
+<th:block th:fragment="feedbackSlotBody (runResult)">
+    <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}"></section>
+    <th:block th:if="${!#strings.isEmpty(runResult.stdout) || !#strings.isEmpty(runResult.stderr)}">
+        <section th:replace="~{fragments/mission-panels :: outputPanelBody(runResult=${runResult})}"></section>
+    </th:block>
 </th:block>
 
 <section th:fragment="statusPanelBody (runResult)" class="panel status-panel"
@@ -65,6 +71,20 @@
         <ul class="feedback-list">
             <li th:each="item : ${runResult.feedbackItems}" th:text="${item}">Feedback item</li>
         </ul>
+</section>
+
+<section th:fragment="outputPanelBody (runResult)" class="panel output-panel">
+        <div class="section-header">
+            <h2>Program Output</h2>
+        </div>
+        <div class="output-stream" th:if="${!#strings.isEmpty(runResult.stdout)}">
+            <h3>stdout</h3>
+            <pre class="output-console" th:text="${runResult.stdout}">Hello!!</pre>
+        </div>
+        <div class="output-stream" th:if="${!#strings.isEmpty(runResult.stderr)}">
+            <h3>stderr</h3>
+            <pre class="output-console output-console-error" th:text="${runResult.stderr}">Problem details</pre>
+        </div>
 </section>
 </body>
 </html>

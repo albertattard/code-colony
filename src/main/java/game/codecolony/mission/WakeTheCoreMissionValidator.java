@@ -8,7 +8,8 @@ import java.util.List;
 
 final class WakeTheCoreMissionValidator {
 
-    WakeTheCoreRunResult validate(final WakeTheCoreMissionSimulation simulation, final String runtimeError) {
+    WakeTheCoreRunResult validate(final WakeTheCoreMissionSimulation simulation, final String runtimeError,
+                                  final String stdout, final String stderr) {
         final List<String> simulationEvents = simulation.events().stream()
                 .map(MissionEvent::description)
                 .toList();
@@ -23,6 +24,8 @@ final class WakeTheCoreMissionValidator {
                             "Fix the runtime problem and run the code again."
                     ),
                     statusFor(simulation.connected(), simulation.connectAttempts()),
+                    stdout,
+                    stderr,
                     false
             );
         }
@@ -44,6 +47,8 @@ final class WakeTheCoreMissionValidator {
                             "The CORE still needs charging and repair before it can return to field work."
                     ),
                     statusFor(true, simulation.connectAttempts()),
+                    stdout,
+                    stderr,
                     true
             );
         }
@@ -57,6 +62,8 @@ final class WakeTheCoreMissionValidator {
                         "Mission 01 only expects a single successful connection."
                 ),
                 statusFor(false, simulation.connectAttempts()),
+                stdout,
+                stderr,
                 false
         );
     }

@@ -21,6 +21,32 @@ class WakeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.coreStatus().healthLevel()).isEqualTo(1);
         assertThat(runResult.coreStatus().healthCapacity()).isEqualTo(5);
         assertThat(runResult.simulationEvents()).contains("Connected to CORE-01.");
+        assertThat(runResult.stdout()).isEmpty();
+        assertThat(runResult.stderr()).isEmpty();
+    }
+
+    @Test
+    void successfulConnectCanAlsoShowLearnerStdout() {
+        final WakeTheCoreRunResult runResult = missionExecutionService.execute("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """);
+
+        assertThat(runResult.success()).isTrue();
+        assertThat(runResult.stdout()).isEqualTo("Hello!!");
+        assertThat(runResult.stderr()).isEmpty();
+    }
+
+    @Test
+    void runtimeFailureCanAlsoShowLearnerStderr() {
+        final WakeTheCoreRunResult runResult = missionExecutionService.execute("""
+                System.err.println("before-failure");
+                throw new RuntimeException("boom");
+                """);
+
+        assertThat(runResult.success()).isFalse();
+        assertThat(runResult.headline()).isEqualTo("Run Failed");
+        assertThat(runResult.stderr()).isEqualTo("before-failure");
     }
 
     @Test

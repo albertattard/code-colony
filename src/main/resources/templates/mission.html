@@ -99,8 +99,7 @@
     </section>
 
     <div id="mission-feedback" class="feedback-slot">
-        <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}">
-        </section>
+        <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
     </div>
 </main>
 <script>

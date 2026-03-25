@@ -22,6 +22,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +65,7 @@ public class WakeTheCoreMissionExecutionService {
             );
 
             if (compilation.exitCode() != 0) {
-                return compilationFailure(compilation.output());
+                return compilationFailure(compilation.combinedOutput());
             }
 
             final Path resultFile = workingDirectory.resolve(RESULT_FILE);
@@ -81,7 +83,7 @@ public class WakeTheCoreMissionExecutionService {
                 return WakeTheCoreRunResultFileCodec.read(resultFile);
             }
 
-            return executionFailure(execution.output());
+            return executionFailure(execution.combinedOutput());
         } catch (InterruptedException interruptedException) {
             Thread.currentThread().interrupt();
             return executionFailure("The mission worker could not be started.");
@@ -100,6 +102,8 @@ public class WakeTheCoreMissionExecutionService {
                 List.of("Compilation stopped before the mission could run."),
                 feedbackItems,
                 new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                "",
+                "",
                 false
         );
     }
@@ -113,6 +117,8 @@ public class WakeTheCoreMissionExecutionService {
                         ? "No runtime diagnostics were returned."
                         : processOutput.strip()),
                 new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                "",
+                "",
                 false
         );
     }
@@ -165,16 +171,32 @@ public class WakeTheCoreMissionExecutionService {
     private ProcessResult runProcess(final List<String> command, final Duration timeout)
             throws IOException, InterruptedException {
         final Process process = new ProcessBuilder(command)
-                .redirectErrorStream(true)
                 .start();
+        final FutureTask<String> stdoutReader = readStream(process.getInputStream());
+        final FutureTask<String> stderrReader = readStream(process.getErrorStream());
+        Thread.ofVirtual().start(stdoutReader);
+        Thread.ofVirtual().start(stderrReader);
         final boolean finished = process.waitFor(timeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
         if (!finished) {
             process.destroyForcibly();
-            return new ProcessResult(-1, "The process timed out.");
+            return new ProcessResult(-1, "", "The process timed out.");
         }
 
-        final String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        return new ProcessResult(process.exitValue(), output);
+        final String stdout = readFuture(stdoutReader);
+        final String stderr = readFuture(stderrReader);
+        return new ProcessResult(process.exitValue(), stdout, stderr);
+    }
+
+    private FutureTask<String> readStream(final InputStream inputStream) {
+        return new FutureTask<>(() -> new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
+    }
+
+    private String readFuture(final FutureTask<String> futureTask) throws InterruptedException, IOException {
+        try {
+            return futureTask.get();
+        } catch (ExecutionException executionException) {
+            throw new IOException("Unable to read process output.", executionException.getCause());
+        }
     }
 
     private Path javaTool(final String toolName) {
@@ -250,6 +272,17 @@ public class WakeTheCoreMissionExecutionService {
         );
     }
 
-    private record ProcessResult(int exitCode, String output) {
+    private record ProcessResult(int exitCode, String stdout, String stderr) {
+        private String combinedOutput() {
+            final String trimmedStdout = stdout == null ? "" : stdout.strip();
+            final String trimmedStderr = stderr == null ? "" : stderr.strip();
+            if (trimmedStdout.isEmpty()) {
+                return trimmedStderr;
+            }
+            if (trimmedStderr.isEmpty()) {
+                return trimmedStdout;
+            }
+            return trimmedStdout + System.lineSeparator() + trimmedStderr;
+        }
     }
 }

@@ -36,6 +36,8 @@ final class WakeTheCoreRunResultFileCodec {
                         properties.getProperty("coreStatus.position"),
                         properties.getProperty("coreStatus.note")
                 ),
+                properties.getProperty("stdout", ""),
+                properties.getProperty("stderr", ""),
                 Boolean.parseBoolean(properties.getProperty("success"))
         );
     }
@@ -55,6 +57,8 @@ final class WakeTheCoreRunResultFileCodec {
         properties.setProperty("coreStatus.dock", runResult.coreStatus().dock());
         properties.setProperty("coreStatus.position", runResult.coreStatus().position());
         properties.setProperty("coreStatus.note", runResult.coreStatus().note());
+        properties.setProperty("stdout", runResult.stdout());
+        properties.setProperty("stderr", runResult.stderr());
         properties.setProperty("success", Boolean.toString(runResult.success()));
 
         try (OutputStream outputStream = Files.newOutputStream(path)) {

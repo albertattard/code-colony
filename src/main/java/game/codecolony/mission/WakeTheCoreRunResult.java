@@ -3,7 +3,8 @@ package game.codecolony.mission;
 import java.util.List;
 
 public record WakeTheCoreRunResult(String headline, String summary, List<String> simulationEvents,
-                                   List<String> feedbackItems, WakeTheCoreCoreStatus coreStatus, boolean success) {
+                                   List<String> feedbackItems, WakeTheCoreCoreStatus coreStatus,
+                                   String stdout, String stderr, boolean success) {
 
     public static WakeTheCoreRunResult initial() {
         return new WakeTheCoreRunResult(
@@ -19,6 +20,8 @@ public record WakeTheCoreRunResult(String headline, String summary, List<String>
                         "The first successful run should bring CORE-01 online."
                 ),
                 new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                "",
+                "",
                 false
         );
     }

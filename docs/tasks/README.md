@@ -18,7 +18,7 @@ Task files should:
 
 ### In Progress
 
-- [Task 0013: Show Learner Program Output](in-progress/0013-show-learner-program-output.md)
+- None
 
 ### Backlog
 
@@ -36,3 +36,4 @@ Task files should:
 - [Task 0010: Create Pixel-Art Mission Grid Prototype](done/0010-create-pixel-art-mission-grid-prototype.md)
 - [Task 0011: Show Drained And Damaged CORE Status](done/0011-show-drained-and-damaged-core-status.md)
 - [Task 0012: Show CORE Identifier In Status Panel](done/0012-show-core-identifier-in-status-panel.md)
+- [Task 0013: Show Learner Program Output](done/0013-show-learner-program-output.md)

@@ -98,7 +98,10 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Position");
         assertThat(page.locator("textarea[name='code']").inputValue()).isEmpty();
 
-        page.locator("textarea[name='code']").fill("CORE.connect();");
+        page.locator("textarea[name='code']").fill("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Briefing"))
                 .click();
@@ -107,7 +110,10 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
         assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.currentTime"))
                 .isEqualTo(0);
-        assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("CORE.connect();");
+        assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Close Briefing"))
                 .click();
@@ -136,6 +142,9 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".feedback-panel").textContent()).contains("CORE Online");
         assertThat(page.locator(".feedback-panel").textContent())
                 .contains("Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.");
+        assertThat(page.locator(".output-panel").textContent()).contains("Program Output");
+        assertThat(page.locator(".output-panel").textContent()).contains("stdout");
+        assertThat(page.locator(".output-panel").textContent()).contains("Hello!!");
     }
 
     private String baseUrl() {

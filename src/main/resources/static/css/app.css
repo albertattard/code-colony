@@ -616,6 +616,35 @@ textarea {
     margin-bottom: 0;
 }
 
+.feedback-slot {
+    display: grid;
+    gap: 1rem;
+}
+
+.output-stream + .output-stream {
+    margin-top: 1rem;
+}
+
+.output-stream h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+}
+
+.output-console {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font: 0.95rem/1.55 "IBM Plex Mono", "SFMono-Regular", monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.output-console-error {
+    color: #ffd9d2;
+}
+
 @media (min-width: 62rem) {
     .mission-header,
     .intro-hero {

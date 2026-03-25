@@ -3,11 +3,16 @@ package game.codecolony.mission;
 import game.codecolony.runtime.MissionExecutionException;
 import game.codecolony.student.CORE;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 
 public final class WakeTheCoreMissionWorker {
+
+    private static final int MAX_CAPTURED_OUTPUT_LENGTH = 4_000;
 
     private WakeTheCoreMissionWorker() {
     }
@@ -22,17 +27,33 @@ public final class WakeTheCoreMissionWorker {
         final WakeTheCoreMissionValidator validator = new WakeTheCoreMissionValidator();
         CORE.attachSimulator(simulator);
 
+        final ByteArrayOutputStream stdoutBuffer = new ByteArrayOutputStream();
+        final ByteArrayOutputStream stderrBuffer = new ByteArrayOutputStream();
+        final PrintStream originalOut = System.out;
+        final PrintStream originalErr = System.err;
+
         WakeTheCoreRunResult runResult;
-        try {
+        try (PrintStream capturedOut = new PrintStream(stdoutBuffer, true, StandardCharsets.UTF_8);
+             PrintStream capturedErr = new PrintStream(stderrBuffer, true, StandardCharsets.UTF_8)) {
+            System.setOut(capturedOut);
+            System.setErr(capturedErr);
             invokePlayerProgram();
-            runResult = validator.validate(simulator.finish(), null);
+            runResult = validator.validate(simulator.finish(), null,
+                    normalizeCapturedOutput(stdoutBuffer),
+                    normalizeCapturedOutput(stderrBuffer));
         } catch (InvocationTargetException invocationTargetException) {
             final Throwable cause = invocationTargetException.getCause();
             final String runtimeError = runtimeMessageFor(cause);
-            runResult = validator.validate(simulator.finish(), runtimeError);
+            runResult = validator.validate(simulator.finish(), runtimeError,
+                    normalizeCapturedOutput(stdoutBuffer),
+                    normalizeCapturedOutput(stderrBuffer));
         } catch (Throwable throwable) {
-            runResult = validator.validate(simulator.finish(), runtimeMessageFor(throwable));
+            runResult = validator.validate(simulator.finish(), runtimeMessageFor(throwable),
+                    normalizeCapturedOutput(stdoutBuffer),
+                    normalizeCapturedOutput(stderrBuffer));
         } finally {
+            System.setOut(originalOut);
+            System.setErr(originalErr);
             CORE.detachSimulator();
         }
 
@@ -56,5 +77,16 @@ public final class WakeTheCoreMissionWorker {
         }
 
         return message;
+    }
+
+    private static String normalizeCapturedOutput(final ByteArrayOutputStream outputBuffer) {
+        final String output = outputBuffer.toString(StandardCharsets.UTF_8).stripTrailing();
+        if (output.length() <= MAX_CAPTURED_OUTPUT_LENGTH) {
+            return output;
+        }
+
+        return output.substring(0, MAX_CAPTURED_OUTPUT_LENGTH)
+                + System.lineSeparator()
+                + "... output truncated ...";
     }
 }
