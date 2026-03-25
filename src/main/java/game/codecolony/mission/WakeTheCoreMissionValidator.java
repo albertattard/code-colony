@@ -36,11 +36,12 @@ final class WakeTheCoreMissionValidator {
         if (successfulConnections == 1 && !rejectedConnection) {
             return new WakeTheCoreRunResult(
                     "CORE Online",
-                    "Control link established. CORE-01 is online.",
+                    "Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.",
                     simulationEvents,
                     List.of(
                             "Mission objective completed.",
-                            "CORE.connect(); changed the visible state of the world."
+                            "CORE.connect(); changed the visible state of the world.",
+                            "The CORE still needs charging and repair before it can return to field work."
                     ),
                     statusFor(true, simulation.connectAttempts()),
                     true
@@ -64,10 +65,10 @@ final class WakeTheCoreMissionValidator {
         if (connected) {
             final String note = connectAttempts > 1
                     ? "Connection established, then an invalid duplicate connect was attempted"
-                    : "Control link established";
-            return new WakeTheCoreCoreStatus("Online", "Full", "Ready", "B1", note);
+                    : "Telemetry online. Battery depleted. Structural damage detected.";
+            return new WakeTheCoreCoreStatus("Online", 0, 5, 1, 5, "Connected", "B1", note);
         }
 
-        return new WakeTheCoreCoreStatus("Offline", "", "", "", "No telemetry available while offline.");
+        return new WakeTheCoreCoreStatus("Offline", null, null, null, null, "", "", "No telemetry available while offline.");
     }
 }

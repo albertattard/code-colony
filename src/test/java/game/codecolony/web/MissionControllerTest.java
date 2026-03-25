@@ -56,6 +56,8 @@ class MissionControllerTest {
         assertThat(body).contains("CORE Status");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
         assertThat(body).doesNotContain("Battery</dt>");
+        assertThat(body).doesNotContain("Power</dt>");
+        assertThat(body).doesNotContain("Health</dt>");
         assertThat(body).doesNotContain("Dock</dt>");
         assertThat(body).doesNotContain("Position</dt>");
         assertThat(body).contains("No telemetry available while offline.");
@@ -76,6 +78,10 @@ class MissionControllerTest {
         assertThat(response.body()).contains("CORE Online");
         assertThat(response.body()).contains("CORE Status");
         assertThat(response.body()).contains("Online");
+        assertThat(response.body()).contains("Power");
+        assertThat(response.body()).contains("0 / 5");
+        assertThat(response.body()).contains("Health");
+        assertThat(response.body()).contains("1 / 5");
     }
 
     private URI baseUri(final String path) {

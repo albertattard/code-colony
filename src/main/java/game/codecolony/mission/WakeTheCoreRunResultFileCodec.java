@@ -27,7 +27,10 @@ final class WakeTheCoreRunResultFileCodec {
                 readList(properties, "feedbackItems"),
                 new WakeTheCoreCoreStatus(
                         properties.getProperty("coreStatus.state"),
-                        properties.getProperty("coreStatus.battery"),
+                        readInteger(properties, "coreStatus.batteryLevel"),
+                        readInteger(properties, "coreStatus.batteryCapacity"),
+                        readInteger(properties, "coreStatus.healthLevel"),
+                        readInteger(properties, "coreStatus.healthCapacity"),
                         properties.getProperty("coreStatus.dock"),
                         properties.getProperty("coreStatus.position"),
                         properties.getProperty("coreStatus.note")
@@ -43,7 +46,10 @@ final class WakeTheCoreRunResultFileCodec {
         writeList(properties, "simulationEvents", runResult.simulationEvents());
         writeList(properties, "feedbackItems", runResult.feedbackItems());
         properties.setProperty("coreStatus.state", runResult.coreStatus().state());
-        properties.setProperty("coreStatus.battery", runResult.coreStatus().battery());
+        writeInteger(properties, "coreStatus.batteryLevel", runResult.coreStatus().batteryLevel());
+        writeInteger(properties, "coreStatus.batteryCapacity", runResult.coreStatus().batteryCapacity());
+        writeInteger(properties, "coreStatus.healthLevel", runResult.coreStatus().healthLevel());
+        writeInteger(properties, "coreStatus.healthCapacity", runResult.coreStatus().healthCapacity());
         properties.setProperty("coreStatus.dock", runResult.coreStatus().dock());
         properties.setProperty("coreStatus.position", runResult.coreStatus().position());
         properties.setProperty("coreStatus.note", runResult.coreStatus().note());
@@ -68,6 +74,17 @@ final class WakeTheCoreRunResultFileCodec {
         properties.setProperty(prefix + ".count", Integer.toString(items.size()));
         for (int index = 0; index < items.size(); index++) {
             properties.setProperty(prefix + "." + index, items.get(index));
+        }
+    }
+
+    private static Integer readInteger(final Properties properties, final String key) {
+        final String value = properties.getProperty(key);
+        return value == null || value.isBlank() ? null : Integer.valueOf(value);
+    }
+
+    private static void writeInteger(final Properties properties, final String key, final Integer value) {
+        if (value != null) {
+            properties.setProperty(key, Integer.toString(value));
         }
     }
 }

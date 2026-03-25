@@ -146,6 +146,7 @@ Examples:
 
 - whether the CORE unit is offline, connected, or active
 - battery level
+- health level
 - connection state
 - mission-relevant status such as docked or undocked
 
@@ -155,6 +156,8 @@ For example:
 
 - before `CORE.connect()`, the CORE status may show `Offline` or `Standby`
 - after `CORE.connect()`, the status should visibly change to `Online`
+
+When battery or health is known, the UI may show these as fixed-segment bars rather than text only. For early missions, five segments is preferred because it is easy for beginners to read at a glance.
 
 This panel should help the learner understand that commands affect not only position but also robot state.
 

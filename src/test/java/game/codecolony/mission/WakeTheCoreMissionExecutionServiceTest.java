@@ -15,6 +15,10 @@ class WakeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.success()).isTrue();
         assertThat(runResult.headline()).isEqualTo("CORE Online");
         assertThat(runResult.coreStatus().state()).isEqualTo("Online");
+        assertThat(runResult.coreStatus().batteryLevel()).isZero();
+        assertThat(runResult.coreStatus().batteryCapacity()).isEqualTo(5);
+        assertThat(runResult.coreStatus().healthLevel()).isEqualTo(1);
+        assertThat(runResult.coreStatus().healthCapacity()).isEqualTo(5);
         assertThat(runResult.simulationEvents()).contains("Connected to CORE-01.");
     }
 
@@ -25,6 +29,8 @@ class WakeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Mission Incomplete");
         assertThat(runResult.coreStatus().state()).isEqualTo("Offline");
+        assertThat(runResult.coreStatus().batteryLevel()).isNull();
+        assertThat(runResult.coreStatus().healthLevel()).isNull();
         assertThat(runResult.feedbackItems()).contains("Call CORE.connect(); to bring the CORE online.");
     }
 

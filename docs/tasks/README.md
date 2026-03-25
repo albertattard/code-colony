@@ -34,3 +34,4 @@ Task files should:
 - [Task 0008: Add Mission Briefing Audio Playback](done/0008-add-mission-briefing-audio-playback.md)
 - [Task 0009: Stop Briefing Audio When Closing Modal](done/0009-stop-briefing-audio-when-closing-modal.md)
 - [Task 0010: Create Pixel-Art Mission Grid Prototype](done/0010-create-pixel-art-mission-grid-prototype.md)
+- [Task 0011: Show Drained And Damaged CORE Status](done/0011-show-drained-and-damaged-core-status.md)

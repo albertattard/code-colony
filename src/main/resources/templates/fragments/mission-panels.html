@@ -3,7 +3,7 @@
 <body>
 <th:block th:fragment="resultPanels (runResult)">
     <div id="mission-status" class="status-slot" hx-swap-oob="outerHTML">
-        <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
+    <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
         </section>
     </div>
     <div id="mission-feedback" class="feedback-slot">
@@ -20,9 +20,25 @@
                   th:classappend="${#strings.equals(runResult.coreStatus.state, 'Online')} ? ' online' : ' offline'">Offline</span>
         </div>
         <dl class="status-list">
-            <div class="status-row" th:if="${!#strings.isEmpty(runResult.coreStatus.battery)}">
-                <dt>Battery</dt>
-                <dd th:text="${runResult.coreStatus.battery}">Full</dd>
+            <div class="status-row status-meter-row" th:if="${runResult.coreStatus.batteryLevel != null}">
+                <dt>Power</dt>
+                <dd class="status-meter meter-battery" aria-label="Power level">
+                    <span class="status-meter-box"
+                          th:each="box : ${#numbers.sequence(1, runResult.coreStatus.batteryCapacity)}"
+                          th:classappend="${box <= runResult.coreStatus.batteryLevel} ? ' filled' : ' empty'"></span>
+                    <span class="status-meter-value"
+                          th:text="${runResult.coreStatus.batteryLevel + ' / ' + runResult.coreStatus.batteryCapacity}">0 / 5</span>
+                </dd>
+            </div>
+            <div class="status-row status-meter-row" th:if="${runResult.coreStatus.healthLevel != null}">
+                <dt>Health</dt>
+                <dd class="status-meter meter-health" aria-label="Health level">
+                    <span class="status-meter-box"
+                          th:each="box : ${#numbers.sequence(1, runResult.coreStatus.healthCapacity)}"
+                          th:classappend="${box <= runResult.coreStatus.healthLevel} ? ' filled' : ' empty'"></span>
+                    <span class="status-meter-value"
+                          th:text="${runResult.coreStatus.healthLevel + ' / ' + runResult.coreStatus.healthCapacity}">1 / 5</span>
+                </dd>
             </div>
             <div class="status-row" th:if="${!#strings.isEmpty(runResult.coreStatus.dock)}">
                 <dt>Dock</dt>

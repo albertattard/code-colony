@@ -91,7 +91,8 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
-        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Battery");
+        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Power");
+        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Health");
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Dock");
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Position");
         assertThat(page.locator("textarea[name='code']").inputValue()).isEmpty();
@@ -122,9 +123,17 @@ class MissionBrowserSmokeTest {
         page.waitForLoadState();
 
         assertThat(page.locator(".status-panel").textContent()).contains("Online");
+        assertThat(page.locator(".status-panel").textContent()).contains("Power");
+        assertThat(page.locator(".status-panel").textContent()).contains("0 / 5");
+        assertThat(page.locator(".status-panel").textContent()).contains("Health");
+        assertThat(page.locator(".status-panel").textContent()).contains("1 / 5");
+        assertThat(page.locator(".meter-battery .status-meter-box").count()).isEqualTo(5);
+        assertThat(page.locator(".meter-battery .status-meter-box.filled").count()).isZero();
+        assertThat(page.locator(".meter-health .status-meter-box").count()).isEqualTo(5);
+        assertThat(page.locator(".meter-health .status-meter-box.filled").count()).isEqualTo(1);
         assertThat(page.locator(".feedback-panel").textContent()).contains("CORE Online");
         assertThat(page.locator(".feedback-panel").textContent())
-                .contains("Control link established. CORE-01 is online.");
+                .contains("Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.");
     }
 
     private String baseUrl() {

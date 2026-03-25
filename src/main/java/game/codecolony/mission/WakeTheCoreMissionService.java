@@ -15,7 +15,7 @@ public final class WakeTheCoreMissionService {
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
-            "When CORE.connect(); works, the status panel should change from Offline to Online."
+            "When CORE.connect(); works, the status panel should change from Offline to Online and reveal the CORE's condition."
     );
     private static final List<CommandReference> COMMANDS = List.of(
             new CommandReference("CORE.connect()", "Establishes a control link to the next available CORE unit.")
