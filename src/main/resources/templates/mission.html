@@ -44,23 +44,30 @@
         </div>
     </header>
 
-    <section class="panel grid-panel">
-        <div class="section-header">
-            <h2>Maintenance Room Grid</h2>
-        </div>
-        <div class="mission-grid">
-            <div class="grid-tile"
-                 th:each="tile : ${gridTiles}"
-                 th:classappend="' tile-' + ${tile.cellType}"
-                 th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
-                <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
-                    <div class="tile-pixels"></div>
-                    <div class="tile-sprite sprite-core facing-east" th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
-                    <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}" aria-hidden="true"></div>
+    <div class="stage-layout">
+        <section class="panel grid-panel">
+            <div class="section-header">
+                <h2>Maintenance Room Grid</h2>
+            </div>
+            <div class="mission-grid">
+                <div class="grid-tile"
+                     th:each="tile : ${gridTiles}"
+                     th:classappend="' tile-' + ${tile.cellType}"
+                     th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
+                    <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
+                        <div class="tile-pixels"></div>
+                        <div class="tile-sprite sprite-core facing-east" th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
+                        <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}" aria-hidden="true"></div>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <div id="mission-status" class="status-slot">
+            <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
+            </section>
         </div>
-    </section>
+    </div>
 
     <section class="panel code-panel">
         <div class="section-header">
@@ -70,7 +77,7 @@
         <form th:action="@{/missions/wake-the-core/run}"
               method="post"
               hx-post="/missions/wake-the-core/run"
-              hx-target="#mission-results"
+              hx-target="#mission-feedback"
               hx-swap="outerHTML">
             <textarea id="code" name="code" spellcheck="false" th:text="${code}"></textarea>
             <div class="inline-reference">
@@ -91,8 +98,9 @@
         </form>
     </section>
 
-    <div id="mission-results"
-         th:replace="~{fragments/mission-panels :: resultPanels(runResult=${runResult})}">
+    <div id="mission-feedback" class="feedback-slot">
+        <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}">
+        </section>
     </div>
 </main>
 <script>

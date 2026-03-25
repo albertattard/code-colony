@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="resultPanels (runResult)" id="mission-results" class="results-grid">
-    <section class="panel status-panel" th:classappend="${runResult.success} ? ' success' : ''">
+<th:block th:fragment="resultPanels (runResult)">
+    <div id="mission-status" class="status-slot" hx-swap-oob="outerHTML">
+        <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
+        </section>
+    </div>
+    <div id="mission-feedback" class="feedback-slot">
+        <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}">
+        </section>
+    </div>
+</th:block>
+
+<section th:fragment="statusPanelBody (runResult)" class="panel status-panel"
+         th:classappend="${runResult.success} ? ' success' : ''">
         <div class="section-header">
             <h2>CORE Status</h2>
             <span class="status-pill" th:text="${runResult.coreStatus.state}"
@@ -23,9 +34,9 @@
             </div>
         </dl>
         <p class="status-note" th:text="${runResult.coreStatus.note}">Standby</p>
-    </section>
+</section>
 
-    <section class="panel feedback-panel">
+<section th:fragment="feedbackPanelBody (runResult)" class="panel feedback-panel">
         <h2 th:text="${runResult.headline}">Awaiting Run</h2>
         <p class="panel-summary" th:text="${runResult.summary}">Feedback summary</p>
         <ol class="event-list">
@@ -34,7 +45,6 @@
         <ul class="feedback-list">
             <li th:each="item : ${runResult.feedbackItems}" th:text="${item}">Feedback item</li>
         </ul>
-    </section>
-</div>
+</section>
 </body>
 </html>

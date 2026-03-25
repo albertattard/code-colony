@@ -52,10 +52,15 @@ body.modal-open {
 .mission-header,
 .intro-hero,
 .intro-card,
-.grid-panel,
+.stage-layout,
 .code-panel,
-.results-grid {
+.feedback-slot {
     grid-column: 1 / -1;
+}
+
+.stage-layout {
+    display: grid;
+    gap: 1rem;
 }
 
 .mission-header {
@@ -540,11 +545,6 @@ textarea {
     background: var(--accent-dark);
 }
 
-.results-grid {
-    display: grid;
-    gap: 1rem;
-}
-
 .status-list {
     margin: 0;
 }
@@ -589,18 +589,12 @@ textarea {
         grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
     }
 
-    .results-grid {
-        grid-template-columns: minmax(0, 2fr) minmax(16rem, 1.2fr);
+    .stage-layout {
+        grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
         align-items: start;
     }
 
-    .feedback-panel {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    .status-panel {
-        grid-column: 2;
-        grid-row: 1;
+    .feedback-slot {
+        max-width: 100%;
     }
 }
