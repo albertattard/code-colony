@@ -49,8 +49,10 @@ class MissionBrowserSmokeTest {
         page.navigate(baseUrl() + "/",
                 new Page.NavigateOptions().setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
 
-        assertThat(page.locator(".intro-briefing h1").textContent()).contains("Code Colony");
-        assertThat(page.locator("body").textContent()).contains("Helix Dynamics Briefing");
+        assertThat(page.locator(".mission-header h1").textContent()).contains("Mission Briefing");
+        assertThat(page.locator("body").textContent())
+                .contains("Investigate the colony site and restore critical systems in stages.");
+        assertThat(page.locator("body").textContent()).contains("Operational Briefing");
         assertThat(page.locator("body").textContent()).contains("Eryndor-IV");
         assertThat(page.locator("body").textContent()).contains("Colony Operations and Repair Engineers");
 

@@ -57,7 +57,7 @@ The intended opening flow is:
 2. The player reads a short narrative setup.
 3. The player reads a short explanation of how the game works.
 4. The player sees what is expected in the first mission.
-5. The player clicks `Start Mission 01`.
+5. The player clicks `Start Mission`.
 6. The player enters the Mission 01 screen.
 
 This flow should be short enough to read in one sitting without scrolling through a large wall of text.
@@ -123,7 +123,7 @@ This should lower the barrier for beginners before they see the mission editor.
 
 The intro screen should end with one clear action:
 
-- `Start Mission 01`
+- `Start Mission`
 
 There should not be multiple competing actions in the MVP.
 

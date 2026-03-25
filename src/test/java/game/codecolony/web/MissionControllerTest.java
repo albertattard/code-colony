@@ -26,8 +26,9 @@ class MissionControllerTest {
                 .build();
         final String body = send(request);
 
-        assertThat(body).contains("Helix Dynamics Briefing");
-        assertThat(body).contains("Code Colony");
+        assertThat(body).contains("Mission Briefing");
+        assertThat(body).contains("Investigate the colony site and restore critical systems in stages.");
+        assertThat(body).contains("Operational Briefing");
         assertThat(body).contains("Eryndor-IV");
         assertThat(body).contains("Colony Operations and Repair Engineers");
         assertThat(body).contains("Start Mission");
