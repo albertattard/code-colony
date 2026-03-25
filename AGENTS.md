@@ -134,6 +134,21 @@ When asked to `build`, use this workflow:
 1. Build and verify the project with `./mvnw clean verify`.
 2. Start the application with `./mvnw spring-boot:run` as a long-running process.
 
+### `generate audio for <source>`
+
+When asked to `generate audio for <source>`, use this workflow:
+
+1. Resolve `<source>` to a player-facing Markdown briefing under `src/main/resources/content/`.
+2. Invoke `tools/tts.sh` with that Markdown file as input.
+3. Save the generated audio under `src/main/resources/static/audio/briefings/` using a sensible default file name derived from the source.
+   If the user explicitly provides an output path, use that instead.
+4. Report which source file was used and where the audio file was saved.
+
+Examples:
+
+- `generate audio for intro`
+- `generate audio for mission-01`
+
 ## Implementation Rules
 
 - Do not expose engine complexity to learners unless the lesson requires it.
