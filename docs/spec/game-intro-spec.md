@@ -18,6 +18,7 @@ This spec defines:
 - the content the player should see before Mission 01
 - the intended player flow from intro to first mission
 - the level of narrative and instruction appropriate for the opening
+- how optional voiced playback should relate to the intro text
 
 This spec does not define:
 
@@ -81,6 +82,8 @@ The intro should define `CORE` as `Colony Operations and Repair Engineer` the fi
 
 The tone should be intriguing, not dramatic or frightening.
 
+If the intro includes voiced playback, the spoken version should match the written text closely enough that the player is not hearing a different version of the briefing.
+
 ### 2. Your Role
 
 This section should explain that the player is a remote engineer.
@@ -126,6 +129,17 @@ The intro screen should end with one clear action:
 - `Start Mission`
 
 There should not be multiple competing actions in the MVP.
+
+## Audio Rules
+
+Voiced playback for the intro is optional but supported.
+
+If present:
+
+- the written briefing text must remain visible
+- the player must still be able to proceed without listening
+- the audio should be a presentation of the approved briefing text, not a separate source of story truth
+- a simple replay control is acceptable if added later
 
 ## Content Constraints
 

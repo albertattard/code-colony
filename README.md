@@ -19,6 +19,13 @@ The first mission specification now defines a small maintenance room scenario in
 - [Architecture Decision Records](docs/adr/README.md)
 - `docs/tasks/` for backlog, in-progress, and completed task documents
 
+## Content Assets
+
+- Runtime audio assets should live under `src/main/resources/static/audio/`.
+- Briefing voice tracks should be organized by purpose, for example `src/main/resources/static/audio/briefings/intro.mp3`.
+- Written briefing text remains the source of truth. Generated audio is a player-facing asset derived from that text.
+- Contributor utilities such as text-to-speech helpers should live under `tools/`.
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).

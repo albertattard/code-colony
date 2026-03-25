@@ -70,6 +70,8 @@ Helix Dynamics should be presented initially as:
 
 Its official voice should sound calm, corporate, and controlled.
 
+If briefings are voiced, the delivery should reinforce that same tone rather than sounding theatrical, playful, or ominous.
+
 The company should provide the player with enough authority to act, while also shaping the information the player receives.
 
 ## Opening Situation
@@ -149,6 +151,8 @@ Lore should be delivered gradually through:
 The story should not rely on long exposition blocks.
 
 Each reveal should support the player's motivation to continue restoring the colony.
+
+When voice tracks are used, the written script should remain the canonical story text. Audio should be treated as a presentation layer derived from approved written content.
 
 ## Relationship To Mission Specs
 

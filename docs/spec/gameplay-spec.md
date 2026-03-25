@@ -57,6 +57,8 @@ Each mission should include:
 - a learner-editable code area
 - a feedback area for compile, runtime, and mission results
 
+Mission briefings may also include optional voiced playback, provided that the written text remains visible and readable on screen.
+
 Each mission must identify its primary learning concept and should not depend on hidden rules that the player cannot infer from the UI or mission text.
 
 ## Browser Mission Layout
@@ -81,9 +83,13 @@ This panel should show:
 - primary objective
 - optional hints or reminders
 
+When voiced briefing playback is present, the panel should still present the full written text and should not rely on audio alone for comprehension.
+
 The briefing should be concise and readable in one sitting.
 
 For early missions, this panel may be presented as a header rather than as a separate boxed sidebar.
+
+If a replay control for briefing audio is provided, it should be simple and should not compete with the primary mission action.
 
 ### 2. Command Reference Panel
 
