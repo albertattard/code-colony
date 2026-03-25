@@ -247,6 +247,8 @@ Examples:
 - the battery and health bars become visible
 - a short success message confirms that the control link was established
 
+Extra learner code that does not interfere with the mission objective, such as `System.out.println(...)`, should not prevent success in Mission 01.
+
 ## Failure Conditions
 
 The mission run fails when:
@@ -287,6 +289,19 @@ The learner should see a short mission summary such as:
 - `Control link established. CORE-01 is online.`
 
 If the mission fails, the learner should see what remains incomplete.
+
+### Program Output
+
+If the learner prints output during Mission 01, the UI should show it in a separate `Program Output` panel rather than mixing it into mission feedback.
+
+For example, if the learner submits:
+
+```java
+CORE.connect();
+System.out.println("Hello!!");
+```
+
+then Mission 01 should still succeed, and the text `Hello!!` should appear under learner `stdout`.
 
 ## UI Expectations
 

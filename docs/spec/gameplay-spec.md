@@ -173,6 +173,31 @@ This panel should show:
 
 This panel is part of the learning experience, not just a debugging aid.
 
+### 7. Program Output Panel
+
+This panel should show output produced directly by the learner program.
+
+It should distinguish between:
+
+- `stdout`
+- `stderr`
+
+This panel should not mix learner program output with:
+
+- simulator action logs
+- mission success or failure summaries
+- learner-facing mission hints
+
+The goal is to let learners see normal Java behavior, such as `System.out.println(...)`, without confusing that output with game feedback.
+
+Recommended behavior:
+
+- show the panel only when at least one stream contains output
+- preserve line breaks and output order within each stream
+- label the streams clearly
+- truncate very large output and say that truncation occurred
+- still show captured output when the run fails or crashes
+
 ## Run Cycle
 
 When the player clicks `Run`, the system should perform the following sequence:
@@ -187,9 +212,13 @@ When the player clicks `Run`, the system should perform the following sequence:
 8. Stop when execution completes, the objective is reached, or a failure/limit condition is triggered.
 9. Present a mission result summary.
 
+If learner code writes to `stdout` or `stderr`, that output should also be captured and presented in the dedicated program output area.
+
 Each run should start from a clean mission state unless the game explicitly introduces persistent state later.
 
 Mission results should be derived from the observed runtime behavior of the learner program, including simulator state changes and recorded execution events, rather than from matching source text patterns.
+
+Harmless learner output should not count as mission failure on its own. A mission should fail because the objective was not met, the code did not compile, runtime rules were broken, or execution crashed or timed out.
 
 ## Simulation Model
 

@@ -18,7 +18,7 @@ Task files should:
 
 ### In Progress
 
-- None
+- [Task 0013: Show Learner Program Output](in-progress/0013-show-learner-program-output.md)
 
 ### Backlog
 
