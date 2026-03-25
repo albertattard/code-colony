@@ -26,7 +26,7 @@ public final class WakeTheCoreMissionService {
             new GridTile("A", "3", "floor", "", "Walkable floor tile"),
             new GridTile("B", "1", "core", "C", "Docked CORE unit"),
             new GridTile("B", "2", "floor", "", "Walkable floor tile"),
-            new GridTile("B", "3", "relay", "R", "Damaged relay cabinet"),
+            new GridTile("B", "3", "repair", "S", "Repair station"),
             new GridTile("C", "1", "floor", "", "Walkable floor tile"),
             new GridTile("C", "2", "floor", "", "Walkable floor tile"),
             new GridTile("C", "3", "floor", "", "Walkable floor tile")

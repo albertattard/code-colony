@@ -55,8 +55,8 @@
                  th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
                 <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
                     <div class="tile-pixels"></div>
-                    <div class="tile-sprite sprite-core" th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
-                    <div class="tile-sprite sprite-relay" th:if="${#strings.equals(tile.cellType, 'relay')}" aria-hidden="true"></div>
+                    <div class="tile-sprite sprite-core facing-east" th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
+                    <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
