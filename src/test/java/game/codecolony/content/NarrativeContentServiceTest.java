@@ -27,7 +27,7 @@ class NarrativeContentServiceTest {
                 narrativeContentService.loadMissionNarrative("mission-01");
 
         assertThat(missionNarrative.title()).isEqualTo("Mission 01: Wake The CORE");
-        assertThat(missionNarrative.summary()).contains("Maintenance Room A1");
+        assertThat(missionNarrative.summary()).contains("Maintenance Room B-1049");
         assertThat(missionNarrative.objective()).isEqualTo("Call CORE.connect(); to bring CORE-01 online.");
         assertThat(missionNarrative.briefingHtml()).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
         assertThat(missionNarrative.briefingHtml()).contains("<code>CORE.connect();</code>");

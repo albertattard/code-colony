@@ -43,7 +43,7 @@ This is not a danger-driven opening. It is a restoration-driven opening.
 
 Suggested briefing:
 
-> Standby power is active in Maintenance Room A1. One CORE unit remains docked, but its condition is still unknown. Re-establish a control link and bring the unit online.
+> Standby power is active in Maintenance Room B-1049. One CORE unit remains docked, but its condition is still unknown. Re-establish a control link and bring the unit online.
 
 Mission text should be short and should not overwhelm the learner with story details.
 

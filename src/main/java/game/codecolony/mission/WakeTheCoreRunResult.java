@@ -10,7 +10,7 @@ public record WakeTheCoreRunResult(String headline, String summary, List<String>
                 "Awaiting Run",
                 "Enter CORE.connect(); and click Run to bring CORE-01 online.",
                 List.of(
-                        "CORE-01 is docked in Maintenance Room A1.",
+                        "CORE-01 is docked in Maintenance Room B-1049.",
                         "The control link is offline.",
                         "Running code will update the CORE status and feedback panels."
                 ),
