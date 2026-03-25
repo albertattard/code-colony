@@ -1,23 +1,29 @@
 package game.codecolony.web;
 
+import game.codecolony.content.NarrativeContentService;
+import game.codecolony.content.NarrativeContentService.IntroNarrativeContent;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
+public final class HomeController {
+
+    private final NarrativeContentService narrativeContentService;
+
+    public HomeController(final NarrativeContentService narrativeContentService) {
+        this.narrativeContentService = narrativeContentService;
+    }
 
     @GetMapping("/")
     public String home(final Model model) {
-        model.addAttribute("missionTitle", "Mission Briefing");
-        model.addAttribute(
-                "missionSummary",
-                "Helix Dynamics has assigned you to oversee the recovery of a remote colony site from orbit around Eryndor-IV."
-        );
-        model.addAttribute(
-                "missionObjective",
-                "Investigate the colony site and restore critical systems in stages."
-        );
+        final IntroNarrativeContent introNarrative = narrativeContentService.loadIntroNarrative();
+        model.addAttribute("missionTitle", introNarrative.title());
+        model.addAttribute("missionSummary", introNarrative.summary());
+        model.addAttribute("missionObjective", introNarrative.objective());
+        model.addAttribute("briefingTitle", introNarrative.briefingTitle());
+        model.addAttribute("briefingHtml", introNarrative.briefingHtml());
         return "intro";
     }
 }

@@ -2,7 +2,7 @@
 
 ## Status
 
-Backlog
+Done
 
 ## Summary
 
@@ -44,11 +44,11 @@ This task should not include:
 
 ## Acceptance Criteria
 
-- [ ] Runtime narrative content lives under `src/main/resources/content/`.
-- [ ] The intro screen renders its briefing from content files.
-- [ ] Mission 01 renders its briefing from content files.
-- [ ] The chosen authoring format is documented well enough to extend consistently.
-- [ ] Existing automated tests continue to pass after the content move.
+- [x] Runtime narrative content lives under `src/main/resources/content/`.
+- [x] The intro screen renders its briefing from content files.
+- [x] Mission 01 renders its briefing from content files.
+- [x] The chosen authoring format is documented well enough to extend consistently.
+- [x] Existing automated tests continue to pass after the content move.
 
 ## Notes
 

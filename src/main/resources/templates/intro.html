@@ -24,29 +24,9 @@
 
         <section class="panel intro-card intro-briefing">
             <p class="eyebrow">Helix Dynamics</p>
-            <h2>Operational Briefing</h2>
-            <div class="intro-copy">
-                <p class="panel-copy">
-                    You are an engineer employed by Helix Dynamics, a leader in sustainable off-world development
-                    and the driving force behind humanity's expansion beyond Earth. From your command station in
-                    orbit around the planet Eryndor-IV, you have been assigned to oversee the recovery of one of
-                    the company's remote colony sites following an unexpected systems outage.
-                </p>
-                <p class="panel-copy">
-                    While the situation has been classified as contained, communication with the surface remains
-                    limited. As a precaution, all direct deployment has been suspended.
-                </p>
-                <p class="panel-copy">
-                    Instead, you will operate CORE units (<em>Colony Operations and Repair Engineers</em>),
-                    specialized robotic systems designed to maintain infrastructure, execute complex directives,
-                    and ensure continuity in challenging environments. With partial access to the colony's network
-                    restored, your role is to re-establish critical systems, assess operational integrity, and
-                    return the site to standard function.
-                </p>
-                <p class="panel-copy">
-                    Helix Dynamics is committed to transparency, safety, and the continued success of its colonies.
-                </p>
-                <p class="panel-copy">Your work will ensure that commitment is upheld.</p>
+            <h2 th:text="${briefingTitle}">Operational Briefing</h2>
+            <div class="intro-copy narrative-markdown" th:utext="${briefingHtml}">
+                <p class="panel-copy">Briefing text</p>
             </div>
             <div class="intro-controls">
                 <div class="intro-audio">

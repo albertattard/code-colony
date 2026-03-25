@@ -48,8 +48,8 @@ class MissionControllerTest {
         assertThat(body).contains("Maintenance Room Grid");
         assertThat(body).contains("Code Console");
         assertThat(body).contains("Mission Briefing");
-        assertThat(body).contains("Standby power has returned to Maintenance Room A1.");
-        assertThat(body).contains("Use CORE.connect(); to bring the docked CORE online.");
+        assertThat(body).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
+        assertThat(body).contains("<code>CORE.connect();</code>");
         assertThat(body).contains("data-briefing-modal");
         assertThat(body).contains("data-briefing-open");
         assertThat(body).contains("CORE Status");

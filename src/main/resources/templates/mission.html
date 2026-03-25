@@ -11,19 +11,10 @@
 <div class="briefing-modal-shell" data-briefing-modal role="dialog" aria-modal="true" aria-labelledby="mission-briefing-title">
     <div class="briefing-backdrop" data-briefing-close></div>
     <section class="panel briefing-modal">
-        <p class="eyebrow" th:text="${briefingHeading}">Mission Briefing</p>
+        <p class="eyebrow">Mission Briefing</p>
         <h2 id="mission-briefing-title" th:text="${missionTitle}">Mission 01: Wake The CORE</h2>
-        <p class="panel-copy" th:text="${briefingContext}">
-            Standby power has returned to Maintenance Room A1. One CORE unit is still docked, charged, and waiting for a control link.
-        </p>
-        <div class="briefing-objective">
-            <p class="objective-label">Objective</p>
-            <p class="objective-text" th:text="${missionObjective}">Call CORE.connect(); to bring CORE-01 online.</p>
-        </div>
-        <div class="briefing-hint">
-            <p class="objective-label">Hint</p>
-            <p class="panel-copy" th:text="${briefingHint}">Use CORE.connect(); to bring the docked CORE online.</p>
-            <pre class="briefing-code"><code>CORE.connect();</code></pre>
+        <div class="narrative-markdown" th:utext="${briefingHtml}">
+            <p>Mission briefing text.</p>
         </div>
         <div class="actions briefing-actions">
             <button class="primary-action" type="button" data-briefing-close>Close Briefing</button>

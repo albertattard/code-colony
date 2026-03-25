@@ -68,6 +68,8 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
         assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Mission Briefing");
         assertThat(page.locator("[data-briefing-modal]").textContent()).contains("CORE.connect();");
+        assertThat(page.locator("[data-briefing-modal]").textContent())
+                .contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Close Briefing"))
                 .click();
