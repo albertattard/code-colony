@@ -31,6 +31,7 @@ class MissionControllerTest {
         assertThat(body).contains("Operational Briefing");
         assertThat(body).contains("Eryndor-IV");
         assertThat(body).contains("Colony Operations and Repair Engineers");
+        assertThat(body).contains("/audio/briefings/intro.mp3");
         assertThat(body).contains("Start Mission");
         assertThat(body).contains("/missions/wake-the-core");
         assertThat(body).doesNotContain("Mission 01: Wake The CORE");

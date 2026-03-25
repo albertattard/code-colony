@@ -55,6 +55,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("body").textContent()).contains("Operational Briefing");
         assertThat(page.locator("body").textContent()).contains("Eryndor-IV");
         assertThat(page.locator("body").textContent()).contains("Colony Operations and Repair Engineers");
+        assertThat(page.locator("audio source").getAttribute("src")).isEqualTo("/audio/briefings/intro.mp3");
 
         page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
                 new Page.GetByRoleOptions().setName("Start Mission"))

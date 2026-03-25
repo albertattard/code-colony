@@ -48,8 +48,15 @@
                 </p>
                 <p class="panel-copy">Your work will ensure that commitment is upheld.</p>
             </div>
-            <div class="actions intro-actions">
-                <a class="primary-action" th:href="@{/missions/wake-the-core}">Start Mission</a>
+            <div class="intro-controls">
+                <div class="intro-audio">
+                    <audio controls preload="none">
+                        <source th:src="@{/audio/briefings/intro.mp3}" type="audio/mpeg">
+                    </audio>
+                </div>
+                <div class="actions intro-actions">
+                    <a class="primary-action" th:href="@{/missions/wake-the-core}">Start Mission</a>
+                </div>
             </div>
         </section>
     </main>
