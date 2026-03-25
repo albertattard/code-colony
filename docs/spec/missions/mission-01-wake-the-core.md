@@ -247,6 +247,15 @@ Examples:
 - the battery and health bars become visible
 - a short success message confirms that the control link was established
 
+After Mission 01 succeeds, the mission page should switch into a completed state:
+
+- the code console remains visible
+- the learner code becomes read-only
+- `Run` and `Reset` are hidden
+- a `Next` action is shown
+
+That action should move the player into the Mission 02 handoff flow, which prepares the next task of charging the depleted CORE.
+
 Extra learner code that does not interfere with the mission objective, such as `System.out.println(...)`, should not prevent success in Mission 01.
 
 ## Failure Conditions

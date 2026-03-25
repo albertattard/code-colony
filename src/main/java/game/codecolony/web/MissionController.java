@@ -2,6 +2,8 @@ package game.codecolony.web;
 
 import game.codecolony.mission.WakeTheCoreMissionService;
 import game.codecolony.mission.WakeTheCoreMissionService.MissionPage;
+import game.codecolony.content.NarrativeContentService;
+import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,19 +15,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MissionController {
 
     private static final String MISSION_PATH = "/missions/wake-the-core";
+    private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final String MISSION_VIEW = "mission";
+    private static final String NEXT_MISSION_VIEW = "mission-handoff";
     private static final String RESULT_FRAGMENT = "fragments/mission-panels :: resultPanels";
 
     private final WakeTheCoreMissionService missionService;
+    private final NarrativeContentService narrativeContentService;
 
-    public MissionController(final WakeTheCoreMissionService missionService) {
+    public MissionController(final WakeTheCoreMissionService missionService,
+                             final NarrativeContentService narrativeContentService) {
         this.missionService = missionService;
+        this.narrativeContentService = narrativeContentService;
     }
 
     @GetMapping(MISSION_PATH)
     public String mission(final Model model) {
         populateModel(model, missionService.initialPage());
         return MISSION_VIEW;
+    }
+
+    @GetMapping(NEXT_MISSION_PATH)
+    public String nextMission(final Model model) {
+        final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-02");
+        model.addAttribute("missionTitle", missionNarrative.title());
+        model.addAttribute("missionSummary", missionNarrative.summary());
+        model.addAttribute("missionObjective", missionNarrative.objective());
+        model.addAttribute("briefingHtml", missionNarrative.briefingHtml());
+        return NEXT_MISSION_VIEW;
     }
 
     @PostMapping(MISSION_PATH + "/run")
@@ -46,6 +63,7 @@ public class MissionController {
         model.addAttribute("availableCommands", missionPage.availableCommands());
         model.addAttribute("gridTiles", missionPage.gridTiles());
         model.addAttribute("code", missionPage.code());
+        model.addAttribute("nextMissionPath", missionPage.nextMissionPath());
         model.addAttribute("runResult", missionPage.runResult());
     }
 

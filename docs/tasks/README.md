@@ -37,3 +37,4 @@ Task files should:
 - [Task 0011: Show Drained And Damaged CORE Status](done/0011-show-drained-and-damaged-core-status.md)
 - [Task 0012: Show CORE Identifier In Status Panel](done/0012-show-core-identifier-in-status-panel.md)
 - [Task 0013: Show Learner Program Output](done/0013-show-learner-program-output.md)
+- [Task 0014: Lock Completed Mission UI](done/0014-lock-completed-mission-ui.md)

@@ -6,10 +6,50 @@
     <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
         </section>
     </div>
+    <div id="mission-code-panel" class="code-slot" hx-swap-oob="outerHTML">
+        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, nextMissionPath=${nextMissionPath})}">
+        </section>
+    </div>
     <div id="mission-feedback" class="feedback-slot">
         <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
     </div>
 </th:block>
+
+<section th:fragment="codePanelBody (code, runResult, availableCommands, missionHints, nextMissionPath)" class="panel code-panel">
+        <div class="section-header">
+            <h2>Code Console</h2>
+        </div>
+        <form th:action="@{/missions/wake-the-core/run}"
+              method="post"
+              hx-post="/missions/wake-the-core/run"
+              hx-target="#mission-feedback"
+              hx-swap="outerHTML">
+            <textarea th:if="${runResult.success}" id="code" name="code" spellcheck="false"
+                      readonly="readonly"
+                      th:text="${code}"></textarea>
+            <textarea th:unless="${runResult.success}" id="code" name="code" spellcheck="false"
+                      th:text="${code}"></textarea>
+            <div class="inline-reference">
+                <h3>Available Commands</h3>
+                <dl class="command-list">
+                    <div class="command-entry" th:each="command : ${availableCommands}">
+                        <dt th:text="${command.signature}">CORE.connect()</dt>
+                        <dd th:text="${command.description}">Establishes a connection.</dd>
+                    </div>
+                </dl>
+            </div>
+            <ul class="hint-list">
+                <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
+            </ul>
+            <div class="actions" th:if="${!runResult.success}">
+                <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
+                <button class="primary-action" type="submit">Run</button>
+            </div>
+            <div class="actions" th:if="${runResult.success}">
+                <a class="primary-action" th:href="${nextMissionPath}">Next</a>
+            </div>
+        </form>
+</section>
 
 <th:block th:fragment="feedbackSlotBody (runResult)">
     <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}"></section>

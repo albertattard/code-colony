@@ -12,6 +12,7 @@ public final class WakeTheCoreMissionService {
 
     private static final String DEFAULT_CODE = "";
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-01.mp3";
+    private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
@@ -53,6 +54,7 @@ public final class WakeTheCoreMissionService {
                 COMMANDS,
                 GRID,
                 DEFAULT_CODE,
+                NEXT_MISSION_PATH,
                 WakeTheCoreRunResult.initial()
         );
     }
@@ -69,6 +71,7 @@ public final class WakeTheCoreMissionService {
                 COMMANDS,
                 GRID,
                 code,
+                NEXT_MISSION_PATH,
                 missionExecutionService.execute(code)
         );
     }
@@ -76,7 +79,8 @@ public final class WakeTheCoreMissionService {
     public record MissionPage(String missionTitle, String missionSummary, String missionObjective,
                               String briefingHtml, String briefingAudioPath,
                               List<String> missionHints, List<CommandReference> availableCommands,
-                              List<GridTile> gridTiles, String code, WakeTheCoreRunResult runResult) {
+                              List<GridTile> gridTiles, String code, String nextMissionPath,
+                              WakeTheCoreRunResult runResult) {
     }
 
     public record CommandReference(String signature, String description) {

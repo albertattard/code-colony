@@ -60,7 +60,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("audio source").getAttribute("src")).isEqualTo("/audio/briefings/intro.mp3");
 
         page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
-                new Page.GetByRoleOptions().setName("Start Mission"))
+                new Page.GetByRoleOptions().setName("Start"))
                 .click();
         page.waitForURL("**/missions/wake-the-core");
 
@@ -79,7 +79,7 @@ class MissionBrowserSmokeTest {
                 }
                 """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                new Page.GetByRoleOptions().setName("Close Briefing"))
+                new Page.GetByRoleOptions().setName("Close"))
                 .click();
         page.locator("[data-briefing-modal]")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
@@ -115,7 +115,7 @@ class MissionBrowserSmokeTest {
                 System.out.println("Hello!!");
                 """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                new Page.GetByRoleOptions().setName("Close Briefing"))
+                new Page.GetByRoleOptions().setName("Close"))
                 .click();
         page.locator("[data-briefing-modal]")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
@@ -145,6 +145,21 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".output-panel").textContent()).contains("Program Output");
         assertThat(page.locator(".output-panel").textContent()).contains("stdout");
         assertThat(page.locator(".output-panel").textContent()).contains("Hello!!");
+        assertThat(page.locator("textarea[name='code']").getAttribute("readonly")).isEqualTo("readonly");
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Run")).count()).isZero();
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Reset")).count()).isZero();
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Next")).isVisible()).isTrue();
+
+        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Next"))
+                .click();
+        page.waitForURL("**/missions/charge-the-core");
+        assertThat(page.locator("h1").textContent()).contains("Mission 02: Charge The CORE");
+        assertThat(page.locator("body").textContent()).contains("Mission Handoff");
+        assertThat(page.locator("body").textContent()).contains("Prepare to charge CORE-01");
     }
 
     private String baseUrl() {

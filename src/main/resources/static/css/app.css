@@ -53,6 +53,7 @@ body.modal-open {
 .intro-hero,
 .intro-card,
 .stage-layout,
+.code-slot,
 .code-panel,
 .feedback-slot {
     grid-column: 1 / -1;

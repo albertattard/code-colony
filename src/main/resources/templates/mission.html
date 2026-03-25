@@ -23,7 +23,7 @@
                 </audio>
             </div>
             <div class="actions briefing-actions">
-                <button class="primary-action" type="button" data-briefing-close>Close Briefing</button>
+                <button class="primary-action" type="button" data-briefing-close>Close</button>
             </div>
         </div>
     </section>
@@ -69,34 +69,10 @@
         </div>
     </div>
 
-    <section class="panel code-panel">
-        <div class="section-header">
-            <h2>Code Console</h2>
-        </div>
-        <form th:action="@{/missions/wake-the-core/run}"
-              method="post"
-              hx-post="/missions/wake-the-core/run"
-              hx-target="#mission-feedback"
-              hx-swap="outerHTML">
-            <textarea id="code" name="code" spellcheck="false" th:text="${code}"></textarea>
-            <div class="inline-reference">
-                <h3>Available Commands</h3>
-                <dl class="command-list">
-                    <div class="command-entry" th:each="command : ${availableCommands}">
-                        <dt th:text="${command.signature}">CORE.connect()</dt>
-                        <dd th:text="${command.description}">Establishes a connection.</dd>
-                    </div>
-                </dl>
-            </div>
-            <ul class="hint-list">
-                <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
-            </ul>
-            <div class="actions">
-                <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
-                <button class="primary-action" type="submit">Run</button>
-            </div>
-        </form>
-    </section>
+    <div id="mission-code-panel" class="code-slot">
+        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, nextMissionPath=${nextMissionPath})}">
+        </section>
+    </div>
 
     <div id="mission-feedback" class="feedback-slot">
         <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>

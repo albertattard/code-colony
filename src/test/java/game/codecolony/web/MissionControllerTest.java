@@ -32,7 +32,7 @@ class MissionControllerTest {
         assertThat(body).contains("Eryndor-IV");
         assertThat(body).contains("Colony Operations and Repair Engineers");
         assertThat(body).contains("/audio/briefings/intro.mp3");
-        assertThat(body).contains("Start Mission");
+        assertThat(body).contains("Start");
         assertThat(body).contains("/missions/wake-the-core");
         assertThat(body).doesNotContain("Mission 01: Wake The CORE");
     }
@@ -58,6 +58,9 @@ class MissionControllerTest {
         assertThat(body).contains("CORE-01");
         assertThat(body).doesNotContain("Program Output");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
+        assertThat(body).contains(">Reset</a>");
+        assertThat(body).contains(">Run</button>");
+        assertThat(body).doesNotContain(">Next<");
         assertThat(body).doesNotContain("Battery</dt>");
         assertThat(body).doesNotContain("Power</dt>");
         assertThat(body).doesNotContain("Health</dt>");
@@ -92,6 +95,24 @@ class MissionControllerTest {
         assertThat(response.body()).contains("Program Output");
         assertThat(response.body()).contains("stdout");
         assertThat(response.body()).contains("Hello!!");
+        assertThat(response.body()).contains("readonly=\"readonly\"");
+        assertThat(response.body()).contains(">Next</a>");
+        assertThat(response.body()).contains("/missions/charge-the-core");
+        assertThat(response.body()).doesNotContain(">Run</button>");
+        assertThat(response.body()).doesNotContain(">Reset</a>");
+    }
+
+    @Test
+    void nextMissionPageRenders() throws IOException, InterruptedException {
+        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core"))
+                .GET()
+                .build();
+        final String body = send(request);
+
+        assertThat(body).contains("Mission 02: Charge The CORE");
+        assertThat(body).contains("Mission Handoff");
+        assertThat(body).contains("restore power");
+        assertThat(body).contains("Prepare to charge CORE-01");
     }
 
     private URI baseUri(final String path) {

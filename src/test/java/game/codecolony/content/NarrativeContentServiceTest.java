@@ -32,4 +32,15 @@ class NarrativeContentServiceTest {
         assertThat(missionNarrative.briefingHtml()).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
         assertThat(missionNarrative.briefingHtml()).contains("<code>CORE.connect();</code>");
     }
+
+    @Test
+    void loadsMissionTwoNarrativeFromMarkdownContent() {
+        final NarrativeContentService.MissionNarrativeContent missionNarrative =
+                narrativeContentService.loadMissionNarrative("mission-02");
+
+        assertThat(missionNarrative.title()).isEqualTo("Mission 02: Charge The CORE");
+        assertThat(missionNarrative.summary()).contains("battery is fully depleted");
+        assertThat(missionNarrative.objective()).contains("Prepare to charge CORE-01");
+        assertThat(missionNarrative.briefingHtml()).contains("Mission 02 will focus on recharging the CORE");
+    }
 }

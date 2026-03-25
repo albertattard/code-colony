@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${missionTitle} + ' | Code Colony'">Code Colony</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout intro-layout">
+    <header class="panel mission-header">
+        <div class="header-copy">
+            <p class="eyebrow">Code Colony</p>
+            <h1 th:text="${missionTitle}">Mission 02: Charge The CORE</h1>
+            <p class="lead" th:text="${missionSummary}">Restore power to the depleted CORE unit.</p>
+        </div>
+        <div class="header-objective">
+            <p class="objective-label">Primary objective</p>
+            <p class="objective-text" th:text="${missionObjective}">Prepare to charge CORE-01 and continue the recovery effort.</p>
+        </div>
+    </header>
+
+    <section class="panel intro-card intro-briefing">
+        <p class="eyebrow">Mission Handoff</p>
+        <h2>Next</h2>
+        <div class="intro-copy narrative-markdown" th:utext="${briefingHtml}">
+            <p>Mission handoff text.</p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

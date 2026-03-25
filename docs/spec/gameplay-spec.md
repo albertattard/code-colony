@@ -389,6 +389,17 @@ When a mission is completed, the game should:
 - reveal the next piece of story or system recovery
 - unlock the next mission or next mission step
 
+For the browser UI, the completed state should also change the mission controls so the player can clearly tell they are done with the current step.
+
+For early missions, this should mean:
+
+- the learner code remains visible
+- the code editor becomes read-only
+- `Run` and `Reset` are hidden
+- a `Next` action is shown instead
+
+If the next mission is not implemented yet, that action may lead to a lightweight handoff or placeholder page rather than the full next gameplay screen.
+
 Mission progression should reward the learner without interrupting the coding rhythm for too long.
 
 ## MVP Gameplay Assumptions
