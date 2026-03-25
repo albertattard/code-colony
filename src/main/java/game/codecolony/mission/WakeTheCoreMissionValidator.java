@@ -8,14 +8,14 @@ import java.util.List;
 
 final class WakeTheCoreMissionValidator {
 
-    WakeTheCoreRunResult validate(final WakeTheCoreMissionSimulation simulation, final String runtimeError,
-                                  final String stdout, final String stderr) {
+    MissionRunResult validate(final WakeTheCoreMissionSimulation simulation, final String runtimeError,
+                              final String stdout, final String stderr) {
         final List<String> simulationEvents = simulation.events().stream()
                 .map(MissionEvent::description)
                 .toList();
 
         if (runtimeError != null && !runtimeError.isBlank()) {
-            return new WakeTheCoreRunResult(
+            return new MissionRunResult(
                     "Run Failed",
                     runtimeError,
                     simulationEvents,
@@ -37,7 +37,7 @@ final class WakeTheCoreMissionValidator {
                 .anyMatch(ConnectionRejectedEvent.class::isInstance);
 
         if (successfulConnections == 1 && !rejectedConnection) {
-            return new WakeTheCoreRunResult(
+            return new MissionRunResult(
                     "CORE Online",
                     "Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.",
                     simulationEvents,
@@ -53,7 +53,7 @@ final class WakeTheCoreMissionValidator {
             );
         }
 
-        return new WakeTheCoreRunResult(
+        return new MissionRunResult(
                 "Mission Incomplete",
                 "CORE-01 is still offline.",
                 simulationEvents,
@@ -68,14 +68,14 @@ final class WakeTheCoreMissionValidator {
         );
     }
 
-    private WakeTheCoreCoreStatus statusFor(final boolean connected, final int connectAttempts) {
+    private MissionCoreStatus statusFor(final boolean connected, final int connectAttempts) {
         if (connected) {
             final String note = connectAttempts > 1
                     ? "Connection established, then an invalid duplicate connect was attempted"
                     : "Telemetry online. Battery depleted. Structural damage detected.";
-            return new WakeTheCoreCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1", note);
+            return new MissionCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1", note);
         }
 
-        return new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline.");
+        return new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline.");
     }
 }

@@ -1,4 +1,4 @@
 package game.codecolony.runtime;
 
-public sealed interface MissionCommand permits ConnectNextCoreCommand {
+public sealed interface MissionCommand permits ChargeCoreCommand, ConnectNextCoreCommand {
 }

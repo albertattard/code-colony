@@ -50,6 +50,13 @@ For the first playable version, the briefing should present:
 
 This briefing should open as a modal when the Mission 02 page loads and should be reopenable through the visible `Briefing` button.
 
+Mission 02 may also provide optional voiced playback inside the briefing modal, provided that:
+
+- the written briefing text remains visible
+- the player can proceed without listening
+- the audio is generated from the approved Mission 02 briefing text rather than a separate source of truth
+- closing the briefing stops any current playback
+
 ## Mission Layout
 
 Mission 02 should reuse the Mission 01 screen layout.
@@ -76,20 +83,19 @@ This means:
 
 ## CORE Status Panel
 
-At the start of Mission 02, the player knows from Mission 01 that CORE-01 exists, but the mission still begins from a fresh simulation run when code is executed.
+At the start of Mission 02, the page should visually continue from the end of Mission 01.
 
 The status panel should communicate:
-
-- `Status: Offline` before the learner reconnects
-- no battery or health telemetry while offline
-
-After a successful `CORE.connect()` call, the status panel should reveal:
 
 - `Status: Online`
 - `Battery: 0/5`
 - `Health: 1/5`
 - `Dock: Connected`
 - `Position: B1`
+
+This is important because Mission 02 should look like a continuation of Mission 01 rather than a reset back to an unknown state.
+
+In Mission 02, `CORE.connect()` should still be required in learner code, but its role is to obtain a usable `CORE` reference for that run, not to visually bring the unit online for the first time.
 
 Each successful `core.charge()` call on the docking station should increase the battery by one segment.
 
@@ -124,6 +130,8 @@ This means the game should preserve the learner's successful submitted code exac
 
 The editor should become writable again for this mission, because the learner is extending their previous solution.
 
+The learner should transform that carried-forward code into the Mission 02 solution themselves. The game should not rewrite or reformat the previous mission's code on their behalf.
+
 ## Starter Code
 
 Recommended carried-forward starting point when the learner finished Mission 01 with only the essential solution:
@@ -149,7 +157,7 @@ The first successful charge should give the CORE enough power for one future mov
 
 The mission succeeds when:
 
-- the player connects to CORE-01
+- the player obtains a `CORE` reference by calling `CORE.connect()`
 - the player charges the CORE to full battery
 
 This should be validated from simulator-observed execution behavior.
@@ -167,7 +175,7 @@ Extra calls to `core.charge()` after the battery is full should not prevent succ
 The mission run fails when:
 
 - the learner code does not compile
-- the learner finishes execution without connecting to the CORE
+- the learner finishes execution without obtaining a CORE reference
 - the learner finishes execution without reaching full battery
 - the learner calls `core.charge()` before storing or obtaining a CORE instance
 
@@ -207,12 +215,13 @@ The mission screen should show:
 - the mission briefing as a modal that opens on first load
 - a persistent `Briefing` button that reopens the mission briefing
 - the carried-forward learner code from Mission 01
+- a CORE status panel that initially matches the connected state shown at the end of Mission 01
 - the status panel visibly filling one battery segment per successful `charge()` call
 
-After Mission 02 succeeds, the page may use the same completed-state pattern introduced in Mission 01:
+After Mission 02 succeeds, the page should use the same completed-state pattern introduced in Mission 01:
 
 - read-only learner code
 - hidden `Run` and `Reset`
 - a visible `Next` action
 
-The exact destination of `Next` should be defined by the Mission 03 spec.
+Until Mission 03 is defined, the UI may show `Next` as a non-navigating placeholder action so the completed-state pattern remains consistent.

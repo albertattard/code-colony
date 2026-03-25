@@ -45,7 +45,7 @@ class MissionBrowserSmokeTest {
     }
 
     @Test
-    void introPageLeadsIntoMissionAndRunUpdatesCoreStatus() {
+    void introPageLeadsIntoMissionOneAndMissionTwo() {
         final Page page = browser.newPage();
 
         page.navigate(baseUrl() + "/",
@@ -156,10 +156,57 @@ class MissionBrowserSmokeTest {
         page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
                 new Page.GetByRoleOptions().setName("Next"))
                 .click();
-        page.waitForURL("**/missions/charge-the-core");
+        page.waitForURL("**/missions/charge-the-core**");
         assertThat(page.locator("h1").textContent()).contains("Mission 02: Charge The CORE");
-        assertThat(page.locator("body").textContent()).contains("Mission Handoff");
-        assertThat(page.locator("body").textContent()).contains("Prepare to charge CORE-01");
+        assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
+        assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Congratulations, engineer.");
+        assertThat(page.locator("[data-briefing-modal] audio source").getAttribute("src"))
+                .isEqualTo("/audio/briefings/mission-02.mp3");
+        assertThat(page.locator(".status-panel").textContent()).contains("Online");
+        assertThat(page.locator(".status-panel").textContent()).contains("0 / 5");
+        assertThat(page.locator(".status-panel").textContent()).contains("1 / 5");
+        assertThat(page.locator(".status-panel").textContent()).contains("Connected");
+        assertThat(page.locator(".status-panel").textContent()).contains("B1");
+        assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """);
+        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Close"))
+                .click();
+        page.locator("[data-briefing-modal]")
+                .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+
+        page.locator("textarea[name='code']").fill("""
+                var core = CORE.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                System.out.println("Charged");
+                """);
+
+        final Response missionTwoResponse = page.waitForResponse(
+                runResponse -> runResponse.url().contains("/missions/charge-the-core/run"),
+                () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                        new Page.GetByRoleOptions().setName("Run"))
+                        .click()
+        );
+        assertThat(missionTwoResponse.ok()).isTrue();
+        page.waitForLoadState();
+
+        assertThat(page.locator(".feedback-panel").textContent()).contains("CORE Charged");
+        assertThat(page.locator(".status-panel").textContent()).contains("5 / 5");
+        assertThat(page.locator(".meter-battery .status-meter-box.filled").count()).isEqualTo(5);
+        assertThat(page.locator(".output-panel").textContent()).contains("Charged");
+        assertThat(page.locator("textarea[name='code']").getAttribute("readonly")).isEqualTo("readonly");
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Run")).count()).isZero();
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Reset")).count()).isZero();
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Next")).isVisible()).isTrue();
     }
 
     private String baseUrl() {

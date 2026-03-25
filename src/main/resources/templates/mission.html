@@ -70,7 +70,7 @@
     </div>
 
     <div id="mission-code-panel" class="code-slot">
-        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, nextMissionPath=${nextMissionPath})}">
+        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, initialCode=${initialCode}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, missionPath=${missionPath}, resetPath=${resetPath}, lockOnSuccess=${lockOnSuccess}, nextMissionPath=${nextMissionPath})}">
         </section>
     </div>
 

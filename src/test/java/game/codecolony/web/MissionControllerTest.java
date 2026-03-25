@@ -98,21 +98,67 @@ class MissionControllerTest {
         assertThat(response.body()).contains("readonly=\"readonly\"");
         assertThat(response.body()).contains(">Next</a>");
         assertThat(response.body()).contains("/missions/charge-the-core");
+        assertThat(response.body()).contains("code=CORE.connect%28%29%3B%0ASystem.out.println%28%22Hello%21%21%22%29%3B%0A");
         assertThat(response.body()).doesNotContain(">Run</button>");
         assertThat(response.body()).doesNotContain(">Reset</a>");
     }
 
     @Test
     void nextMissionPageRenders() throws IOException, InterruptedException {
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core"))
+        final String carriedCode = URLEncoder.encode("""
+                CORE.connect();
+                System.out.println("Hello!!");
+                """, StandardCharsets.UTF_8);
+        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core?code=" + carriedCode))
                 .GET()
                 .build();
         final String body = send(request);
 
         assertThat(body).contains("Mission 02: Charge The CORE");
-        assertThat(body).contains("Mission Handoff");
-        assertThat(body).contains("restore power");
-        assertThat(body).contains("Prepare to charge CORE-01");
+        assertThat(body).contains("Maintenance Room Grid");
+        assertThat(body).contains("Charge CORE-01 to full power.");
+        assertThat(body).contains("Congratulations, engineer.");
+        assertThat(body).contains("/audio/briefings/mission-02.mp3");
+        assertThat(body).contains("Online");
+        assertThat(body).contains("0 / 5");
+        assertThat(body).contains("1 / 5");
+        assertThat(body).contains("Connected");
+        assertThat(body).contains("B1");
+        assertThat(body).contains("name=\"initialCode\"");
+        assertThat(body).contains("System.out.println(&quot;Hello!!&quot;);");
+        assertThat(body).contains("""
+                <textarea id="code" name="code" spellcheck="false">CORE.connect();
+                System.out.println(&quot;Hello!!&quot;);
+                </textarea>""");
+    }
+
+    @Test
+    void missionTwoRunEndpointReturnsUpdatedBatteryState() throws IOException, InterruptedException {
+        final String formBody = "code=" + URLEncoder.encode("""
+                var core = CORE.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                """, StandardCharsets.UTF_8)
+                + "&initialCode=" + URLEncoder.encode("CORE.connect();", StandardCharsets.UTF_8);
+        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core/run"))
+                .header("HX-Request", "true")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(formBody))
+                .build();
+        final HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("CORE Charged");
+        assertThat(response.body()).contains("5 / 5");
+        assertThat(response.body()).contains("Charged CORE-01 to 5/5.");
+        assertThat(response.body()).doesNotContain(">Run</button>");
+        assertThat(response.body()).doesNotContain(">Reset</a>");
+        assertThat(response.body()).contains(">Next</button>");
+        assertThat(response.body()).contains("readonly=\"readonly\"");
     }
 
     private URI baseUri(final String path) {

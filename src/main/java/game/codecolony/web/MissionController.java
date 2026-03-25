@@ -1,9 +1,8 @@
 package game.codecolony.web;
 
+import game.codecolony.mission.ChargeTheCoreMissionService;
+import game.codecolony.mission.MissionPage;
 import game.codecolony.mission.WakeTheCoreMissionService;
-import game.codecolony.mission.WakeTheCoreMissionService.MissionPage;
-import game.codecolony.content.NarrativeContentService;
-import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,39 +16,43 @@ public class MissionController {
     private static final String MISSION_PATH = "/missions/wake-the-core";
     private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final String MISSION_VIEW = "mission";
-    private static final String NEXT_MISSION_VIEW = "mission-handoff";
     private static final String RESULT_FRAGMENT = "fragments/mission-panels :: resultPanels";
 
-    private final WakeTheCoreMissionService missionService;
-    private final NarrativeContentService narrativeContentService;
+    private final WakeTheCoreMissionService wakeTheCoreMissionService;
+    private final ChargeTheCoreMissionService chargeTheCoreMissionService;
 
-    public MissionController(final WakeTheCoreMissionService missionService,
-                             final NarrativeContentService narrativeContentService) {
-        this.missionService = missionService;
-        this.narrativeContentService = narrativeContentService;
+    public MissionController(final WakeTheCoreMissionService wakeTheCoreMissionService,
+                             final ChargeTheCoreMissionService chargeTheCoreMissionService) {
+        this.wakeTheCoreMissionService = wakeTheCoreMissionService;
+        this.chargeTheCoreMissionService = chargeTheCoreMissionService;
     }
 
     @GetMapping(MISSION_PATH)
     public String mission(final Model model) {
-        populateModel(model, missionService.initialPage());
+        populateModel(model, wakeTheCoreMissionService.initialPage());
         return MISSION_VIEW;
     }
 
     @GetMapping(NEXT_MISSION_PATH)
-    public String nextMission(final Model model) {
-        final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-02");
-        model.addAttribute("missionTitle", missionNarrative.title());
-        model.addAttribute("missionSummary", missionNarrative.summary());
-        model.addAttribute("missionObjective", missionNarrative.objective());
-        model.addAttribute("briefingHtml", missionNarrative.briefingHtml());
-        return NEXT_MISSION_VIEW;
+    public String nextMission(@RequestParam(defaultValue = "") final String code, final Model model) {
+        populateModel(model, chargeTheCoreMissionService.initialPage(code));
+        return MISSION_VIEW;
     }
 
     @PostMapping(MISSION_PATH + "/run")
     public String runMission(@RequestParam(defaultValue = "") final String code,
                              @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
                              final Model model) {
-        populateModel(model, missionService.pageForCode(code));
+        populateModel(model, wakeTheCoreMissionService.pageForCode(code));
+        return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
+    }
+
+    @PostMapping(NEXT_MISSION_PATH + "/run")
+    public String runNextMission(@RequestParam(defaultValue = "") final String code,
+                                 @RequestParam(defaultValue = "") final String initialCode,
+                                 @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
+                                 final Model model) {
+        populateModel(model, chargeTheCoreMissionService.pageForCode(code, initialCode));
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
     }
 
@@ -63,7 +66,11 @@ public class MissionController {
         model.addAttribute("availableCommands", missionPage.availableCommands());
         model.addAttribute("gridTiles", missionPage.gridTiles());
         model.addAttribute("code", missionPage.code());
+        model.addAttribute("initialCode", missionPage.initialCode());
+        model.addAttribute("missionPath", missionPage.missionPath());
+        model.addAttribute("resetPath", missionPage.resetPath());
         model.addAttribute("nextMissionPath", missionPage.nextMissionPath());
+        model.addAttribute("lockOnSuccess", missionPage.lockOnSuccess());
         model.addAttribute("runResult", missionPage.runResult());
     }
 

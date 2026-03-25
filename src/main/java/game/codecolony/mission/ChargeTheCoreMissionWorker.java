@@ -7,14 +7,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
-public final class WakeTheCoreMissionWorker {
+public final class ChargeTheCoreMissionWorker {
 
     private static final int MAX_CAPTURED_OUTPUT_LENGTH = 4_000;
 
-    private WakeTheCoreMissionWorker() {
+    private ChargeTheCoreMissionWorker() {
     }
 
     public static void main(final String[] args) throws Exception {
@@ -23,8 +23,8 @@ public final class WakeTheCoreMissionWorker {
         }
 
         final Path resultFile = Path.of(args[0]);
-        final WakeTheCoreMissionSimulator simulator = new WakeTheCoreMissionSimulator();
-        final WakeTheCoreMissionValidator validator = new WakeTheCoreMissionValidator();
+        final ChargeTheCoreMissionSimulator simulator = new ChargeTheCoreMissionSimulator();
+        final ChargeTheCoreMissionValidator validator = new ChargeTheCoreMissionValidator();
         CORE.attachSimulator(simulator);
 
         final ByteArrayOutputStream stdoutBuffer = new ByteArrayOutputStream();

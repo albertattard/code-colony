@@ -7,7 +7,7 @@
         </section>
     </div>
     <div id="mission-code-panel" class="code-slot" hx-swap-oob="outerHTML">
-        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, nextMissionPath=${nextMissionPath})}">
+        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, initialCode=${initialCode}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, missionPath=${missionPath}, resetPath=${resetPath}, lockOnSuccess=${lockOnSuccess}, nextMissionPath=${nextMissionPath})}">
         </section>
     </div>
     <div id="mission-feedback" class="feedback-slot">
@@ -15,19 +15,20 @@
     </div>
 </th:block>
 
-<section th:fragment="codePanelBody (code, runResult, availableCommands, missionHints, nextMissionPath)" class="panel code-panel">
+<section th:fragment="codePanelBody (code, initialCode, runResult, availableCommands, missionHints, missionPath, resetPath, lockOnSuccess, nextMissionPath)" class="panel code-panel">
         <div class="section-header">
             <h2>Code Console</h2>
         </div>
-        <form th:action="@{/missions/wake-the-core/run}"
+        <form th:action="${missionPath + '/run'}"
               method="post"
-              hx-post="/missions/wake-the-core/run"
+              th:attr="hx-post=${missionPath + '/run'}"
               hx-target="#mission-feedback"
               hx-swap="outerHTML">
-            <textarea th:if="${runResult.success}" id="code" name="code" spellcheck="false"
+            <input type="hidden" name="initialCode" th:value="${initialCode}">
+            <textarea th:if="${runResult.success and lockOnSuccess}" id="code" name="code" spellcheck="false"
                       readonly="readonly"
                       th:text="${code}"></textarea>
-            <textarea th:unless="${runResult.success}" id="code" name="code" spellcheck="false"
+            <textarea th:unless="${runResult.success and lockOnSuccess}" id="code" name="code" spellcheck="false"
                       th:text="${code}"></textarea>
             <div class="inline-reference">
                 <h3>Available Commands</h3>
@@ -41,12 +42,15 @@
             <ul class="hint-list">
                 <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
             </ul>
-            <div class="actions" th:if="${!runResult.success}">
-                <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
+            <div class="actions" th:if="${!runResult.success or !lockOnSuccess}">
+                <a class="secondary-action" th:href="${resetPath}">Reset</a>
                 <button class="primary-action" type="submit">Run</button>
             </div>
-            <div class="actions" th:if="${runResult.success}">
+            <div class="actions" th:if="${runResult.success and lockOnSuccess and !#strings.isEmpty(nextMissionPath)}">
                 <a class="primary-action" th:href="${nextMissionPath}">Next</a>
+            </div>
+            <div class="actions" th:if="${runResult.success and lockOnSuccess and #strings.isEmpty(nextMissionPath)}">
+                <button class="primary-action" type="button" disabled>Next</button>
             </div>
         </form>
 </section>

@@ -9,23 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-final class WakeTheCoreRunResultFileCodec {
+final class MissionRunResultFileCodec {
 
-    private WakeTheCoreRunResultFileCodec() {
+    private MissionRunResultFileCodec() {
     }
 
-    static WakeTheCoreRunResult read(final Path path) throws IOException {
+    static MissionRunResult read(final Path path) throws IOException {
         final Properties properties = new Properties();
         try (InputStream inputStream = Files.newInputStream(path)) {
             properties.load(inputStream);
         }
 
-        return new WakeTheCoreRunResult(
+        return new MissionRunResult(
                 properties.getProperty("headline"),
                 properties.getProperty("summary"),
                 readList(properties, "simulationEvents"),
                 readList(properties, "feedbackItems"),
-                new WakeTheCoreCoreStatus(
+                new MissionCoreStatus(
                         properties.getProperty("coreStatus.unitName"),
                         properties.getProperty("coreStatus.state"),
                         readInteger(properties, "coreStatus.batteryLevel"),
@@ -42,7 +42,7 @@ final class WakeTheCoreRunResultFileCodec {
         );
     }
 
-    static void write(final Path path, final WakeTheCoreRunResult runResult) throws IOException {
+    static void write(final Path path, final MissionRunResult runResult) throws IOException {
         final Properties properties = new Properties();
         properties.setProperty("headline", runResult.headline());
         properties.setProperty("summary", runResult.summary());
@@ -62,7 +62,7 @@ final class WakeTheCoreRunResultFileCodec {
         properties.setProperty("success", Boolean.toString(runResult.success()));
 
         try (OutputStream outputStream = Files.newOutputStream(path)) {
-            properties.store(outputStream, "Wake The CORE run result");
+            properties.store(outputStream, "Mission run result");
         }
     }
 
@@ -72,7 +72,6 @@ final class WakeTheCoreRunResultFileCodec {
         for (int index = 0; index < count; index++) {
             items.add(properties.getProperty(prefix + "." + index));
         }
-
         return List.copyOf(items);
     }
 

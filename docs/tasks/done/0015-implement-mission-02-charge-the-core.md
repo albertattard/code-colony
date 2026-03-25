@@ -35,11 +35,11 @@ Mission 02 is the first step where the learner builds on previous code instead o
 
 ## Acceptance Criteria
 
-- [ ] Clicking `Next` after Mission 01 loads Mission 02 directly.
-- [ ] Mission 02 opens with the same layout as Mission 01 and shows its own briefing modal.
-- [ ] Mission 02 preloads the learner's successful Mission 01 code into the editor.
-- [ ] The learner can update the code to use `var core = CORE.connect();`.
-- [ ] Each successful `core.charge();` call restores one battery segment.
-- [ ] Battery is capped at `5/5`.
-- [ ] Mission 02 succeeds only when the battery reaches full charge.
-- [ ] Automated tests cover Mission 02 progression, charging, and full-battery success.
+- [x] Clicking `Next` after Mission 01 loads Mission 02 directly.
+- [x] Mission 02 opens with the same layout as Mission 01 and shows its own briefing modal.
+- [x] Mission 02 preloads the learner's successful Mission 01 code into the editor.
+- [x] The learner can update the code to use `var core = CORE.connect();`.
+- [x] Each successful `core.charge();` call restores one battery segment.
+- [x] Battery is capped at `5/5`.
+- [x] Mission 02 succeeds only when the battery reaches full charge.
+- [x] Automated tests cover Mission 02 progression, charging, and full-battery success.

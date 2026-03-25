@@ -18,11 +18,7 @@ Task files should:
 
 ### In Progress
 
-- None
-
 ### Backlog
-
-- [Task 0015: Implement Mission 02 Charge The CORE](backlog/0015-implement-mission-02-charge-the-core.md)
 
 ### Done
 
@@ -40,3 +36,7 @@ Task files should:
 - [Task 0012: Show CORE Identifier In Status Panel](done/0012-show-core-identifier-in-status-panel.md)
 - [Task 0013: Show Learner Program Output](done/0013-show-learner-program-output.md)
 - [Task 0014: Lock Completed Mission UI](done/0014-lock-completed-mission-ui.md)
+- [Task 0015: Implement Mission 02 Charge The CORE](done/0015-implement-mission-02-charge-the-core.md)
+- [Task 0016: Enrich Mission 02 Briefing](done/0016-enrich-mission-02-briefing.md)
+- [Task 0017: Align Mission 02 Initial State With Mission 01](done/0017-align-mission-02-initial-state-with-mission-01.md)
+- [Task 0018: Lock Completed Mission 02 UI](done/0018-lock-completed-mission-02-ui.md)

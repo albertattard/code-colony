@@ -10,7 +10,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void successfulConnectRunBringsCoreOnline() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("CORE.connect();");
+        final MissionRunResult runResult = missionExecutionService.execute("CORE.connect();");
 
         assertThat(runResult.success()).isTrue();
         assertThat(runResult.headline()).isEqualTo("CORE Online");
@@ -27,7 +27,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void successfulConnectCanAlsoShowLearnerStdout() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionService.execute("""
                 CORE.connect();
                 System.out.println("Hello!!");
                 """);
@@ -39,7 +39,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void runtimeFailureCanAlsoShowLearnerStderr() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionService.execute("""
                 System.err.println("before-failure");
                 throw new RuntimeException("boom");
                 """);
@@ -51,7 +51,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void missingConnectLeavesCoreOffline() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("");
+        final MissionRunResult runResult = missionExecutionService.execute("");
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Mission Incomplete");
@@ -64,7 +64,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void duplicateConnectShowsRuntimeFailure() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionService.execute("""
                 CORE.connect();
                 CORE.connect();
                 """);
@@ -78,7 +78,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void compileFailureReturnsLearnerFacingFeedback() {
-        final WakeTheCoreRunResult runResult = missionExecutionService.execute("core.connect();");
+        final MissionRunResult runResult = missionExecutionService.execute("core.connect();");
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Compilation Failed");

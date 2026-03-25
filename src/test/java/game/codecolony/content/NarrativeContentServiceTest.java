@@ -40,7 +40,9 @@ class NarrativeContentServiceTest {
 
         assertThat(missionNarrative.title()).isEqualTo("Mission 02: Charge The CORE");
         assertThat(missionNarrative.summary()).contains("battery is fully depleted");
-        assertThat(missionNarrative.objective()).contains("Prepare to charge CORE-01");
-        assertThat(missionNarrative.briefingHtml()).contains("Mission 02 will focus on recharging the CORE");
+        assertThat(missionNarrative.objective()).isEqualTo("Charge CORE-01 to full power.");
+        assertThat(missionNarrative.briefingHtml()).contains("Congratulations, engineer.");
+        assertThat(missionNarrative.briefingHtml()).contains("var core = CORE.connect();");
+        assertThat(missionNarrative.briefingHtml()).contains("core.charge();");
     }
 }

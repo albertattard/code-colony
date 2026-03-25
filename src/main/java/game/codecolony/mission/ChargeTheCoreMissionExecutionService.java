@@ -32,10 +32,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public final class WakeTheCoreMissionExecutionService {
+public final class ChargeTheCoreMissionExecutionService {
 
     private static final String PLAYER_PROGRAM_SOURCE = "PlayerProgram.java";
-    private static final String RESULT_FILE = "wake-the-core-result.properties";
+    private static final String RESULT_FILE = "charge-the-core-result.properties";
     private static final String SUPPORT_CLASSES_DIRECTORY = "support-classes";
     private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(10);
     private static final Duration RUN_TIMEOUT = Duration.ofSeconds(5);
@@ -46,7 +46,7 @@ public final class WakeTheCoreMissionExecutionService {
     public MissionRunResult execute(final String code) {
         Path workingDirectory = null;
         try {
-            workingDirectory = Files.createTempDirectory("wake-the-core-");
+            workingDirectory = Files.createTempDirectory("charge-the-core-");
             final Path sourceDirectory = workingDirectory.resolve("src/game/codecolony/player");
             final Path classesDirectory = workingDirectory.resolve("classes");
             final Path supportClassesDirectory = workingDirectory.resolve(SUPPORT_CLASSES_DIRECTORY);
@@ -77,7 +77,7 @@ public final class WakeTheCoreMissionExecutionService {
                     List.of(
                             javaTool("java").toString(),
                             "-cp", classesDirectory + System.getProperty("path.separator") + supportClassesDirectory,
-                            "game.codecolony.mission.WakeTheCoreMissionWorker",
+                            "game.codecolony.mission.ChargeTheCoreMissionWorker",
                             resultFile.toString()
                     ),
                     RUN_TIMEOUT
@@ -102,10 +102,10 @@ public final class WakeTheCoreMissionExecutionService {
         final List<String> feedbackItems = parseCompilerFeedback(compilerOutput);
         return new MissionRunResult(
                 "Compilation Failed",
-                "The code could not be compiled for Mission 01.",
+                "The code could not be compiled for Mission 02.",
                 List.of("Compilation stopped before the mission could run."),
                 feedbackItems,
-                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                missionTwoInitialStatus(),
                 "",
                 "",
                 false
@@ -116,15 +116,20 @@ public final class WakeTheCoreMissionExecutionService {
         return new MissionRunResult(
                 "Run Failed",
                 "The mission worker did not return a valid result.",
-                List.of("Execution stopped before Mission 01 could be evaluated."),
+                List.of("Execution stopped before Mission 02 could be evaluated."),
                 List.of(processOutput == null || processOutput.isBlank()
                         ? "No runtime diagnostics were returned."
                         : processOutput.strip()),
-                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                missionTwoInitialStatus(),
                 "",
                 "",
                 false
         );
+    }
+
+    private MissionCoreStatus missionTwoInitialStatus() {
+        return new MissionCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1",
+                "Control link remains stable from Mission 01. Battery depleted. Structural damage still detected.");
     }
 
     private List<String> parseCompilerFeedback(final String compilerOutput) {
@@ -273,10 +278,10 @@ public final class WakeTheCoreMissionExecutionService {
                 MissionCoreStatus.class,
                 MissionRunResult.class,
                 MissionRunResultFileCodec.class,
-                WakeTheCoreMissionSimulation.class,
-                WakeTheCoreMissionSimulator.class,
-                WakeTheCoreMissionValidator.class,
-                WakeTheCoreMissionWorker.class
+                ChargeTheCoreMissionSimulation.class,
+                ChargeTheCoreMissionSimulator.class,
+                ChargeTheCoreMissionValidator.class,
+                ChargeTheCoreMissionWorker.class
         );
     }
 

@@ -1,5 +1,7 @@
 package game.codecolony.student;
 
+import game.codecolony.runtime.ChargeCoreCommand;
+import game.codecolony.runtime.ChargeCoreResult;
 import game.codecolony.runtime.ConnectCoreResult;
 import game.codecolony.runtime.ConnectNextCoreCommand;
 import game.codecolony.runtime.MissionCommandResult;
@@ -35,6 +37,15 @@ public final class CORE {
 
     public int coreId() {
         return coreId;
+    }
+
+    public void charge() {
+        final MissionCommandResult result = simulator().execute(new ChargeCoreCommand(coreId));
+        if (result instanceof ChargeCoreResult) {
+            return;
+        }
+
+        throw new MissionExecutionException("Unable to charge the CORE unit.");
     }
 
     private static MissionSimulator simulator() {

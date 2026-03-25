@@ -3,6 +3,8 @@ package game.codecolony.mission;
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 public final class WakeTheCoreMissionService {
 
     private static final String DEFAULT_CODE = "";
+    private static final String MISSION_PATH = "/missions/wake-the-core";
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-01.mp3";
     private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final List<String> HINTS = List.of(
@@ -54,13 +57,18 @@ public final class WakeTheCoreMissionService {
                 COMMANDS,
                 GRID,
                 DEFAULT_CODE,
+                DEFAULT_CODE,
+                MISSION_PATH,
+                MISSION_PATH,
                 NEXT_MISSION_PATH,
-                WakeTheCoreRunResult.initial()
+                true,
+                initialRunResult()
         );
     }
 
     public MissionPage pageForCode(final String code) {
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-01");
+        final MissionRunResult runResult = missionExecutionService.execute(code);
         return new MissionPage(
                 missionNarrative.title(),
                 missionNarrative.summary(),
@@ -71,21 +79,36 @@ public final class WakeTheCoreMissionService {
                 COMMANDS,
                 GRID,
                 code,
-                NEXT_MISSION_PATH,
-                missionExecutionService.execute(code)
+                DEFAULT_CODE,
+                MISSION_PATH,
+                MISSION_PATH,
+                nextMissionPath(code),
+                true,
+                runResult
         );
     }
 
-    public record MissionPage(String missionTitle, String missionSummary, String missionObjective,
-                              String briefingHtml, String briefingAudioPath,
-                              List<String> missionHints, List<CommandReference> availableCommands,
-                              List<GridTile> gridTiles, String code, String nextMissionPath,
-                              WakeTheCoreRunResult runResult) {
+    private MissionRunResult initialRunResult() {
+        return new MissionRunResult(
+                "Awaiting Run",
+                "Enter CORE.connect(); and click Run to bring CORE-01 online.",
+                List.of(
+                        "CORE-01 is docked in Maintenance Room B-1049.",
+                        "The control link is offline.",
+                        "Running code will update the CORE status and feedback panels."
+                ),
+                List.of(
+                        "Mission 01 expects a single method call: CORE.connect();",
+                        "The first successful run should bring CORE-01 online."
+                ),
+                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                "",
+                "",
+                false
+        );
     }
 
-    public record CommandReference(String signature, String description) {
-    }
-
-    public record GridTile(String rowLabel, String columnLabel, String cellType, String shortLabel, String fullLabel) {
+    private String nextMissionPath(final String code) {
+        return NEXT_MISSION_PATH + "?code=" + URLEncoder.encode(code, StandardCharsets.UTF_8);
     }
 }
