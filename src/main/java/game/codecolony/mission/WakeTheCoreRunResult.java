@@ -18,7 +18,7 @@ public record WakeTheCoreRunResult(String headline, String summary, List<String>
                         "Mission 01 expects a single method call: CORE.connect();",
                         "The first successful run should bring CORE-01 online."
                 ),
-                new WakeTheCoreCoreStatus("Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
                 false
         );
     }

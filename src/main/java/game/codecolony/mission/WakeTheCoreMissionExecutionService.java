@@ -99,7 +99,7 @@ public class WakeTheCoreMissionExecutionService {
                 "The code could not be compiled for Mission 01.",
                 List.of("Compilation stopped before the mission could run."),
                 feedbackItems,
-                new WakeTheCoreCoreStatus("Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
                 false
         );
     }
@@ -112,7 +112,7 @@ public class WakeTheCoreMissionExecutionService {
                 List.of(processOutput == null || processOutput.isBlank()
                         ? "No runtime diagnostics were returned."
                         : processOutput.strip()),
-                new WakeTheCoreCoreStatus("Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
                 false
         );
     }

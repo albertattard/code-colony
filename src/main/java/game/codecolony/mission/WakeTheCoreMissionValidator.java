@@ -66,9 +66,9 @@ final class WakeTheCoreMissionValidator {
             final String note = connectAttempts > 1
                     ? "Connection established, then an invalid duplicate connect was attempted"
                     : "Telemetry online. Battery depleted. Structural damage detected.";
-            return new WakeTheCoreCoreStatus("Online", 0, 5, 1, 5, "Connected", "B1", note);
+            return new WakeTheCoreCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1", note);
         }
 
-        return new WakeTheCoreCoreStatus("Offline", null, null, null, null, "", "", "No telemetry available while offline.");
+        return new WakeTheCoreCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline.");
     }
 }

@@ -91,6 +91,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
+        assertThat(page.locator(".status-panel").textContent()).contains("CORE-01");
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Power");
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Health");
         assertThat(page.locator(".status-panel").textContent()).doesNotContain("Dock");
@@ -123,6 +124,7 @@ class MissionBrowserSmokeTest {
         page.waitForLoadState();
 
         assertThat(page.locator(".status-panel").textContent()).contains("Online");
+        assertThat(page.locator(".status-panel").textContent()).contains("CORE-01");
         assertThat(page.locator(".status-panel").textContent()).contains("Power");
         assertThat(page.locator(".status-panel").textContent()).contains("0 / 5");
         assertThat(page.locator(".status-panel").textContent()).contains("Health");

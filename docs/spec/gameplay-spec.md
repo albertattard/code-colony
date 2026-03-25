@@ -144,6 +144,7 @@ This panel should show the current visible state of the active CORE unit.
 
 Examples:
 
+- active CORE identifier
 - whether the CORE unit is offline, connected, or active
 - battery level
 - health level

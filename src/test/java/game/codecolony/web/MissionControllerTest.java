@@ -54,6 +54,8 @@ class MissionControllerTest {
         assertThat(body).contains("data-briefing-modal");
         assertThat(body).contains("data-briefing-open");
         assertThat(body).contains("CORE Status");
+        assertThat(body).contains("Unit");
+        assertThat(body).contains("CORE-01");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
         assertThat(body).doesNotContain("Battery</dt>");
         assertThat(body).doesNotContain("Power</dt>");
@@ -77,6 +79,7 @@ class MissionControllerTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(response.body()).contains("CORE Online");
         assertThat(response.body()).contains("CORE Status");
+        assertThat(response.body()).contains("CORE-01");
         assertThat(response.body()).contains("Online");
         assertThat(response.body()).contains("Power");
         assertThat(response.body()).contains("0 / 5");

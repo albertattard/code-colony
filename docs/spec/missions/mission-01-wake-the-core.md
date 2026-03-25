@@ -152,6 +152,7 @@ This mission should introduce a visible status panel for the active CORE unit.
 
 The panel should show at least:
 
+- active CORE identifier
 - connection state
 - battery state
 - health state

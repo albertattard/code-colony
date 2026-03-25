@@ -26,6 +26,7 @@ final class WakeTheCoreRunResultFileCodec {
                 readList(properties, "simulationEvents"),
                 readList(properties, "feedbackItems"),
                 new WakeTheCoreCoreStatus(
+                        properties.getProperty("coreStatus.unitName"),
                         properties.getProperty("coreStatus.state"),
                         readInteger(properties, "coreStatus.batteryLevel"),
                         readInteger(properties, "coreStatus.batteryCapacity"),
@@ -45,6 +46,7 @@ final class WakeTheCoreRunResultFileCodec {
         properties.setProperty("summary", runResult.summary());
         writeList(properties, "simulationEvents", runResult.simulationEvents());
         writeList(properties, "feedbackItems", runResult.feedbackItems());
+        properties.setProperty("coreStatus.unitName", runResult.coreStatus().unitName());
         properties.setProperty("coreStatus.state", runResult.coreStatus().state());
         writeInteger(properties, "coreStatus.batteryLevel", runResult.coreStatus().batteryLevel());
         writeInteger(properties, "coreStatus.batteryCapacity", runResult.coreStatus().batteryCapacity());

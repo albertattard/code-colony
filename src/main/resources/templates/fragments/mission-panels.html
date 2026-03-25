@@ -20,6 +20,10 @@
                   th:classappend="${#strings.equals(runResult.coreStatus.state, 'Online')} ? ' online' : ' offline'">Offline</span>
         </div>
         <dl class="status-list">
+            <div class="status-row">
+                <dt>Unit</dt>
+                <dd th:text="${runResult.coreStatus.unitName}">CORE-01</dd>
+            </div>
             <div class="status-row status-meter-row" th:if="${runResult.coreStatus.batteryLevel != null}">
                 <dt>Power</dt>
                 <dd class="status-meter meter-battery" aria-label="Power level">
