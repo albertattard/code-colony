@@ -87,9 +87,15 @@ When voiced briefing playback is present, the panel should still present the ful
 
 The briefing should be concise and readable in one sitting.
 
-For early missions, this panel may be presented as a header rather than as a separate boxed sidebar.
+For early missions, this panel should be presented as a modal-style briefing that opens when the mission page first loads.
+
+The player should be able to dismiss the briefing and reopen it at any time through a visible `Briefing` action on the mission screen.
+
+This should let the learner recover the mission instructions without leaving the mission or losing the current code in the editor.
 
 If a replay control for briefing audio is provided, it should be simple and should not compete with the primary mission action.
+
+The modal should focus on the immediate mission task and should not repeat the full game-level introduction.
 
 ### 2. Command Reference Panel
 
@@ -218,6 +224,19 @@ The playback should:
 For the MVP, the playback can be lightweight and step-based rather than highly animated.
 
 Visible status changes should update as part of the same playback cycle when appropriate.
+
+## Briefing Availability During Play
+
+Mission instructions should remain accessible during play.
+
+For the MVP:
+
+- the mission briefing opens by default on first mission load
+- the player can close it without starting a run
+- a persistent `Briefing` control reopens the same mission briefing
+- reopening the briefing should not reset the current mission state or learner code
+
+This is important for beginners because they may need to revisit the objective and hint text while they are still learning how to translate instructions into code.
 
 ## Mission Outcome Rules
 

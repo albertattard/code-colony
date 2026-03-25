@@ -173,6 +173,8 @@ The split should be:
 - intro screen explains the game and the player's role
 - mission screen explains the immediate task
 
+For the MVP, the mission-local briefing may appear as a modal when the mission page opens, provided the player can reopen it afterwards from a visible `Briefing` control.
+
 ## Non-Goals For The First Version
 
 The intro screen should not try to become:

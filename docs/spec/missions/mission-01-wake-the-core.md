@@ -47,6 +47,15 @@ Suggested briefing:
 
 Mission text should be short and should not overwhelm the learner with story details.
 
+For the first playable version, the briefing should present:
+
+- a mission heading
+- a short local context paragraph
+- the objective to connect to the docked CORE
+- a beginner-friendly hint showing `CORE.connect();`
+
+The briefing should open as a modal when the mission page loads and should be reopenable through a visible `Briefing` button on the mission screen.
+
 ## Mission Layout
 
 The mission takes place in a single small maintenance room.
@@ -251,13 +260,16 @@ If the mission fails, the learner should see what remains incomplete.
 
 The mission screen should show:
 
-- the mission briefing
+- the mission briefing as a modal that opens on first load
+- a persistent `Briefing` button that reopens the mission briefing
 - the available commands/manual
 - the top-down 3x3 room view as the main visual panel
 - the code entry area below the map
 - the CORE status panel on the side
 - simulation or action playback
 - mission feedback
+
+The initial Mission 01 briefing should be intentionally small and should emphasize that the player only needs to connect to the CORE unit.
 
 The map should remain visible while the player edits and runs code.
 
