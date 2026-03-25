@@ -16,3 +16,4 @@ These documents define the product, learning model, student programming surface,
 ## Mission Specifications
 
 - [Mission 01: Wake The CORE](missions/mission-01-wake-the-core.md)
+- [Mission 02: Charge The CORE](missions/mission-02-charge-the-core.md)

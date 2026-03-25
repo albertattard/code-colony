@@ -22,6 +22,8 @@ Task files should:
 
 ### Backlog
 
+- [Task 0015: Implement Mission 02 Charge The CORE](backlog/0015-implement-mission-02-charge-the-core.md)
+
 ### Done
 
 - [Task 0001: Create Browser Application Skeleton](done/0001-create-browser-application-skeleton.md)

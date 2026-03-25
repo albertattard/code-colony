@@ -45,6 +45,25 @@ The intended mission loop is:
 
 This loop should stay short. A learner should be able to move from code change to visible outcome quickly.
 
+## Mission Progression
+
+Mission progression should feel continuous rather than menu-driven.
+
+For the early missions:
+
+- completing a mission should unlock a visible `Next` action
+- selecting `Next` should load the next mission page directly
+- the next mission page should reuse the same layout as the previous mission unless the mission spec says otherwise
+- the next mission briefing should open immediately on first load of that mission
+
+When one mission builds directly on the previous one, the learner's submitted code should carry forward into the next mission.
+
+This carried code should:
+
+- remain editable in the new mission
+- serve as the starting point for the next task
+- reinforce that the learner is extending a working solution rather than starting over
+
 ## Mission Structure
 
 Each mission should include:
@@ -124,6 +143,8 @@ This panel should provide:
 - a clear `Reset` action
 
 The code surface should remain focused on learner-written logic, not project structure.
+
+When a mission builds on a previous mission, the code panel should preload the learner's most recent successful code from that previous mission.
 
 ### 4. Simulation Panel
 
@@ -242,6 +263,12 @@ For example:
 - a charge command restores battery only when the CORE is on a docking station tile
 - a repair command affects the current tile or object if repair is possible
 - a scan command reveals information and records the result in feedback
+
+For early battery behavior:
+
+- `core.charge()` should restore exactly one battery segment per successful call
+- battery charge should be capped at the unit's maximum capacity
+- calling `core.charge()` at full battery should not fail the mission and should not increase the battery beyond full
 
 If an action cannot be completed, the game should report that clearly.
 

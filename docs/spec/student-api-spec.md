@@ -134,6 +134,17 @@ Examples:
 
 Early missions should use these sparingly.
 
+## Early Mission Progression Rules
+
+The first missions should reuse the same learner-facing `CORE` type while gradually changing how the learner uses it.
+
+Expected progression:
+
+- Mission 01 introduces `CORE.connect();` as a standalone static call
+- Mission 02 introduces storing the returned `CORE` in a local variable and calling an instance method on it
+
+This means Mission 02 should explicitly teach that `CORE.connect()` returns a `CORE` instance that can be reused for later actions.
+
 ## Mission Exposure Model
 
 The game should use a layered API model:
@@ -162,6 +173,12 @@ For early planned station interactions:
 
 - `core.charge()` should succeed only when the CORE is on a docking station tile
 - `core.repair()` should succeed only when the CORE is on a repair station tile
+
+For early battery behavior:
+
+- `core.charge()` should restore one battery segment per successful call
+- charging should stop at the unit's maximum capacity
+- calling `core.charge()` while already full should leave the battery unchanged and should not be treated as an error
 
 These actions should not happen automatically when the CORE enters the relevant tile. The learner must call the method explicitly.
 
@@ -256,6 +273,13 @@ An early mission may present code like:
 
 ```java
 CORE.connect();
+```
+
+A following mission may build on that code like:
+
+```java
+var core = CORE.connect();
+core.charge();
 ```
 
 Later missions may present code like:

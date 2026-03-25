@@ -81,8 +81,11 @@ Before implementing a feature, identify which existing spec governs it. If none 
 ## Documentation Rules
 
 - Keep specs concise and decision-oriented.
+- Treat approved specs as the source of truth for established product, gameplay, and learner-facing behavior.
 - Mark assumptions explicitly.
 - Separate confirmed decisions from open questions.
+- If behavior is discovered or clarified during development, update the relevant spec before treating that behavior as established.
+- Do not leave mission progression, carried learner state, or learner-facing rules implicit in code when they affect gameplay or teaching.
 - Update the relevant spec in the same change as any behavior-changing implementation.
 
 ## Architectural Decisions

@@ -254,7 +254,9 @@ After Mission 01 succeeds, the mission page should switch into a completed state
 - `Run` and `Reset` are hidden
 - a `Next` action is shown
 
-That action should move the player into the Mission 02 handoff flow, which prepares the next task of charging the depleted CORE.
+That action should move the player directly into Mission 02.
+
+Mission 02 should reuse the same page layout and should preload the learner's successful Mission 01 code so the player can build on what they already wrote.
 
 Extra learner code that does not interfere with the mission objective, such as `System.out.println(...)`, should not prevent success in Mission 01.
 
