@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public final class WakeTheCoreMissionService {
 
     private static final String DEFAULT_CODE = "";
+    private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-01.mp3";
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
@@ -47,6 +48,7 @@ public final class WakeTheCoreMissionService {
                 missionNarrative.summary(),
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
+                BRIEFING_AUDIO_PATH,
                 HINTS,
                 COMMANDS,
                 GRID,
@@ -62,6 +64,7 @@ public final class WakeTheCoreMissionService {
                 missionNarrative.summary(),
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
+                BRIEFING_AUDIO_PATH,
                 HINTS,
                 COMMANDS,
                 GRID,
@@ -71,7 +74,7 @@ public final class WakeTheCoreMissionService {
     }
 
     public record MissionPage(String missionTitle, String missionSummary, String missionObjective,
-                              String briefingHtml,
+                              String briefingHtml, String briefingAudioPath,
                               List<String> missionHints, List<CommandReference> availableCommands,
                               List<GridTile> gridTiles, String code, WakeTheCoreRunResult runResult) {
     }

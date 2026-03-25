@@ -56,6 +56,13 @@ For the first playable version, the briefing should present:
 
 The briefing should open as a modal when the mission page loads and should be reopenable through a visible `Briefing` button on the mission screen.
 
+Mission 01 may also provide optional voiced playback inside the briefing modal, provided that:
+
+- the written briefing text remains visible
+- the player can proceed without listening
+- the audio is a rendering of the approved Mission 01 briefing text rather than a separate source of truth
+- closing the briefing stops any current playback
+
 ## Mission Layout
 
 The mission takes place in a single small maintenance room.

@@ -16,8 +16,15 @@
         <div class="narrative-markdown" th:utext="${briefingHtml}">
             <p>Mission briefing text.</p>
         </div>
-        <div class="actions briefing-actions">
-            <button class="primary-action" type="button" data-briefing-close>Close Briefing</button>
+        <div class="briefing-controls">
+            <div class="briefing-audio" th:if="${!#strings.isEmpty(briefingAudioPath)}">
+                <audio controls preload="none">
+                    <source th:src="${briefingAudioPath}" type="audio/mpeg">
+                </audio>
+            </div>
+            <div class="actions briefing-actions">
+                <button class="primary-action" type="button" data-briefing-close>Close Briefing</button>
+            </div>
         </div>
     </section>
 </div>
@@ -62,7 +69,6 @@
               hx-post="/missions/wake-the-core/run"
               hx-target="#mission-results"
               hx-swap="outerHTML">
-            <label class="code-label" for="code">Learner-editable snippet</label>
             <textarea id="code" name="code" spellcheck="false" th:text="${code}"></textarea>
             <div class="inline-reference">
                 <h3>Available Commands</h3>
@@ -92,8 +98,13 @@
         if (!briefingModal) {
             return;
         }
+        const briefingAudio = briefingModal.querySelector("audio");
 
         const setBriefingOpen = (open) => {
+            if (!open && briefingAudio) {
+                briefingAudio.pause();
+                briefingAudio.currentTime = 0;
+            }
             briefingModal.hidden = !open;
             document.body.classList.toggle("modal-open", open);
         };

@@ -224,6 +224,20 @@ h1 {
     margin: 0;
 }
 
+.briefing-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.briefing-audio audio {
+    width: 22rem;
+    max-width: 100%;
+    flex: 0 0 auto;
+}
+
 .briefing-actions {
     margin-top: 0;
 }
@@ -352,11 +366,17 @@ textarea {
 }
 
 .secondary-button {
-    padding: 0;
-    border: 0;
-    background: transparent;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--panel-border);
+    background: #f7efe4;
     cursor: pointer;
     font: inherit;
+    box-shadow: 0 0.35rem 0.6rem rgba(73, 52, 24, 0.08);
+}
+
+.secondary-button:hover,
+.secondary-button:focus-visible {
+    background: #f1e4d2;
 }
 
 .actions {

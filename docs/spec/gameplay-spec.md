@@ -99,6 +99,8 @@ If a replay control for briefing audio is provided, it should be simple and shou
 
 The modal should focus on the immediate mission task and should not repeat the full game-level introduction.
 
+If the player closes a mission briefing while its audio is playing, the audio should stop immediately. Reopening the briefing should not resume playback automatically.
+
 The content shown in this panel should be sourced from mission content files so that briefing text can evolve without template rewrites and can be reused for voice generation.
 
 ### 2. Command Reference Panel

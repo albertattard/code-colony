@@ -70,12 +70,24 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("[data-briefing-modal]").textContent()).contains("CORE.connect();");
         assertThat(page.locator("[data-briefing-modal]").textContent())
                 .contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
+        assertThat(page.locator("[data-briefing-modal] audio source").getAttribute("src"))
+                .isEqualTo("/audio/briefings/mission-01.mp3");
+        page.locator("[data-briefing-modal] audio").evaluate("""
+                audio => {
+                    audio.currentTime = 2;
+                    return audio.currentTime;
+                }
+                """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Close Briefing"))
                 .click();
         page.locator("[data-briefing-modal]")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isFalse();
+        assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.currentTime"))
+                .isEqualTo(0);
+        assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.paused"))
+                .isEqualTo(true);
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
@@ -91,6 +103,8 @@ class MissionBrowserSmokeTest {
         page.locator("[data-briefing-modal]")
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
+        assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.currentTime"))
+                .isEqualTo(0);
         assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("CORE.connect();");
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Close Briefing"))
