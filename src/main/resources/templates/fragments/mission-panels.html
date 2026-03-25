@@ -9,15 +9,15 @@
                   th:classappend="${#strings.equals(runResult.coreStatus.state, 'Online')} ? ' online' : ' offline'">Offline</span>
         </div>
         <dl class="status-list">
-            <div class="status-row">
+            <div class="status-row" th:if="${!#strings.isEmpty(runResult.coreStatus.battery)}">
                 <dt>Battery</dt>
                 <dd th:text="${runResult.coreStatus.battery}">Full</dd>
             </div>
-            <div class="status-row">
+            <div class="status-row" th:if="${!#strings.isEmpty(runResult.coreStatus.dock)}">
                 <dt>Dock</dt>
                 <dd th:text="${runResult.coreStatus.dock}">Connected</dd>
             </div>
-            <div class="status-row">
+            <div class="status-row" th:if="${!#strings.isEmpty(runResult.coreStatus.position)}">
                 <dt>Position</dt>
                 <dd th:text="${runResult.coreStatus.position}">B1</dd>
             </div>

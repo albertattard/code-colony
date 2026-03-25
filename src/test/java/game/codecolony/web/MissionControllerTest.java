@@ -30,11 +30,16 @@ class MissionControllerTest {
         assertThat(body).contains("Maintenance Room Grid");
         assertThat(body).contains("Code Console");
         assertThat(body).contains("CORE Status");
+        assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
+        assertThat(body).doesNotContain("Battery</dt>");
+        assertThat(body).doesNotContain("Dock</dt>");
+        assertThat(body).doesNotContain("Position</dt>");
+        assertThat(body).contains("No telemetry available while offline.");
     }
 
     @Test
-    void runEndpointReturnsPlaceholderFragmentForHtmx() throws IOException, InterruptedException {
-        final String formBody = "code=" + URLEncoder.encode("core.moveEast();", StandardCharsets.UTF_8);
+    void runEndpointReturnsMissionResultFragmentForHtmx() throws IOException, InterruptedException {
+        final String formBody = "code=" + URLEncoder.encode("CORE.connect();", StandardCharsets.UTF_8);
         final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/wake-the-core/run"))
                 .header("HX-Request", "true")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -44,9 +49,9 @@ class MissionControllerTest {
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.body()).contains("Placeholder Run Complete");
+        assertThat(response.body()).contains("CORE Online");
         assertThat(response.body()).contains("CORE Status");
-        assertThat(response.body()).contains("Offline");
+        assertThat(response.body()).contains("Online");
     }
 
     private URI baseUri(final String path) {

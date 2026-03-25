@@ -53,12 +53,12 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
+        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Battery");
+        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Dock");
+        assertThat(page.locator(".status-panel").textContent()).doesNotContain("Position");
+        assertThat(page.locator("textarea[name='code']").inputValue()).isEmpty();
 
-        page.locator("textarea[name='code']").fill("""
-                var core = CORE.connect();
-                core.moveRight();
-                core.repair();
-                """);
+        page.locator("textarea[name='code']").fill("CORE.connect();");
         final Response response = page.waitForResponse(
                 runResponse -> runResponse.url().contains("/missions/wake-the-core/run"),
                 () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
@@ -69,9 +69,9 @@ class MissionBrowserSmokeTest {
         page.waitForLoadState();
 
         assertThat(page.locator(".status-panel").textContent()).contains("Online");
-        assertThat(page.locator(".feedback-panel").textContent()).contains("Placeholder Run Complete");
+        assertThat(page.locator(".feedback-panel").textContent()).contains("CORE Online");
         assertThat(page.locator(".feedback-panel").textContent())
-                .contains("Code was submitted successfully to the placeholder run endpoint.");
+                .contains("Control link established. CORE-01 is online.");
     }
 
     private String baseUrl() {

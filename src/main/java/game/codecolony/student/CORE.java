@@ -1,0 +1,47 @@
+package game.codecolony.student;
+
+import game.codecolony.runtime.ConnectCoreResult;
+import game.codecolony.runtime.ConnectNextCoreCommand;
+import game.codecolony.runtime.MissionCommandResult;
+import game.codecolony.runtime.MissionExecutionException;
+import game.codecolony.runtime.MissionSimulator;
+
+public final class CORE {
+
+    private static MissionSimulator simulator;
+
+    private final int coreId;
+
+    private CORE(final int coreId) {
+        this.coreId = coreId;
+    }
+
+    public static void attachSimulator(final MissionSimulator missionSimulator) {
+        simulator = missionSimulator;
+    }
+
+    public static void detachSimulator() {
+        simulator = null;
+    }
+
+    public static CORE connect() {
+        final MissionCommandResult result = simulator().execute(new ConnectNextCoreCommand());
+        if (result instanceof ConnectCoreResult connectCoreResult) {
+            return new CORE(connectCoreResult.coreId());
+        }
+
+        throw new MissionExecutionException("Unable to connect to a CORE unit.");
+    }
+
+    public int coreId() {
+        return coreId;
+    }
+
+    private static MissionSimulator simulator() {
+        if (simulator == null) {
+            throw new IllegalStateException("Mission simulator is not attached.");
+        }
+
+        return simulator;
+    }
+}

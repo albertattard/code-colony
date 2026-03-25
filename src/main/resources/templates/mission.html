@@ -13,33 +13,25 @@
         <div class="header-copy">
             <p class="eyebrow">Code Colony</p>
             <h1 th:text="${missionTitle}">Mission 01: Wake The CORE</h1>
-            <p class="lead" th:text="${missionSummary}">Wake the docked CORE unit, move it to the relay cabinet, and restore relay access.</p>
+            <p class="lead" th:text="${missionSummary}">Re-establish a control link and bring the docked CORE online.</p>
         </div>
         <div class="header-objective">
             <p class="objective-label">Primary objective</p>
-            <p class="objective-text" th:text="${missionObjective}">Connect to CORE-01, move one tile right, and repair the damaged relay.</p>
+            <p class="objective-text" th:text="${missionObjective}">Call CORE.connect(); to bring CORE-01 online.</p>
         </div>
     </header>
 
     <section class="panel grid-panel">
         <div class="section-header">
             <h2>Maintenance Room Grid</h2>
-            <span class="panel-badge">3 x 3 room</span>
         </div>
-        <div class="grid-shell">
-            <div class="mission-grid">
-                <div class="grid-tile"
-                     th:each="tile : ${gridTiles}"
-                     th:classappend="' tile-' + ${tile.cellType}">
-                    <span class="tile-label" th:text="${tile.shortLabel}">.</span>
-                    <span class="tile-name" th:text="${tile.fullLabel}">Walkable floor tile</span>
-                </div>
-            </div>
-            <div class="grid-legend">
-                <p class="legend-line"><strong>C</strong> Docked CORE unit</p>
-                <p class="legend-line"><strong>R</strong> Damaged relay cabinet</p>
-                <p class="legend-line"><strong>.</strong> Walkable floor tile</p>
-                <p class="legend-line"><strong>W</strong> Wall or machinery edge</p>
+        <div class="mission-grid">
+            <div class="grid-tile"
+                 th:each="tile : ${gridTiles}"
+                 th:classappend="' tile-' + ${tile.cellType}">
+                <span class="tile-label" th:if="${!#strings.isEmpty(tile.shortLabel)}"
+                      th:text="${tile.shortLabel}">C</span>
+                <span class="tile-name" th:text="${tile.fullLabel}">Walkable floor tile</span>
             </div>
         </div>
     </section>

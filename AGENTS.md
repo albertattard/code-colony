@@ -125,6 +125,13 @@ When asked to `commit changes`, use this workflow:
 5. Show the commit message.
 6. Ask for confirmation before pushing upstream.
 
+### `build`
+
+When asked to `build`, use this workflow:
+
+1. Build and verify the project with `./mvnw clean verify`.
+2. Start the application with `./mvnw spring-boot:run` as a long-running process.
+
 ## Implementation Rules
 
 - Do not expose engine complexity to learners unless the lesson requires it.

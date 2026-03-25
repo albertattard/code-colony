@@ -13,7 +13,6 @@
     --online: #24734b;
     --offline: #7c3b2e;
     --tile-floor: #efe3cf;
-    --tile-wall: #d4c0a2;
     --tile-core: #c9ebf5;
     --tile-relay: #f5d4b8;
 }
@@ -88,7 +87,6 @@ h1 {
 .panel-summary,
 .objective-text,
 .status-note,
-.grid-legend,
 .hint-list,
 .command-entry dd {
     color: var(--muted);
@@ -115,7 +113,6 @@ h1 {
     margin-bottom: 0.75rem;
 }
 
-.panel-badge,
 .status-pill {
     display: inline-flex;
     align-items: center;
@@ -126,11 +123,6 @@ h1 {
     font-weight: 700;
 }
 
-.panel-badge {
-    background: #f7eddc;
-    color: #7b5627;
-}
-
 .status-pill {
     background: #f7ddd5;
     color: var(--offline);
@@ -139,11 +131,6 @@ h1 {
 .status-pill.online {
     background: #d7efdf;
     color: var(--online);
-}
-
-.grid-shell {
-    display: grid;
-    gap: 1rem;
 }
 
 .mission-grid {
@@ -165,10 +152,6 @@ h1 {
     background: var(--tile-floor);
 }
 
-.tile-wall {
-    background: var(--tile-wall);
-}
-
 .tile-core {
     background: var(--tile-core);
     border-color: #89b8c8;
@@ -187,16 +170,6 @@ h1 {
 .tile-name {
     font-size: 0.9rem;
     color: var(--muted);
-}
-
-.grid-legend {
-    display: grid;
-    gap: 0.4rem;
-    padding-top: 0.25rem;
-}
-
-.legend-line {
-    margin: 0;
 }
 
 .code-label {
