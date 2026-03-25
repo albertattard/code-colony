@@ -72,7 +72,6 @@
     <section class="panel code-panel">
         <div class="section-header">
             <h2>Code Console</h2>
-            <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
         </div>
         <form th:action="@{/missions/wake-the-core/run}"
               method="post"
@@ -93,6 +92,7 @@
                 <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
             </ul>
             <div class="actions">
+                <a class="secondary-action" th:href="@{/missions/wake-the-core}">Reset</a>
                 <button class="primary-action" type="submit">Run</button>
             </div>
         </form>

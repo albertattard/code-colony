@@ -526,6 +526,8 @@ textarea {
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
 }
 
 .briefing-trigger {
