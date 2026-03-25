@@ -1,69 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Colony | Briefing</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
+
 <body>
-<main class="layout intro-layout">
-    <header class="panel intro-hero">
-        <div>
-            <p class="eyebrow">Remote Engineer Briefing</p>
+    <main class="layout intro-layout">
+        <header class="panel mission-header">
+            <div class="header-copy">
+                <p class="eyebrow">Code Colony</p>
+                <h1 th:text="${missionTitle}">Briefing</h1>
+                <p class="lead" th:text="${missionSummary}">Re-establish a control link and bring the docked CORE online.</p>
+            </div>
+            <div class="header-objective">
+                <p class="objective-label">Primary objective</p>
+                <p class="objective-text" th:text="${missionObjective}">Something!!</p>
+            </div>
+        </header>
+
+        <section class="panel intro-card intro-briefing">
+            <p class="eyebrow">Helix Dynamics Briefing</p>
             <h1>Code Colony</h1>
-            <p class="lead">
-                The colony has gone silent. From a central station with only partial systems restored,
-                you will reconnect to dormant CORE maintenance robots and bring the colony back online.
-            </p>
-        </div>
-        <div class="header-objective">
-            <p class="objective-label">First Assignment</p>
-            <p class="objective-text">
-                Start with one small mission: establish a control link to a docked CORE unit.
-            </p>
-        </div>
-    </header>
-
-    <section class="panel intro-card intro-briefing">
-        <div class="intro-section">
-            <div class="section-header">
-                <h2>Introduction</h2>
+            <div class="intro-copy">
+                <p class="panel-copy">
+                    You are an engineer employed by Helix Dynamics, a leader in sustainable off-world development
+                    and the driving force behind humanity's expansion beyond Earth. From your command station in
+                    orbit around the planet Eryndor-IV, you have been assigned to oversee the recovery of one of
+                    the company's remote colony sites following an unexpected systems outage.
+                </p>
+                <p class="panel-copy">
+                    While the situation has been classified as contained, communication with the surface remains
+                    limited. As a precaution, all direct deployment has been suspended.
+                </p>
+                <p class="panel-copy">
+                    Instead, you will operate CORE units (<em>Colony Operations and Repair Engineers</em>),
+                    specialized robotic systems designed to maintain infrastructure, execute complex directives,
+                    and ensure continuity in challenging environments. With partial access to the colony's network
+                    restored, your role is to re-establish critical systems, assess operational integrity, and
+                    return the site to standard function.
+                </p>
+                <p class="panel-copy">
+                    Helix Dynamics is committed to transparency, safety, and the continued success of its colonies.
+                </p>
+                <p class="panel-copy">Your work will ensure that commitment is upheld.</p>
             </div>
-            <p class="panel-copy">
-                You are the remote engineer for the recovery effort. Your job is to restore damaged systems,
-                direct CORE maintenance units, and uncover what caused the colony to fail.
-            </p>
-        </div>
-
-        <div class="intro-section">
-            <div class="section-header">
-                <h2>How Missions Work</h2>
-            </div>
-            <ul class="intro-list">
-                <li>Read the mission objective.</li>
-                <li>Enter a small Java command in the browser.</li>
-                <li>Click <strong>Run</strong> to execute it.</li>
-                <li>Watch the result and adjust your code if needed.</li>
-            </ul>
-            <p class="panel-copy">
-                You do not need an IDE or local Java setup. The game provides the coding surface for you.
-            </p>
-        </div>
-
-        <div class="intro-section">
-            <div class="section-header">
-                <h2>Mission 01</h2>
-            </div>
-            <p class="panel-copy">
-                The first mission is intentionally small. You will bring a docked CORE online with one simple
-                method call, then use later missions to give that CORE more detailed instructions.
-            </p>
             <div class="actions intro-actions">
-                <a class="primary-action" th:href="@{/missions/wake-the-core}">Start Mission 01</a>
+                <a class="primary-action" th:href="@{/missions/wake-the-core}">Start Mission</a>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 </body>
+
 </html>

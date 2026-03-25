@@ -6,6 +6,8 @@ This document defines the first playable mission in Code Colony.
 
 Its purpose is to establish the player's initial understanding of the game world, the coding interface, and the act of controlling a CORE unit through Java code.
 
+This mission should inherit its broader narrative framing from `docs/spec/story-spec.md` and only define the story details specific to this opening recovery slice.
+
 ## Mission Summary
 
 The player has restored enough access to open a maintenance room with standby power. Inside the room, one CORE unit is still plugged into a charging dock and fully charged. A damaged relay cabinet in the same room blocks wider access to the colony network.

@@ -26,10 +26,11 @@ class MissionControllerTest {
                 .build();
         final String body = send(request);
 
-        assertThat(body).contains("Remote Engineer Briefing");
+        assertThat(body).contains("Helix Dynamics Briefing");
         assertThat(body).contains("Code Colony");
-        assertThat(body).contains("You do not need an IDE or local Java setup.");
-        assertThat(body).contains("Start Mission 01");
+        assertThat(body).contains("Eryndor-IV");
+        assertThat(body).contains("Colony Operations and Repair Engineers");
+        assertThat(body).contains("Start Mission");
         assertThat(body).contains("/missions/wake-the-core");
         assertThat(body).doesNotContain("Mission 01: Wake The CORE");
     }

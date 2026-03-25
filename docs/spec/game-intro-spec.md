@@ -8,6 +8,8 @@ Its purpose is to give the player enough narrative and interface context to begi
 
 This screen is part of the product experience and part of the teaching experience. It should reduce uncertainty before the learner sees the first coding task.
 
+The narrative framing used here should align with `docs/spec/story-spec.md`.
+
 ## Scope
 
 This spec defines:

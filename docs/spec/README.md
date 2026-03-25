@@ -7,6 +7,7 @@ These documents define the product, learning model, student programming surface,
 ## Specification Index
 
 - [Product Spec](product-spec.md)
+- [Story Spec](story-spec.md)
 - [Learning Spec](learning-spec.md)
 - [Student API Spec](student-api-spec.md)
 - [Gameplay Spec](gameplay-spec.md)

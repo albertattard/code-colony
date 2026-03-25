@@ -49,12 +49,13 @@ class MissionBrowserSmokeTest {
         page.navigate(baseUrl() + "/",
                 new Page.NavigateOptions().setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
 
-        assertThat(page.locator("h1").textContent()).contains("Code Colony");
-        assertThat(page.locator("body").textContent()).contains("Remote Engineer Briefing");
-        assertThat(page.locator("body").textContent()).contains("You do not need an IDE or local Java setup.");
+        assertThat(page.locator(".intro-briefing h1").textContent()).contains("Code Colony");
+        assertThat(page.locator("body").textContent()).contains("Helix Dynamics Briefing");
+        assertThat(page.locator("body").textContent()).contains("Eryndor-IV");
+        assertThat(page.locator("body").textContent()).contains("Colony Operations and Repair Engineers");
 
         page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
-                new Page.GetByRoleOptions().setName("Start Mission 01"))
+                new Page.GetByRoleOptions().setName("Start Mission"))
                 .click();
         page.waitForURL("**/missions/wake-the-core");
 

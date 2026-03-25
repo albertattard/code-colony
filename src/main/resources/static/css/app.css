@@ -132,21 +132,15 @@ h1 {
     gap: 1.5rem;
 }
 
-.intro-section + .intro-section {
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
+.intro-copy {
+    display: grid;
+    gap: 1rem;
 }
 
 .panel-copy {
     margin: 0;
     font-size: 1rem;
     line-height: 1.6;
-}
-
-.intro-list {
-    margin: 0;
-    padding-left: 1.2rem;
-    line-height: 1.7;
 }
 
 .intro-actions {
