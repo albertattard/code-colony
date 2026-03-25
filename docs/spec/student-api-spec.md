@@ -102,6 +102,7 @@ Instance action examples:
 - `core.move()`
 - `core.rotateClockwise()`
 - `core.rotateCounterClockwise()`
+- `core.charge()`
 - `core.repair()`
 - `core.activate()`
 - `core.scan()`
@@ -149,9 +150,22 @@ Later missions may introduce:
 
 - `var core = CORE.connect();`
 - `CORE.connect(int number)` to connect to a specific mission-defined CORE
-- instance methods such as `move()`, `rotateClockwise()`, `rotateCounterClockwise()`, and `repair()`
+- instance methods such as `move()`, `rotateClockwise()`, `rotateCounterClockwise()`, `charge()`, and `repair()`
 
 Internally, later instance methods may issue commands against the run's mission simulator, which then applies world rules and records mission events. This is an implementation detail and should not complicate the learner-facing API.
+
+### Station-Dependent Actions
+
+Some instance actions should depend on the CORE unit's current position in the mission space.
+
+For early planned station interactions:
+
+- `core.charge()` should succeed only when the CORE is on a docking station tile
+- `core.repair()` should succeed only when the CORE is on a repair station tile
+
+These actions should not happen automatically when the CORE enters the relevant tile. The learner must call the method explicitly.
+
+If the learner calls a station-dependent action from the wrong location, runtime feedback should explain that the required station is not present on the current tile.
 
 ## Java Features By Stage
 
@@ -250,6 +264,14 @@ Later missions may present code like:
 var core = CORE.connect();
 core.rotateClockwise();
 core.move();
+```
+
+or:
+
+```java
+var core = CORE.connect();
+core.move();
+core.charge();
 ```
 
 The learner writes code, clicks run, watches the CORE unit act on screen, and receives feedback about whether the mission objective was completed.

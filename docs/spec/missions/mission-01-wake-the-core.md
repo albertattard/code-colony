@@ -10,7 +10,7 @@ This mission should inherit its broader narrative framing from `docs/spec/story-
 
 ## Mission Summary
 
-The player has restored enough access to open a maintenance room with standby power. Inside the room, one CORE unit is still plugged into a charging dock and fully charged. A damaged relay cabinet in the same room blocks wider access to the colony network.
+The player has restored enough access to open a maintenance room with standby power. Inside the room, one CORE unit remains docked at a charging station. The same room also contains a repair station that will be used in later recovery work.
 
 The player must establish a connection to the CORE unit.
 
@@ -82,26 +82,25 @@ Initial proposed layout:
 
 ```text
 +---+---+---+
-| W | W | W |
+| . | . | . |
 +---+---+---+
-| D | C | R |
+| D | . | S |
 +---+---+---+
-| W | . | W |
+| . | . | . |
 +---+---+---+
 ```
 
 Legend:
 
-- `W` = wall or room machinery edge
-- `D` = docking station
+- `D` = docking station tile, currently occupied by the CORE
 - `C` = CORE unit starting position
-- `R` = damaged relay cabinet
+- `S` = repair station
 - `.` = walkable floor tile
 
 Interpretation:
 
-- The CORE unit starts docked in the center-left area of the room.
-- The relay cabinet is reachable by moving right from the start position.
+- The CORE unit starts on the docking station in the center-left area of the room.
+- The repair station is reachable by moving right from the start position.
 - The room is intentionally small and highly readable.
 
 The final visual presentation may be richer than the ASCII map, but the underlying logic should remain simple.
@@ -114,11 +113,21 @@ Key visual elements:
 
 - a charging dock or magnetic cradle
 - a visible cable, clamp, or light indicating the CORE is plugged in
-- a fully charged status light on the dock
-- a damaged relay cabinet with warning lights or sparks
+- a docking station tile that can later be used with `charge()`
+- a repair station tile that can later be used with `repair()`
 - industrial floor tiles with a clear walkable path
 
 The first mission should use a top-down view, not an isometric view, so directional commands remain easy to understand.
+
+For the first visual pass, the room should prefer a pixel-art style tile presentation over plain bordered content boxes.
+
+This should mean:
+
+- square tiles with crisp edges
+- an industrial floor pattern that reads as a game space rather than a form layout
+- a small authored-looking CORE silhouette on its dock
+- a damaged relay tile that looks distinct from ordinary floor space
+- labels that support readability without overwhelming the artwork
 
 ## Screen Layout
 
@@ -163,6 +172,13 @@ Suggested connected state:
 - `Dock: Released` or `Dock: Ready`
 
 This change is important because it teaches that `CORE.connect()` is not just syntax. It changes the world and the robot state.
+
+Later missions in this same room may also introduce station-dependent actions:
+
+- the docking station allows charging only when the CORE is on that tile and the learner calls `core.charge()`
+- the repair station allows repair only when the CORE is on that tile and the learner calls `core.repair()`
+
+These effects should not happen automatically just because the CORE enters the tile.
 
 ## Available Commands
 

@@ -206,6 +206,7 @@ The simulation should resolve each action one step at a time.
 For example:
 
 - a movement command updates the CORE unit's position if the path is valid
+- a charge command restores battery only when the CORE is on a docking station tile
 - a repair command affects the current tile or object if repair is possible
 - a scan command reveals information and records the result in feedback
 
@@ -214,8 +215,11 @@ If an action cannot be completed, the game should report that clearly.
 Examples:
 
 - the path is blocked
+- there is no docking station here
 - there is nothing to repair here
 - the target system is already active
+
+Entering a special tile should not automatically trigger its effect unless a mission explicitly says so. If the player wants to charge or repair the CORE, they should need to call the relevant method while the CORE is on the appropriate station tile.
 
 ## On-Screen Playback
 
