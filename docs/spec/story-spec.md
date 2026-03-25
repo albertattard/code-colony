@@ -154,6 +154,10 @@ Each reveal should support the player's motivation to continue restoring the col
 
 When voice tracks are used, the written script should remain the canonical story text. Audio should be treated as a presentation layer derived from approved written content.
 
+Player-facing narrative text should be stored as runtime content files rather than embedded primarily in templates or Java classes. Specifications define what the content must communicate, but the running game should load approved intro, mission, and lore text from application resources.
+
+This separation keeps lore editable without code changes and supports text-to-speech generation from the same approved written source.
+
 ## Relationship To Mission Specs
 
 Mission specs should not attempt to redefine the broader narrative frame.

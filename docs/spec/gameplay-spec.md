@@ -59,6 +59,8 @@ Each mission should include:
 
 Mission briefings may also include optional voiced playback, provided that the written text remains visible and readable on screen.
 
+Where practical, mission briefing text should come from runtime content files rather than being hardcoded in templates. This keeps the written briefing as the canonical source for both on-screen presentation and derived audio.
+
 Each mission must identify its primary learning concept and should not depend on hidden rules that the player cannot infer from the UI or mission text.
 
 ## Browser Mission Layout
@@ -96,6 +98,8 @@ This should let the learner recover the mission instructions without leaving the
 If a replay control for briefing audio is provided, it should be simple and should not compete with the primary mission action.
 
 The modal should focus on the immediate mission task and should not repeat the full game-level introduction.
+
+The content shown in this panel should be sourced from mission content files so that briefing text can evolve without template rewrites and can be reused for voice generation.
 
 ### 2. Command Reference Panel
 
