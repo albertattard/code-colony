@@ -2,7 +2,7 @@
 
 ## Status
 
-Backlog
+Done
 
 ## Summary
 
@@ -47,13 +47,13 @@ This task should not include:
 
 ## Acceptance Criteria
 
-- [ ] Visiting the main entry point shows a game intro screen instead of landing directly on Mission 01.
-- [ ] The intro screen explains the player's role and the colony situation in concise language.
-- [ ] The intro screen explains that the player writes small Java commands in the browser and runs them from the game interface.
-- [ ] The intro screen prepares the player for Mission 01 without replacing the mission briefing.
-- [ ] The intro screen provides one clear primary action to start Mission 01.
-- [ ] Starting Mission 01 from the intro screen takes the player to the existing mission page.
-- [ ] Automated tests cover the intro screen and the transition into Mission 01.
+- [x] Visiting the main entry point shows a game intro screen instead of landing directly on Mission 01.
+- [x] The intro screen explains the player's role and the colony situation in concise language.
+- [x] The intro screen explains that the player writes small Java commands in the browser and runs them from the game interface.
+- [x] The intro screen prepares the player for Mission 01 without replacing the mission briefing.
+- [x] The intro screen provides one clear primary action to start Mission 01.
+- [x] Starting Mission 01 from the intro screen takes the player to the existing mission page.
+- [x] Automated tests cover the intro screen and the transition into Mission 01.
 
 ## Notes
 

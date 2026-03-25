@@ -62,6 +62,8 @@ This keeps the experience focused on behavior rather than Java project structure
 
 When the learner runs their code, the system should execute it in a predefined context that gives access to the student-facing `CORE` API.
 
+Within the game world, `CORE` means `Colony Operations and Repair Engineer`.
+
 Each learner run should execute in its own worker JVM process.
 
 In early missions, the learner should not need to construct objects manually. The game should expose a static entry point:

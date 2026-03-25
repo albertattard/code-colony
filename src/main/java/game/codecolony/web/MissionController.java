@@ -22,11 +22,6 @@ public class MissionController {
         this.missionService = missionService;
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:" + MISSION_PATH;
-    }
-
     @GetMapping(MISSION_PATH)
     public String mission(final Model model) {
         populateModel(model, missionService.initialPage());

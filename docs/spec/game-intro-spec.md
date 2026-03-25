@@ -75,6 +75,8 @@ It should establish:
 - only partial systems have been restored
 - CORE units are the player's way of acting on the colony
 
+The intro should define `CORE` as `Colony Operations and Repair Engineer` the first time the term is introduced.
+
 The tone should be intriguing, not dramatic or frightening.
 
 ### 2. Your Role

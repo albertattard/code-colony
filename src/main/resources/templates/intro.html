@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Colony | Briefing</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main class="layout intro-layout">
+    <header class="panel intro-hero">
+        <div>
+            <p class="eyebrow">Remote Engineer Briefing</p>
+            <h1>Code Colony</h1>
+            <p class="lead">
+                The colony has gone silent. From a central station with only partial systems restored,
+                you will reconnect to dormant CORE maintenance robots and bring the colony back online.
+            </p>
+        </div>
+        <div class="header-objective">
+            <p class="objective-label">First Assignment</p>
+            <p class="objective-text">
+                Start with one small mission: establish a control link to a docked CORE unit.
+            </p>
+        </div>
+    </header>
+
+    <section class="panel intro-card intro-briefing">
+        <div class="intro-section">
+            <div class="section-header">
+                <h2>Introduction</h2>
+            </div>
+            <p class="panel-copy">
+                You are the remote engineer for the recovery effort. Your job is to restore damaged systems,
+                direct CORE maintenance units, and uncover what caused the colony to fail.
+            </p>
+        </div>
+
+        <div class="intro-section">
+            <div class="section-header">
+                <h2>How Missions Work</h2>
+            </div>
+            <ul class="intro-list">
+                <li>Read the mission objective.</li>
+                <li>Enter a small Java command in the browser.</li>
+                <li>Click <strong>Run</strong> to execute it.</li>
+                <li>Watch the result and adjust your code if needed.</li>
+            </ul>
+            <p class="panel-copy">
+                You do not need an IDE or local Java setup. The game provides the coding surface for you.
+            </p>
+        </div>
+
+        <div class="intro-section">
+            <div class="section-header">
+                <h2>Mission 01</h2>
+            </div>
+            <p class="panel-copy">
+                The first mission is intentionally small. You will bring a docked CORE online with one simple
+                method call, then use later missions to give that CORE more detailed instructions.
+            </p>
+            <div class="actions intro-actions">
+                <a class="primary-action" th:href="@{/missions/wake-the-core}">Start Mission 01</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

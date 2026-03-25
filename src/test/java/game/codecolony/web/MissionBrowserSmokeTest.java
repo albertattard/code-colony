@@ -43,11 +43,20 @@ class MissionBrowserSmokeTest {
     }
 
     @Test
-    void missionPageRendersAndRunUpdatesCoreStatus() {
+    void introPageLeadsIntoMissionAndRunUpdatesCoreStatus() {
         final Page page = browser.newPage();
 
-        page.navigate(baseUrl() + "/missions/wake-the-core",
+        page.navigate(baseUrl() + "/",
                 new Page.NavigateOptions().setWaitUntil(com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED));
+
+        assertThat(page.locator("h1").textContent()).contains("Code Colony");
+        assertThat(page.locator("body").textContent()).contains("Remote Engineer Briefing");
+        assertThat(page.locator("body").textContent()).contains("You do not need an IDE or local Java setup.");
+
+        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Start Mission 01"))
+                .click();
+        page.waitForURL("**/missions/wake-the-core");
 
         assertThat(page.locator("h1").textContent()).contains("Mission 01: Wake The CORE");
         assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");

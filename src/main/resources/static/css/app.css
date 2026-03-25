@@ -25,11 +25,7 @@ body {
     margin: 0;
     font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
     color: var(--text);
-    background:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px),
-        linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
-    background-size: 1.5rem 1.5rem, 1.5rem 1.5rem, auto;
+    background: linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
 }
 
 .layout {
@@ -50,6 +46,8 @@ body {
 }
 
 .mission-header,
+.intro-hero,
+.intro-card,
 .grid-panel,
 .code-panel,
 .results-grid {
@@ -57,6 +55,16 @@ body {
 }
 
 .mission-header {
+    display: grid;
+    gap: 1rem;
+    align-items: start;
+}
+
+.intro-layout {
+    max-width: 64rem;
+}
+
+.intro-hero {
     display: grid;
     gap: 1rem;
     align-items: start;
@@ -84,10 +92,12 @@ h1 {
 }
 
 .lead,
+.panel-copy,
 .panel-summary,
 .objective-text,
 .status-note,
 .hint-list,
+.intro-list,
 .command-entry dd {
     color: var(--muted);
 }
@@ -111,6 +121,36 @@ h1 {
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 0.75rem;
+}
+
+.intro-card h2 {
+    margin: 0;
+}
+
+.intro-briefing {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.intro-section + .intro-section {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+}
+
+.panel-copy {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.intro-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    line-height: 1.7;
+}
+
+.intro-actions {
+    justify-content: flex-start;
 }
 
 .status-pill {
@@ -299,7 +339,8 @@ textarea {
 }
 
 @media (min-width: 62rem) {
-    .mission-header {
+    .mission-header,
+    .intro-hero {
         grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
     }
 

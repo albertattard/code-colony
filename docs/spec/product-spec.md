@@ -8,6 +8,8 @@ Code Colony
 
 Code Colony is a programming-driven strategy game in which the player acts as a remote engineer investigating a silent off-world colony. The player restores systems and uncovers the colony's fate by programming CORE maintenance units in Java.
 
+In the game world, `CORE` stands for `Colony Operations and Repair Engineer`.
+
 The game is designed first as a teaching tool for young learners who are curious about programming, using mission outcomes to make Java concepts concrete.
 
 The intended player experience is fully browser-based. Players do not install the game, use an IDE, or manage a local Java setup. They write Java code inside the game interface and run it directly from the browser.

@@ -20,6 +20,21 @@ class MissionControllerTest {
     private int port;
 
     @Test
+    void homePageRendersIntroScreen() throws IOException, InterruptedException {
+        final HttpRequest request = HttpRequest.newBuilder(baseUri("/"))
+                .GET()
+                .build();
+        final String body = send(request);
+
+        assertThat(body).contains("Remote Engineer Briefing");
+        assertThat(body).contains("Code Colony");
+        assertThat(body).contains("You do not need an IDE or local Java setup.");
+        assertThat(body).contains("Start Mission 01");
+        assertThat(body).contains("/missions/wake-the-core");
+        assertThat(body).doesNotContain("Mission 01: Wake The CORE");
+    }
+
+    @Test
     void missionPageRenders() throws IOException, InterruptedException {
         final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/wake-the-core"))
                 .GET()
