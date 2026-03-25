@@ -116,14 +116,16 @@ Task directories:
 
 When asked to `commit changes`, use this workflow:
 
-1. Compile the project and run tests when the repository contains code.
-2. Prepare a two-part commit message:
+1. Update the related task files and move completed tasks to `docs/tasks/done/` when applicable.
+2. Compile the project and run tests when the repository contains code.
+   If the build or tests fail, stop and fix the issue before committing unless the user explicitly approves committing a known failing state.
+3. Prepare a two-part commit message:
    - a short subject starting with a present-tense verb
    - a longer body describing the business reason for the change
-3. Commit only the files related to the current task.
-4. Exclude unrelated pending changes from the commit.
-5. Show the commit message.
-6. Ask for confirmation before pushing upstream.
+4. Commit only the files related to the current task.
+5. Exclude unrelated pending changes from the commit.
+6. Show the commit message.
+7. Ask for confirmation before pushing upstream.
 
 ### `build`
 

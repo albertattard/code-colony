@@ -22,10 +22,11 @@ Task files should:
 
 ### Backlog
 
-- [Task 0004: Implement First Learner Execution Slice](backlog/0004-implement-first-learner-execution-slice.md)
+- [Task 0005: Add Game Intro Screen](backlog/0005-add-game-intro-screen.md)
 
 ### Done
 
 - [Task 0001: Create Browser Application Skeleton](done/0001-create-browser-application-skeleton.md)
 - [Task 0002: Add Browser Smoke Tests](done/0002-add-browser-smoke-tests.md)
 - [Task 0003: Align Current Code With Coding Standards](done/0003-align-current-code-with-coding-standards.md)
+- [Task 0004: Implement First Learner Execution Slice](done/0004-implement-first-learner-execution-slice.md)

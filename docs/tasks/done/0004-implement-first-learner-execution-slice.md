@@ -2,7 +2,7 @@
 
 ## Status
 
-Backlog
+Done
 
 ## Summary
 
@@ -52,16 +52,16 @@ This task should not include:
 
 ## Acceptance Criteria
 
-- [ ] A Mission 01 submission is compiled as Java code rather than checked through string matching.
-- [ ] Learner code executes outside the web server JVM.
-- [ ] Compile failures are shown as learner-facing feedback.
-- [ ] Runtime failures are shown as learner-facing feedback.
-- [ ] Mission success is determined from observed execution behavior.
-- [ ] A Mission 01 run that calls `CORE.connect();` once changes the visible CORE status to online.
-- [ ] A Mission 01 run that does not call `CORE.connect();` leaves the CORE offline and shows learner-facing feedback.
-- [ ] A Mission 01 run that calls `CORE.connect()` more than once is treated as an error and shows learner-facing feedback.
-- [ ] The existing browser flow continues to work for Mission 01.
-- [ ] Automated tests cover the main success and failure paths.
+- [x] A Mission 01 submission is compiled as Java code rather than checked through string matching.
+- [x] Learner code executes outside the web server JVM.
+- [x] Compile failures are shown as learner-facing feedback.
+- [x] Runtime failures are shown as learner-facing feedback.
+- [x] Mission success is determined from observed execution behavior.
+- [x] A Mission 01 run that calls `CORE.connect();` once changes the visible CORE status to online.
+- [x] A Mission 01 run that does not call `CORE.connect();` leaves the CORE offline and shows learner-facing feedback.
+- [x] A Mission 01 run that calls `CORE.connect()` more than once is treated as an error and shows learner-facing feedback.
+- [x] The existing browser flow continues to work for Mission 01.
+- [x] Automated tests cover the main success and failure paths.
 
 ## Notes
 
