@@ -33,3 +33,4 @@ Task files should:
 - [Task 0007: Externalize Briefing And Lore Content](done/0007-externalize-briefing-and-lore-content.md)
 - [Task 0008: Add Mission Briefing Audio Playback](done/0008-add-mission-briefing-audio-playback.md)
 - [Task 0009: Stop Briefing Audio When Closing Modal](done/0009-stop-briefing-audio-when-closing-modal.md)
+- [Task 0010: Create Pixel-Art Mission Grid Prototype](done/0010-create-pixel-art-mission-grid-prototype.md)
