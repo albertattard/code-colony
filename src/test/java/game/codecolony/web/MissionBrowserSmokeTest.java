@@ -88,7 +88,7 @@ class MissionBrowserSmokeTest {
                 .isEqualTo(0);
         assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.paused"))
                 .isEqualTo(true);
-        assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room Grid");
+        assertThat(page.locator(".grid-panel").textContent()).contains("Maintenance Room B-1049");
         assertThat(page.locator(".code-panel").textContent()).contains("Code Console");
         assertThat(page.locator(".status-panel").textContent()).contains("Offline");
         assertThat(page.locator(".status-panel").textContent()).contains("CORE-01");

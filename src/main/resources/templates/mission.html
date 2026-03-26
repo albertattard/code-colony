@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,103 +8,109 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-<body>
-<div class="briefing-modal-shell" data-briefing-modal role="dialog" aria-modal="true" aria-labelledby="mission-briefing-title">
-    <div class="briefing-backdrop" data-briefing-close></div>
-    <section class="panel briefing-modal">
-        <p class="eyebrow">Mission Briefing</p>
-        <h2 id="mission-briefing-title" th:text="${missionTitle}">Mission 01: Wake The CORE</h2>
-        <div class="narrative-markdown" th:utext="${briefingHtml}">
-            <p>Mission briefing text.</p>
-        </div>
-        <div class="briefing-controls">
-            <div class="briefing-audio" th:if="${!#strings.isEmpty(briefingAudioPath)}">
-                <audio controls preload="none">
-                    <source th:src="${briefingAudioPath}" type="audio/mpeg">
-                </audio>
-            </div>
-            <div class="actions briefing-actions">
-                <button class="primary-action" type="button" data-briefing-close>Close</button>
-            </div>
-        </div>
-    </section>
-</div>
-<main class="layout">
-    <header class="panel mission-header">
-        <div class="header-copy">
-            <p class="eyebrow">Code Colony</p>
-            <h1 th:text="${missionTitle}">Mission 01: Wake The CORE</h1>
-            <p class="lead" th:text="${missionSummary}">Re-establish a control link and bring the docked CORE online.</p>
-        </div>
-        <div class="header-objective">
-            <p class="objective-label">Primary objective</p>
-            <p class="objective-text" th:text="${missionObjective}">Call CORE.connect(); to bring CORE-01 online.</p>
-            <button class="secondary-action secondary-button briefing-trigger" type="button" data-briefing-open>
-                Briefing
-            </button>
-        </div>
-    </header>
 
-    <div class="stage-layout">
-        <section class="panel grid-panel">
-            <div class="section-header">
-                <h2>Maintenance Room Grid</h2>
+<body>
+    <div class="briefing-modal-shell" data-briefing-modal role="dialog" aria-modal="true"
+        aria-labelledby="mission-briefing-title">
+        <div class="briefing-backdrop" data-briefing-close></div>
+        <section class="panel briefing-modal">
+            <p class="eyebrow">Mission Briefing</p>
+            <h2 id="mission-briefing-title" th:text="${missionTitle}">Mission 01: Wake The CORE</h2>
+            <div class="narrative-markdown" th:utext="${briefingHtml}">
+                <p>Mission briefing text.</p>
             </div>
-            <div class="mission-grid">
-                <div class="grid-tile"
-                     th:each="tile : ${gridTiles}"
-                     th:classappend="' tile-' + ${tile.cellType}"
-                     th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
-                    <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
-                        <div class="tile-pixels"></div>
-                        <div class="tile-sprite sprite-core facing-east" th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
-                        <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}" aria-hidden="true"></div>
-                    </div>
+            <div class="briefing-controls">
+                <div class="briefing-audio" th:if="${!#strings.isEmpty(briefingAudioPath)}">
+                    <audio controls preload="none">
+                        <source th:src="${briefingAudioPath}" type="audio/mpeg">
+                    </audio>
+                </div>
+                <div class="actions briefing-actions">
+                    <button class="primary-action" type="button" data-briefing-close>Close</button>
                 </div>
             </div>
         </section>
+    </div>
+    <main class="layout">
+        <header class="panel mission-header">
+            <div class="header-copy">
+                <p class="eyebrow">Code Colony</p>
+                <h1 th:text="${missionTitle}">Mission 01: Wake The CORE</h1>
+                <p class="lead" th:text="${missionSummary}">Re-establish a control link and bring the docked CORE
+                    online.</p>
+            </div>
+            <div class="header-objective">
+                <p class="objective-label">Primary objective</p>
+                <p class="objective-text" th:text="${missionObjective}">Call CORE.connect(); to bring CORE-01 online.
+                </p>
+                <button class="secondary-action secondary-button briefing-trigger" type="button" data-briefing-open>
+                    Briefing
+                </button>
+            </div>
+        </header>
 
-        <div id="mission-status" class="status-slot">
-            <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
+        <div class="stage-layout">
+            <section class="panel grid-panel">
+                <div class="section-header">
+                    <h2>Maintenance Room B-1049</h2>
+                </div>
+                <div class="mission-grid">
+                    <div class="grid-tile" th:each="tile : ${gridTiles}" th:classappend="' tile-' + ${tile.cellType}"
+                        th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
+                        <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
+                            <div class="tile-pixels"></div>
+                            <div class="tile-sprite sprite-core facing-east"
+                                th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
+                            <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}"
+                                aria-hidden="true"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="mission-status" class="status-slot">
+                <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
+                </section>
+            </div>
+        </div>
+
+        <div id="mission-code-panel" class="code-slot">
+            <section
+                th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, initialCode=${initialCode}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, missionPath=${missionPath}, resetPath=${resetPath}, lockOnSuccess=${lockOnSuccess}, nextMissionPath=${nextMissionPath})}">
             </section>
         </div>
-    </div>
 
-    <div id="mission-code-panel" class="code-slot">
-        <section th:replace="~{fragments/mission-panels :: codePanelBody(code=${code}, initialCode=${initialCode}, runResult=${runResult}, availableCommands=${availableCommands}, missionHints=${missionHints}, missionPath=${missionPath}, resetPath=${resetPath}, lockOnSuccess=${lockOnSuccess}, nextMissionPath=${nextMissionPath})}">
-        </section>
-    </div>
-
-    <div id="mission-feedback" class="feedback-slot">
-        <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
-    </div>
-</main>
-<script>
-    (() => {
-        const briefingModal = document.querySelector("[data-briefing-modal]");
-        if (!briefingModal) {
-            return;
-        }
-        const briefingAudio = briefingModal.querySelector("audio");
-
-        const setBriefingOpen = (open) => {
-            if (!open && briefingAudio) {
-                briefingAudio.pause();
-                briefingAudio.currentTime = 0;
+        <div id="mission-feedback" class="feedback-slot">
+            <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
+        </div>
+    </main>
+    <script>
+        (() => {
+            const briefingModal = document.querySelector("[data-briefing-modal]");
+            if (!briefingModal) {
+                return;
             }
-            briefingModal.hidden = !open;
-            document.body.classList.toggle("modal-open", open);
-        };
+            const briefingAudio = briefingModal.querySelector("audio");
 
-        document.querySelectorAll("[data-briefing-open]").forEach((element) => {
-            element.addEventListener("click", () => setBriefingOpen(true));
-        });
-        document.querySelectorAll("[data-briefing-close]").forEach((element) => {
-            element.addEventListener("click", () => setBriefingOpen(false));
-        });
+            const setBriefingOpen = (open) => {
+                if (!open && briefingAudio) {
+                    briefingAudio.pause();
+                    briefingAudio.currentTime = 0;
+                }
+                briefingModal.hidden = !open;
+                document.body.classList.toggle("modal-open", open);
+            };
 
-        document.body.classList.add("modal-open");
-    })();
-</script>
+            document.querySelectorAll("[data-briefing-open]").forEach((element) => {
+                element.addEventListener("click", () => setBriefingOpen(true));
+            });
+            document.querySelectorAll("[data-briefing-close]").forEach((element) => {
+                element.addEventListener("click", () => setBriefingOpen(false));
+            });
+
+            document.body.classList.add("modal-open");
+        })();
+    </script>
 </body>
+
 </html>

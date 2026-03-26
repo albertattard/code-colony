@@ -45,7 +45,7 @@ class MissionControllerTest {
         final String body = send(request);
 
         assertThat(body).contains("Mission 01: Wake The CORE");
-        assertThat(body).contains("Maintenance Room Grid");
+        assertThat(body).contains("Maintenance Room B-1049");
         assertThat(body).contains("Code Console");
         assertThat(body).contains("Mission Briefing");
         assertThat(body).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
@@ -115,7 +115,7 @@ class MissionControllerTest {
         final String body = send(request);
 
         assertThat(body).contains("Mission 02: Charge The CORE");
-        assertThat(body).contains("Maintenance Room Grid");
+        assertThat(body).contains("Maintenance Room B-1049");
         assertThat(body).contains("Charge CORE-01 to full power.");
         assertThat(body).contains("Congratulations, engineer.");
         assertThat(body).contains("/audio/briefings/mission-02.mp3");
