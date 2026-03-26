@@ -464,7 +464,10 @@ h1 {
 }
 
 .tile-floor .tile-scene::after,
+.tile-core-floor .tile-scene::after,
+.tile-dock .tile-scene::after,
 .tile-core .tile-scene::after,
+.tile-core-repair .tile-scene::after,
 .tile-repair .tile-scene::after {
     content: "";
     position: absolute;
@@ -473,14 +476,16 @@ h1 {
     background: rgba(63, 48, 33, 0.16);
 }
 
-.tile-core .tile-scene {
+.tile-core .tile-scene,
+.tile-dock .tile-scene {
     background:
             linear-gradient(90deg, rgba(69, 55, 40, 0.14) 0 0.35rem, transparent 0.35rem calc(100% - 0.35rem), rgba(69, 55, 40, 0.14) calc(100% - 0.35rem)),
             linear-gradient(rgba(243, 250, 253, 0.3), rgba(74, 135, 154, 0.12)),
             #adcdd9;
 }
 
-.tile-core .tile-scene::before {
+.tile-core .tile-scene::before,
+.tile-dock .tile-scene::before {
     content: "";
     position: absolute;
     left: 18%;
@@ -496,14 +501,16 @@ h1 {
     border-top: 0.28rem solid #2d3c45;
 }
 
-.tile-repair .tile-scene {
+.tile-repair .tile-scene,
+.tile-core-repair .tile-scene {
     background:
             linear-gradient(90deg, rgba(69, 55, 40, 0.14) 0 0.35rem, transparent 0.35rem calc(100% - 0.35rem), rgba(69, 55, 40, 0.14) calc(100% - 0.35rem)),
             linear-gradient(rgba(246, 252, 242, 0.22), rgba(87, 123, 78, 0.14)),
             var(--tile-repair);
 }
 
-.tile-repair .tile-scene::before {
+.tile-repair .tile-scene::before,
+.tile-core-repair .tile-scene::before {
     content: "";
     position: absolute;
     left: 14%;
@@ -531,6 +538,7 @@ h1 {
     width: 60%;
     height: 48%;
     transform-origin: 50% 50%;
+    z-index: 2;
 }
 
 .sprite-core::before {
@@ -580,6 +588,7 @@ h1 {
     bottom: 18%;
     width: 24%;
     height: 26%;
+    z-index: 1;
     background:
             linear-gradient(#17351c 0 22%, #9ee7a0 22% 42%, #17351c 42% 100%);
     box-shadow:

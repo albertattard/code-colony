@@ -3,6 +3,7 @@ package game.codecolony.web;
 import game.codecolony.mission.ChargeTheCoreMissionService;
 import game.codecolony.mission.CodeExplanation;
 import game.codecolony.mission.CodeExplanationService;
+import game.codecolony.mission.repaircore.RepairTheCoreMissionService;
 import game.codecolony.mission.MissionPage;
 import game.codecolony.mission.WakeTheCoreMissionService;
 import game.codecolony.session.GameSessionNotFoundException;
@@ -27,25 +28,32 @@ public class MissionController {
     private static final String SESSION_ROUTE_PREFIX = "/sessions/{gameSessionId}/missions";
     private static final String MISSION_ONE_PATH = SESSION_ROUTE_PREFIX + "/wake-the-core";
     private static final String MISSION_TWO_PATH = SESSION_ROUTE_PREFIX + "/charge-the-core";
+    private static final String MISSION_THREE_PATH = SESSION_ROUTE_PREFIX + "/repair-the-core";
     private static final String MISSION_ONE_RESET_PATH = MISSION_ONE_PATH + "/reset";
     private static final String MISSION_TWO_RESET_PATH = MISSION_TWO_PATH + "/reset";
+    private static final String MISSION_THREE_RESET_PATH = MISSION_THREE_PATH + "/reset";
     private static final String MISSION_ONE_ID = "mission-01";
     private static final String MISSION_TWO_ID = "mission-02";
+    private static final String MISSION_THREE_ID = "mission-03";
     private static final String MISSION_TWO_DEFAULT_CODE = "Core.connect();";
+    private static final String MISSION_THREE_DEFAULT_CODE = "var core = Core.connect();";
     private static final String MISSION_VIEW = "mission";
     private static final String RESULT_FRAGMENT = "fragments/mission-panels :: resultPanels";
 
     private final WakeTheCoreMissionService wakeTheCoreMissionService;
     private final ChargeTheCoreMissionService chargeTheCoreMissionService;
+    private final RepairTheCoreMissionService repairTheCoreMissionService;
     private final CodeExplanationService codeExplanationService;
     private final GameSessionService gameSessionService;
 
     public MissionController(final WakeTheCoreMissionService wakeTheCoreMissionService,
                              final ChargeTheCoreMissionService chargeTheCoreMissionService,
+                             final RepairTheCoreMissionService repairTheCoreMissionService,
                              final CodeExplanationService codeExplanationService,
                              final GameSessionService gameSessionService) {
         this.wakeTheCoreMissionService = wakeTheCoreMissionService;
         this.chargeTheCoreMissionService = chargeTheCoreMissionService;
+        this.repairTheCoreMissionService = repairTheCoreMissionService;
         this.codeExplanationService = codeExplanationService;
         this.gameSessionService = gameSessionService;
     }
@@ -79,6 +87,24 @@ public class MissionController {
         );
         gameSessionService.resetCurrentCodeToStartCode(gameSessionId, MISSION_TWO_ID, resetCode);
         return nextMission(gameSessionId, model);
+    }
+
+    @GetMapping(MISSION_THREE_PATH)
+    public String missionThree(@PathVariable final UUID gameSessionId, final Model model) {
+        final MissionPage missionPage = buildMissionThreePageForCurrentState(gameSessionId);
+        populateModel(model, scopeMissionThreePage(gameSessionId, missionPage), null);
+        return MISSION_VIEW;
+    }
+
+    @GetMapping(MISSION_THREE_RESET_PATH)
+    public String resetMissionThree(@PathVariable final UUID gameSessionId, final Model model) {
+        final String resetCode = gameSessionService.currentCodeForCompletedMissionOrDefault(
+                gameSessionId,
+                MISSION_TWO_ID,
+                MISSION_THREE_DEFAULT_CODE
+        );
+        gameSessionService.resetCurrentCodeToStartCode(gameSessionId, MISSION_THREE_ID, resetCode);
+        return missionThree(gameSessionId, model);
     }
 
     @PostMapping(MISSION_ONE_PATH + "/run")
@@ -115,6 +141,26 @@ public class MissionController {
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
     }
 
+    @PostMapping(MISSION_THREE_PATH + "/run")
+    public String runMissionThree(@PathVariable final UUID gameSessionId,
+                                  @RequestParam(defaultValue = "") final String code,
+                                  @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
+                                  final Model model) {
+        gameSessionService.updateCurrentCode(gameSessionId, MISSION_THREE_ID, code);
+        final String fallbackStartCode = gameSessionService.currentCodeForCompletedMissionOrDefault(
+                gameSessionId,
+                MISSION_TWO_ID,
+                MISSION_THREE_DEFAULT_CODE
+        );
+        final String initialCode = gameSessionService.startCodeOrDefault(gameSessionId, MISSION_THREE_ID, fallbackStartCode);
+        final MissionPage missionPage = repairTheCoreMissionService.pageForCode(code, initialCode);
+        if (missionPage.runResult().success()) {
+            gameSessionService.markMissionSuccessful(gameSessionId, MISSION_THREE_ID);
+        }
+        populateModel(model, scopeMissionThreePage(gameSessionId, missionPage), null);
+        return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
+    }
+
     @PostMapping(MISSION_ONE_PATH + "/explain")
     public String explainMission(@PathVariable final UUID gameSessionId,
                                  @RequestParam(defaultValue = "") final String code,
@@ -136,6 +182,18 @@ public class MissionController {
         final MissionPage missionPage = buildMissionTwoPageForCurrentState(gameSessionId);
         final CodeExplanation codeExplanation = codeExplanationService.explain(MISSION_TWO_ID, code);
         populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage), codeExplanation);
+        return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
+    }
+
+    @PostMapping(MISSION_THREE_PATH + "/explain")
+    public String explainMissionThree(@PathVariable final UUID gameSessionId,
+                                      @RequestParam(defaultValue = "") final String code,
+                                      @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
+                                      final Model model) {
+        gameSessionService.updateCurrentCode(gameSessionId, MISSION_THREE_ID, code);
+        final MissionPage missionPage = buildMissionThreePageForCurrentState(gameSessionId);
+        final CodeExplanation codeExplanation = codeExplanationService.explain(MISSION_THREE_ID, code);
+        populateModel(model, scopeMissionThreePage(gameSessionId, missionPage), codeExplanation);
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
     }
 
@@ -167,6 +225,20 @@ public class MissionController {
                 : withCode(chargeTheCoreMissionService.initialPage(startCode), currentCode);
     }
 
+    private MissionPage buildMissionThreePageForCurrentState(final UUID gameSessionId) {
+        final String carriedCode = gameSessionService.currentCodeForCompletedMissionOrDefault(
+                gameSessionId,
+                MISSION_TWO_ID,
+                MISSION_THREE_DEFAULT_CODE
+        );
+        gameSessionService.initializeStartCodeIfMissing(gameSessionId, MISSION_THREE_ID, carriedCode);
+        final String startCode = gameSessionService.startCodeOrDefault(gameSessionId, MISSION_THREE_ID, carriedCode);
+        final String currentCode = gameSessionService.currentCodeOrDefault(gameSessionId, MISSION_THREE_ID, startCode);
+        return gameSessionService.isMissionCompleted(gameSessionId, MISSION_THREE_ID)
+                ? repairTheCoreMissionService.pageForCode(currentCode, startCode)
+                : withCode(repairTheCoreMissionService.initialPage(startCode), currentCode);
+    }
+
     private MissionPage scopeMissionOnePage(final UUID gameSessionId, final MissionPage missionPage) {
         return withPaths(
                 missionPage,
@@ -181,6 +253,15 @@ public class MissionController {
                 missionPage,
                 missionTwoPath(gameSessionId),
                 missionTwoResetPath(gameSessionId),
+                missionThreePath(gameSessionId)
+        );
+    }
+
+    private MissionPage scopeMissionThreePage(final UUID gameSessionId, final MissionPage missionPage) {
+        return withPaths(
+                missionPage,
+                missionThreePath(gameSessionId),
+                missionThreeResetPath(gameSessionId),
                 ""
         );
     }
@@ -199,6 +280,14 @@ public class MissionController {
 
     private String missionTwoResetPath(final UUID gameSessionId) {
         return missionTwoPath(gameSessionId) + "/reset";
+    }
+
+    private String missionThreePath(final UUID gameSessionId) {
+        return "/sessions/" + gameSessionId + "/missions/repair-the-core";
+    }
+
+    private String missionThreeResetPath(final UUID gameSessionId) {
+        return missionThreePath(gameSessionId) + "/reset";
     }
 
     private MissionPage withCode(final MissionPage missionPage, final String code) {

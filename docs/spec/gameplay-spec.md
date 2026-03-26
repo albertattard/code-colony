@@ -84,6 +84,7 @@ Mission state should be used for mission continuity:
 
 - Mission 01 success marks Mission 01 as completed
 - Mission 02 preloads `startCode` from Mission 01 `currentCode` only when Mission 01 is completed and no Mission 02 state exists yet
+- Mission 03 preloads `startCode` from Mission 02 `currentCode` only when Mission 02 is completed and no Mission 03 state exists yet
 
 For this stage, game sessions may be stored in memory and may expire after inactivity. Expired or unknown session IDs should produce clear player-facing guidance to start a new session.
 

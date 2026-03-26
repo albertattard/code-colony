@@ -45,7 +45,7 @@ class MissionBrowserSmokeTest {
     }
 
     @Test
-    void introPageLeadsIntoMissionOneAndMissionTwo() {
+    void introPageLeadsIntoMissionOneMissionTwoAndMissionThree() {
         final Page page = browser.newPage();
 
         page.navigate(baseUrl() + "/",
@@ -207,8 +207,16 @@ class MissionBrowserSmokeTest {
                 new Page.GetByRoleOptions().setName("Run")).count()).isZero();
         assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
                 new Page.GetByRoleOptions().setName("Reset")).count()).isZero();
-        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+        assertThat(page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
                 new Page.GetByRoleOptions().setName("Next")).isVisible()).isTrue();
+
+        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+                new Page.GetByRoleOptions().setName("Next"))
+                .click();
+        page.waitForURL("**/sessions/**/missions/repair-the-core**");
+        assertThat(page.locator("h1").textContent()).contains("Mission 03: Repair The CORE");
+        assertThat(page.locator(".code-panel").textContent()).contains("core.repair()");
+        assertThat(page.locator("textarea[name='code']").inputValue()).contains("var core = Core.connect();");
     }
 
     private String baseUrl() {

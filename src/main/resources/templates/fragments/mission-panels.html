@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="resultPanels (runResult)">
+    <div id="mission-grid-panel" hx-swap-oob="outerHTML">
+        <section th:replace="~{fragments/mission-panels :: gridPanelBody(gridTiles=${gridTiles})}">
+        </section>
+    </div>
     <div id="mission-status" class="status-slot" hx-swap-oob="outerHTML">
     <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">
         </section>
@@ -14,6 +18,24 @@
         <div th:replace="~{fragments/mission-panels :: feedbackSlotBody(runResult=${runResult})}"></div>
     </div>
 </th:block>
+
+<section th:fragment="gridPanelBody (gridTiles)" class="panel grid-panel">
+    <div class="section-header">
+        <h2>Maintenance Room B-1049</h2>
+    </div>
+    <div class="mission-grid">
+        <div class="grid-tile" th:each="tile : ${gridTiles}" th:classappend="' tile-' + ${tile.cellType}"
+             th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
+            <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
+                <div class="tile-pixels"></div>
+                <div class="tile-sprite sprite-core facing-east"
+                     th:if="${#strings.equals(tile.cellType, 'core') || #strings.equals(tile.cellType, 'core-floor') || #strings.equals(tile.cellType, 'core-repair')}" aria-hidden="true"></div>
+                <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair') || #strings.equals(tile.cellType, 'core-repair')}"
+                     aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section th:fragment="codePanelBody (code, initialCode, runResult, availableCommands, missionHints, missionPath, resetPath, lockOnSuccess, nextMissionPath)" class="panel code-panel">
         <div class="section-header">

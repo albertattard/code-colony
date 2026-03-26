@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-final class MissionRunResultFileCodec {
+public final class MissionRunResultFileCodec {
 
     private MissionRunResultFileCodec() {
     }
 
-    static MissionRunResult read(final Path path) throws IOException {
+    public static MissionRunResult read(final Path path) throws IOException {
         final Properties properties = new Properties();
         try (InputStream inputStream = Files.newInputStream(path)) {
             properties.load(inputStream);
@@ -42,7 +42,7 @@ final class MissionRunResultFileCodec {
         );
     }
 
-    static void write(final Path path, final MissionRunResult runResult) throws IOException {
+    public static void write(final Path path, final MissionRunResult runResult) throws IOException {
         final Properties properties = new Properties();
         properties.setProperty("headline", runResult.headline());
         properties.setProperty("summary", runResult.summary());

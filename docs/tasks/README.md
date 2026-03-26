@@ -43,3 +43,4 @@ Task files should:
 - [Task 0019: Introduce Game Session State](done/0019-introduce-game-session-state.md)
 - [Task 0020: Add Code Explanation Action](done/0020-add-code-explanation-action.md)
 - [Task 0021: Move Explain To Modal And Markdown Content](done/0021-move-explain-to-modal-and-markdown-content.md)
+- [Task 0022: Implement Mission 03 Repair The CORE](done/0022-implement-mission-03-repair-the-core.md)

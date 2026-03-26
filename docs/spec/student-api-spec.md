@@ -142,6 +142,7 @@ Expected progression:
 
 - Mission 01 introduces `Core.connect();` as a standalone static call
 - Mission 02 introduces storing the returned `CORE` in a local variable and calling an instance method on it
+- Mission 03 introduces sequential instance actions with `core.move()` and station-dependent `core.repair()`
 
 This means Mission 02 should explicitly teach that `Core.connect()` returns a `CORE` instance that can be reused for later actions.
 

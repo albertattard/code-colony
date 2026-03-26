@@ -192,6 +192,7 @@ class MissionControllerTest {
     void missionTwoRunEndpointReturnsUpdatedBatteryState() throws Exception {
         final String missionOnePath = createSessionAndGetMissionOnePath();
         final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        final String missionThreePath = missionOnePath.replace("/wake-the-core", "/repair-the-core");
         runMissionOne(missionOnePath, "Core.connect();");
 
         final MvcResult result = mockMvc.perform(post(missionTwoPath + "/run")
@@ -214,9 +215,108 @@ class MissionControllerTest {
         assertThat(body).contains("Charged CORE-01 to 5/5.");
         assertThat(body).doesNotContain(">Run</button>");
         assertThat(body).doesNotContain(">Reset</a>");
-        assertThat(body).contains(">Next</button>");
+        assertThat(body).contains(">Next</a>");
+        assertThat(body).contains(missionThreePath);
         assertThat(body).contains("readonly=\"readonly\"");
         assertThat(body).contains("Explain");
+    }
+
+    @Test
+    void missionThreePageRendersWithCarriedCodeFromMissionTwo() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        final String missionThreePath = missionOnePath.replace("/wake-the-core", "/repair-the-core");
+        runMissionOne(missionOnePath, "Core.connect();");
+        runMissionTwo(missionTwoPath, """
+                var core = Core.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                """);
+
+        final MvcResult result = mockMvc.perform(get(missionThreePath))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("Mission 03: Repair The CORE");
+        assertThat(body).contains("Move CORE-01 to the repair station and repair it.");
+        assertThat(body).contains("name=\"initialCode\"");
+        assertThat(body).contains("var core = Core.connect();");
+        assertThat(body).contains("core.charge();");
+    }
+
+    @Test
+    void missionThreeRunEndpointRequiresForLoopForSuccess() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        final String missionThreePath = missionOnePath.replace("/wake-the-core", "/repair-the-core");
+        runMissionOne(missionOnePath, "Core.connect();");
+        runMissionTwo(missionTwoPath, """
+                var core = Core.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                """);
+
+        final MvcResult result = mockMvc.perform(post(missionThreePath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", """
+                                var core = Core.connect();
+                                core.move();
+                                core.move();
+                                core.repair();
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("CORE Repaired");
+        assertThat(body).contains("B3 · CORE unit on repair station");
+        assertThat(body).contains("tile-core-repair");
+        assertThat(body).contains("5 / 5");
+        assertThat(body).doesNotContain(">Run</button>");
+        assertThat(body).doesNotContain(">Reset</a>");
+        assertThat(body).contains(">Next</button>");
+        assertThat(body).contains("readonly=\"readonly\"");
+    }
+
+    @Test
+    void missionThreeRunRendersCoreOnB2AfterSingleMove() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        final String missionThreePath = missionOnePath.replace("/wake-the-core", "/repair-the-core");
+        runMissionOne(missionOnePath, "Core.connect();");
+        runMissionTwo(missionTwoPath, """
+                var core = Core.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                core.charge();
+                """);
+
+        final MvcResult result = mockMvc.perform(post(missionThreePath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("code", """
+                                var core = Core.connect();
+                                core.move();
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("B2 · CORE unit");
+        assertThat(body).contains("tile-core-floor");
+        assertThat(body).doesNotContain("B1 · Docked CORE unit");
+        assertThat(body).contains("B1 · Docking station");
+        assertThat(body).contains("tile-dock");
+        assertThat(body).contains("4 / 5");
     }
 
     @Test
@@ -230,6 +330,7 @@ class MissionControllerTest {
         assertThat(body).contains("Session Expired");
         assertThat(body).contains("Start New Session");
         assertThat(body).contains("action=\"/game-sessions\"");
+        assertThat(body).contains("<body class=\"flat-bg\">");
     }
 
     private String createSessionAndGetMissionOnePath() throws Exception {
@@ -244,6 +345,14 @@ class MissionControllerTest {
 
     private void runMissionOne(final String missionOnePath, final String code) throws Exception {
         mockMvc.perform(post(missionOnePath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", code))
+                .andExpect(status().isOk());
+    }
+
+    private void runMissionTwo(final String missionTwoPath, final String code) throws Exception {
+        mockMvc.perform(post(missionTwoPath + "/run")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .header("HX-Request", "true")
                         .param("code", code))

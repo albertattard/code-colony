@@ -222,6 +222,4 @@ After Mission 02 succeeds, the page should use the same completed-state pattern 
 
 - read-only learner code
 - hidden `Run` and `Reset`
-- a visible `Next` action
-
-Until Mission 03 is defined, the UI may show `Next` as a non-navigating placeholder action so the completed-state pattern remains consistent.
+- a visible `Next` action that opens Mission 03

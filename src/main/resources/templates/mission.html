@@ -50,23 +50,10 @@
         </header>
 
         <div class="stage-layout">
-            <section class="panel grid-panel">
-                <div class="section-header">
-                    <h2>Maintenance Room B-1049</h2>
-                </div>
-                <div class="mission-grid">
-                    <div class="grid-tile" th:each="tile : ${gridTiles}" th:classappend="' tile-' + ${tile.cellType}"
-                        th:attr="data-tooltip=${tile.rowLabel + tile.columnLabel + ' · ' + tile.fullLabel}, aria-label=${tile.rowLabel + tile.columnLabel + ' ' + tile.fullLabel}, tabindex=0">
-                        <div class="tile-scene" th:classappend="' scene-' + ${tile.cellType}">
-                            <div class="tile-pixels"></div>
-                            <div class="tile-sprite sprite-core facing-east"
-                                th:if="${#strings.equals(tile.cellType, 'core')}" aria-hidden="true"></div>
-                            <div class="tile-sprite sprite-repair" th:if="${#strings.equals(tile.cellType, 'repair')}"
-                                aria-hidden="true"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <div id="mission-grid-panel">
+                <section th:replace="~{fragments/mission-panels :: gridPanelBody(gridTiles=${gridTiles})}">
+                </section>
+            </div>
 
             <div id="mission-status" class="status-slot">
                 <section th:replace="~{fragments/mission-panels :: statusPanelBody(runResult=${runResult})}">

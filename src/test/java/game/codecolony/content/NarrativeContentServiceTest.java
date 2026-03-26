@@ -47,6 +47,18 @@ class NarrativeContentServiceTest {
     }
 
     @Test
+    void loadsMissionThreeNarrativeFromMarkdownContent() {
+        final NarrativeContentService.MissionNarrativeContent missionNarrative =
+                narrativeContentService.loadMissionNarrative("mission-03");
+
+        assertThat(missionNarrative.title()).isEqualTo("Mission 03: Repair The CORE");
+        assertThat(missionNarrative.summary()).contains("structural damage");
+        assertThat(missionNarrative.objective()).isEqualTo("Move CORE-01 to the repair station and repair it.");
+        assertThat(missionNarrative.briefingHtml()).contains("core.move();");
+        assertThat(missionNarrative.briefingHtml()).contains("core.repair();");
+    }
+
+    @Test
     void loadsMissionExplanationFromMarkdownContent() {
         final NarrativeContentService.MissionExplanationContent explanation =
                 narrativeContentService.loadMissionExplanation("mission-01");
@@ -72,6 +84,17 @@ class NarrativeContentServiceTest {
         assertThat(explanation.headline()).isEqualTo("Charge CORE-01 one step at a time");
         assertThat(explanation.explanationHtml()).contains("<strong>charge its battery</strong>");
         assertThat(explanation.explanationHtml()).contains("<strong>Can we call <code>charge()</code> on the <code>Core</code> class instead?</strong>");
+    }
+
+    @Test
+    void loadsMissionThreeExplanationFromMarkdownContent() {
+        final NarrativeContentService.MissionExplanationContent explanation =
+                narrativeContentService.loadMissionExplanation("mission-03");
+
+        assertThat(explanation.headline()).isEqualTo("Repair CORE-01 step by step");
+        assertThat(explanation.explanationHtml()).contains("core.move();");
+        assertThat(explanation.explanationHtml()).contains("core.repair();");
+        assertThat(explanation.explanationHtml()).contains("<blockquote>");
     }
 
     @Test

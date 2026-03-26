@@ -19,8 +19,10 @@ The first version supports a small Markdown subset:
 - fenced code blocks (```java ... ```)
 - horizontal rules (`---`)
 - inline emphasis using `*text*`
+- inline bold using `**text**`
 - inline code using `` `code` ``
 - inline links using `[label](https://example.com)`
+- blockquotes using `> quoted text`
 
 This keeps the content readable for authors, renderable in the browser, and easy to reuse for text-to-speech workflows.
 
