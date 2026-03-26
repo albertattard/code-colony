@@ -63,4 +63,35 @@ class NarrativeContentServiceTest {
         assertThat(explanation.explanationHtml()).contains("semicolon (<code>;</code>)");
         assertThat(explanation.explanationHtml()).contains("<a href=\"https://learn.java/learning/tutorials/creatingobjectsandcallingmethods/\"");
     }
+
+    @Test
+    void loadsMissionTwoExplanationFromMarkdownContent() {
+        final NarrativeContentService.MissionExplanationContent explanation =
+                narrativeContentService.loadMissionExplanation("mission-02");
+
+        assertThat(explanation.headline()).isEqualTo("Charge CORE-01 one step at a time");
+        assertThat(explanation.explanationHtml()).contains("<strong>charge its battery</strong>");
+        assertThat(explanation.explanationHtml()).contains("<strong>Can we call <code>charge()</code> on the <code>Core</code> class instead?</strong>");
+    }
+
+    @Test
+    void rendersBlockQuotesFromMarkdownContent() {
+        final NarrativeContentService.StructuredMarkdownDocument document =
+                NarrativeContentService.StructuredMarkdownDocument.parse("""
+                        # Sample
+
+                        ## Headline
+                        Example
+
+                        ## Explanation
+                        > **Can we call `charge()` on the `Core` class instead?**
+                        >
+                        > No. You call `charge()` on a connected unit.
+                        """, "inline-test.md");
+
+        final String html = document.requiredHtml("explanation");
+        assertThat(html).contains("<blockquote>");
+        assertThat(html).contains("<strong>Can we call <code>charge()</code> on the <code>Core</code> class instead?</strong>");
+        assertThat(html).contains("<p>No. You call <code>charge()</code> on a connected unit.</p>");
+    }
 }

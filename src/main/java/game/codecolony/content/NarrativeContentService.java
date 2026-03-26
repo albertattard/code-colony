@@ -167,6 +167,7 @@ public final class NarrativeContentService {
             boolean inCodeFence = false;
             String codeFenceLanguage = "";
             final StringBuilder codeFenceContent = new StringBuilder();
+            final StringBuilder blockQuoteContent = new StringBuilder();
 
             for (final String rawLine : markdown.split("\\R", -1)) {
                 final String trimmedLine = rawLine.trim();
@@ -193,6 +194,26 @@ public final class NarrativeContentService {
                     }
                     continue;
                 }
+
+                final String strippedLine = rawLine.stripLeading();
+                if (strippedLine.startsWith(">")) {
+                    appendParagraph(html, paragraphLines);
+                    appendList(html, listItems, activeListTag);
+                    listItems.clear();
+                    activeListTag = null;
+
+                    String quoteLine = strippedLine.substring(1);
+                    if (quoteLine.startsWith(" ")) {
+                        quoteLine = quoteLine.substring(1);
+                    }
+                    if (!blockQuoteContent.isEmpty()) {
+                        blockQuoteContent.append('\n');
+                    }
+                    blockQuoteContent.append(quoteLine);
+                    continue;
+                }
+
+                appendBlockQuote(html, blockQuoteContent);
 
                 if (trimmedLine.startsWith("```")) {
                     appendParagraph(html, paragraphLines);
@@ -253,6 +274,7 @@ public final class NarrativeContentService {
 
             appendParagraph(html, paragraphLines);
             appendList(html, listItems, activeListTag);
+            appendBlockQuote(html, blockQuoteContent);
 
             if (inCodeFence) {
                 html.append("<pre><code")
@@ -291,6 +313,16 @@ public final class NarrativeContentService {
             html.append("</").append(listTag).append('>');
         }
 
+        private static void appendBlockQuote(final StringBuilder html, final StringBuilder blockQuoteContent) {
+            if (blockQuoteContent.isEmpty()) {
+                return;
+            }
+            html.append("<blockquote>")
+                    .append(renderMarkdown(blockQuoteContent.toString()))
+                    .append("</blockquote>");
+            blockQuoteContent.setLength(0);
+        }
+
         private static String renderInlineMarkdown(final String markdown) {
             final StringBuilder html = new StringBuilder();
             int index = 0;
@@ -327,6 +359,17 @@ public final class NarrativeContentService {
                     }
                 }
                 if (character == '*') {
+                    if (index + 1 < markdown.length() && markdown.charAt(index + 1) == '*') {
+                        final int closingIndex = markdown.indexOf("**", index + 2);
+                        if (closingIndex > index + 2) {
+                            final String strongContent = markdown.substring(index + 2, closingIndex);
+                            html.append("<strong>")
+                                    .append(renderInlineMarkdown(strongContent))
+                                    .append("</strong>");
+                            index = closingIndex + 2;
+                            continue;
+                        }
+                    }
                     final int closingIndex = markdown.indexOf('*', index + 1);
                     if (closingIndex > index + 1) {
                         final String emphasizedContent = markdown.substring(index + 1, closingIndex);

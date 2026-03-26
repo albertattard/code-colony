@@ -203,6 +203,28 @@ h1 {
     margin-top: 1rem;
 }
 
+.narrative-markdown blockquote {
+    margin: 0;
+    padding: 0.75rem 0.9rem;
+    border-left: 3px solid var(--accent);
+    background: #f7f1e8;
+}
+
+.narrative-markdown blockquote p {
+    color: var(--muted);
+}
+
+.narrative-markdown p + blockquote,
+.narrative-markdown blockquote + p,
+.narrative-markdown ul + blockquote,
+.narrative-markdown ol + blockquote,
+.narrative-markdown blockquote + ul,
+.narrative-markdown blockquote + ol,
+.narrative-markdown pre + blockquote,
+.narrative-markdown blockquote + pre {
+    margin-top: 1rem;
+}
+
 .narrative-markdown pre {
     margin: 0;
     padding: 0.7rem 0.85rem;
