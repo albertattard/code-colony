@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Colony | Page Not Found</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body class="flat-bg">
+<main class="layout intro-layout">
+    <section class="panel intro-card not-found-card">
+        <p class="eyebrow">Code Colony</p>
+        <p class="not-found-status">Error 404</p>
+        <h1>Signal Lost</h1>
+        <p class="panel-copy">
+            The route you requested is no longer available. Mission coordinates may have changed after the latest
+            system update.
+        </p>
+        <p class="panel-copy not-found-path" th:if="${path}">
+            Requested path: <code th:text="${path}">/sessions/unknown/missions/automate-charging</code>
+        </p>
+        <div class="actions not-found-actions">
+            <a class="secondary-action secondary-button" th:href="@{/}">Back to Briefing</a>
+            <form th:action="@{/game-sessions}" method="post">
+                <button class="primary-action" type="submit">Start New Session</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+
+</html>

@@ -28,6 +28,10 @@ body {
     background: linear-gradient(180deg, #faf7f2 0%, var(--bg) 100%);
 }
 
+body.flat-bg {
+    background: var(--bg);
+}
+
 body.modal-open {
     overflow: hidden;
 }
@@ -284,6 +288,44 @@ h1 {
 
 .intro-actions {
     margin-top: 0;
+}
+
+.not-found-card {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.not-found-card h1 {
+    margin: 0;
+}
+
+.not-found-status {
+    margin: 0;
+    font: 0.9rem/1.4 "IBM Plex Mono", "SFMono-Regular", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+}
+
+.not-found-path {
+    margin-top: 0.2rem;
+}
+
+.not-found-actions {
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+
+.not-found-actions form {
+    margin: 0;
+    display: inline-flex;
+}
+
+.not-found-actions .secondary-button,
+.not-found-actions .primary-action {
+    white-space: nowrap;
 }
 
 .briefing-modal-shell,
