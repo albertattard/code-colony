@@ -1,6 +1,8 @@
 package game.codecolony.web;
 
 import game.codecolony.mission.ChargeTheCoreMissionService;
+import game.codecolony.mission.CodeExplanation;
+import game.codecolony.mission.CodeExplanationService;
 import game.codecolony.mission.MissionPage;
 import game.codecolony.mission.WakeTheCoreMissionService;
 import game.codecolony.session.GameSessionNotFoundException;
@@ -29,30 +31,29 @@ public class MissionController {
     private static final String MISSION_TWO_RESET_PATH = MISSION_TWO_PATH + "/reset";
     private static final String MISSION_ONE_ID = "mission-01";
     private static final String MISSION_TWO_ID = "mission-02";
-    private static final String MISSION_TWO_DEFAULT_CODE = "CORE.connect();";
+    private static final String MISSION_TWO_DEFAULT_CODE = "Core.connect();";
     private static final String MISSION_VIEW = "mission";
     private static final String RESULT_FRAGMENT = "fragments/mission-panels :: resultPanels";
 
     private final WakeTheCoreMissionService wakeTheCoreMissionService;
     private final ChargeTheCoreMissionService chargeTheCoreMissionService;
+    private final CodeExplanationService codeExplanationService;
     private final GameSessionService gameSessionService;
 
     public MissionController(final WakeTheCoreMissionService wakeTheCoreMissionService,
                              final ChargeTheCoreMissionService chargeTheCoreMissionService,
+                             final CodeExplanationService codeExplanationService,
                              final GameSessionService gameSessionService) {
         this.wakeTheCoreMissionService = wakeTheCoreMissionService;
         this.chargeTheCoreMissionService = chargeTheCoreMissionService;
+        this.codeExplanationService = codeExplanationService;
         this.gameSessionService = gameSessionService;
     }
 
     @GetMapping(MISSION_ONE_PATH)
     public String mission(@PathVariable final UUID gameSessionId, final Model model) {
-        gameSessionService.initializeStartCodeIfMissing(gameSessionId, MISSION_ONE_ID, "");
-        final String currentCode = gameSessionService.currentCodeOrDefault(gameSessionId, MISSION_ONE_ID, "");
-        final MissionPage missionPage = gameSessionService.isMissionCompleted(gameSessionId, MISSION_ONE_ID)
-                ? wakeTheCoreMissionService.pageForCode(currentCode)
-                : withCode(wakeTheCoreMissionService.initialPage(), currentCode);
-        populateModel(model, scopeMissionOnePage(gameSessionId, missionPage));
+        final MissionPage missionPage = buildMissionOnePageForCurrentState(gameSessionId);
+        populateModel(model, scopeMissionOnePage(gameSessionId, missionPage), null);
         return MISSION_VIEW;
     }
 
@@ -64,18 +65,8 @@ public class MissionController {
 
     @GetMapping(MISSION_TWO_PATH)
     public String nextMission(@PathVariable final UUID gameSessionId, final Model model) {
-        final String carriedCode = gameSessionService.currentCodeForCompletedMissionOrDefault(
-                gameSessionId,
-                MISSION_ONE_ID,
-                MISSION_TWO_DEFAULT_CODE
-        );
-        gameSessionService.initializeStartCodeIfMissing(gameSessionId, MISSION_TWO_ID, carriedCode);
-        final String startCode = gameSessionService.startCodeOrDefault(gameSessionId, MISSION_TWO_ID, carriedCode);
-        final String currentCode = gameSessionService.currentCodeOrDefault(gameSessionId, MISSION_TWO_ID, startCode);
-        final MissionPage missionPage = gameSessionService.isMissionCompleted(gameSessionId, MISSION_TWO_ID)
-                ? chargeTheCoreMissionService.pageForCode(currentCode, startCode)
-                : withCode(chargeTheCoreMissionService.initialPage(startCode), currentCode);
-        populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage));
+        final MissionPage missionPage = buildMissionTwoPageForCurrentState(gameSessionId);
+        populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage), null);
         return MISSION_VIEW;
     }
 
@@ -100,7 +91,7 @@ public class MissionController {
         if (missionPage.runResult().success()) {
             gameSessionService.markMissionSuccessful(gameSessionId, MISSION_ONE_ID);
         }
-        populateModel(model, scopeMissionOnePage(gameSessionId, missionPage));
+        populateModel(model, scopeMissionOnePage(gameSessionId, missionPage), null);
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
     }
 
@@ -120,7 +111,31 @@ public class MissionController {
         if (missionPage.runResult().success()) {
             gameSessionService.markMissionSuccessful(gameSessionId, MISSION_TWO_ID);
         }
-        populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage));
+        populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage), null);
+        return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
+    }
+
+    @PostMapping(MISSION_ONE_PATH + "/explain")
+    public String explainMission(@PathVariable final UUID gameSessionId,
+                                 @RequestParam(defaultValue = "") final String code,
+                                 @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
+                                 final Model model) {
+        gameSessionService.updateCurrentCode(gameSessionId, MISSION_ONE_ID, code);
+        final MissionPage missionPage = buildMissionOnePageForCurrentState(gameSessionId);
+        final CodeExplanation codeExplanation = codeExplanationService.explain(MISSION_ONE_ID, code);
+        populateModel(model, scopeMissionOnePage(gameSessionId, missionPage), codeExplanation);
+        return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
+    }
+
+    @PostMapping(MISSION_TWO_PATH + "/explain")
+    public String explainNextMission(@PathVariable final UUID gameSessionId,
+                                     @RequestParam(defaultValue = "") final String code,
+                                     @RequestHeader(value = "HX-Request", required = false) final String htmxRequest,
+                                     final Model model) {
+        gameSessionService.updateCurrentCode(gameSessionId, MISSION_TWO_ID, code);
+        final MissionPage missionPage = buildMissionTwoPageForCurrentState(gameSessionId);
+        final CodeExplanation codeExplanation = codeExplanationService.explain(MISSION_TWO_ID, code);
+        populateModel(model, scopeMissionTwoPage(gameSessionId, missionPage), codeExplanation);
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
     }
 
@@ -128,6 +143,28 @@ public class MissionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String sessionNotFound() {
         return "session-expired";
+    }
+
+    private MissionPage buildMissionOnePageForCurrentState(final UUID gameSessionId) {
+        gameSessionService.initializeStartCodeIfMissing(gameSessionId, MISSION_ONE_ID, "");
+        final String currentCode = gameSessionService.currentCodeOrDefault(gameSessionId, MISSION_ONE_ID, "");
+        return gameSessionService.isMissionCompleted(gameSessionId, MISSION_ONE_ID)
+                ? wakeTheCoreMissionService.pageForCode(currentCode)
+                : withCode(wakeTheCoreMissionService.initialPage(), currentCode);
+    }
+
+    private MissionPage buildMissionTwoPageForCurrentState(final UUID gameSessionId) {
+        final String carriedCode = gameSessionService.currentCodeForCompletedMissionOrDefault(
+                gameSessionId,
+                MISSION_ONE_ID,
+                MISSION_TWO_DEFAULT_CODE
+        );
+        gameSessionService.initializeStartCodeIfMissing(gameSessionId, MISSION_TWO_ID, carriedCode);
+        final String startCode = gameSessionService.startCodeOrDefault(gameSessionId, MISSION_TWO_ID, carriedCode);
+        final String currentCode = gameSessionService.currentCodeOrDefault(gameSessionId, MISSION_TWO_ID, startCode);
+        return gameSessionService.isMissionCompleted(gameSessionId, MISSION_TWO_ID)
+                ? chargeTheCoreMissionService.pageForCode(currentCode, startCode)
+                : withCode(chargeTheCoreMissionService.initialPage(startCode), currentCode);
     }
 
     private MissionPage scopeMissionOnePage(final UUID gameSessionId, final MissionPage missionPage) {
@@ -207,7 +244,9 @@ public class MissionController {
         );
     }
 
-    private void populateModel(final Model model, final MissionPage missionPage) {
+    private void populateModel(final Model model,
+                               final MissionPage missionPage,
+                               final CodeExplanation codeExplanation) {
         model.addAttribute("missionTitle", missionPage.missionTitle());
         model.addAttribute("missionSummary", missionPage.missionSummary());
         model.addAttribute("missionObjective", missionPage.missionObjective());
@@ -223,6 +262,7 @@ public class MissionController {
         model.addAttribute("nextMissionPath", missionPage.nextMissionPath());
         model.addAttribute("lockOnSuccess", missionPage.lockOnSuccess());
         model.addAttribute("runResult", missionPage.runResult());
+        model.addAttribute("codeExplanation", codeExplanation);
     }
 
     private boolean isHtmxRequest(final String htmxRequest) {

@@ -3,8 +3,11 @@ package game.codecolony.content;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,14 @@ public final class NarrativeContentService {
         );
     }
 
+    public MissionExplanationContent loadMissionExplanation(final String missionId) {
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/explain.md");
+        return new MissionExplanationContent(
+                document.requiredPlainText("headline"),
+                document.requiredHtml("explanation")
+        );
+    }
+
     private StructuredMarkdownDocument loadDocument(final String classpathLocation) {
         final ClassPathResource resource = new ClassPathResource(classpathLocation);
         try (InputStream inputStream = resource.getInputStream()) {
@@ -51,7 +62,14 @@ public final class NarrativeContentService {
     public record MissionNarrativeContent(String title, String summary, String objective, String briefingHtml) {
     }
 
+    public record MissionExplanationContent(String headline, String explanationHtml) {
+    }
+
     static final class StructuredMarkdownDocument {
+
+        private static final Pattern UNORDERED_LIST_ITEM = Pattern.compile("^[-*]\\s+(.+)$");
+        private static final Pattern ORDERED_LIST_ITEM = Pattern.compile("^\\d+\\.\\s+(.+)$");
+        private static final Pattern HORIZONTAL_RULE = Pattern.compile("^---+$");
 
         private final String title;
         private final Map<String, String> sections;
@@ -143,17 +161,134 @@ public final class NarrativeContentService {
 
         private static String renderMarkdown(final String markdown) {
             final StringBuilder html = new StringBuilder();
-            final String[] blocks = markdown.trim().split("(?:\\R\\s*){2,}");
-            for (final String block : blocks) {
-                final String trimmedBlock = block.trim();
-                if (trimmedBlock.isEmpty()) {
+            final List<String> paragraphLines = new ArrayList<>();
+            final List<String> listItems = new ArrayList<>();
+            String activeListTag = null;
+            boolean inCodeFence = false;
+            String codeFenceLanguage = "";
+            final StringBuilder codeFenceContent = new StringBuilder();
+
+            for (final String rawLine : markdown.split("\\R", -1)) {
+                final String trimmedLine = rawLine.trim();
+
+                if (inCodeFence) {
+                    if (trimmedLine.startsWith("```")) {
+                        html.append("<pre><code");
+                        if (!codeFenceLanguage.isBlank()) {
+                            html.append(" class=\"language-")
+                                    .append(HtmlUtils.htmlEscape(codeFenceLanguage))
+                                    .append('"');
+                        }
+                        html.append(">")
+                                .append(HtmlUtils.htmlEscape(codeFenceContent.toString()))
+                                .append("</code></pre>");
+                        inCodeFence = false;
+                        codeFenceLanguage = "";
+                        codeFenceContent.setLength(0);
+                    } else {
+                        if (!codeFenceContent.isEmpty()) {
+                            codeFenceContent.append('\n');
+                        }
+                        codeFenceContent.append(rawLine);
+                    }
                     continue;
                 }
-                html.append("<p>")
-                        .append(renderInlineMarkdown(trimmedBlock.replace('\n', ' ')))
-                        .append("</p>");
+
+                if (trimmedLine.startsWith("```")) {
+                    appendParagraph(html, paragraphLines);
+                    appendList(html, listItems, activeListTag);
+                    listItems.clear();
+                    activeListTag = null;
+                    inCodeFence = true;
+                    codeFenceLanguage = trimmedLine.substring(3).trim();
+                    continue;
+                }
+
+                if (trimmedLine.isEmpty()) {
+                    appendParagraph(html, paragraphLines);
+                    appendList(html, listItems, activeListTag);
+                    listItems.clear();
+                    activeListTag = null;
+                    continue;
+                }
+
+                if (HORIZONTAL_RULE.matcher(trimmedLine).matches()) {
+                    appendParagraph(html, paragraphLines);
+                    appendList(html, listItems, activeListTag);
+                    listItems.clear();
+                    activeListTag = null;
+                    html.append("<hr>");
+                    continue;
+                }
+
+                final var unorderedItemMatcher = UNORDERED_LIST_ITEM.matcher(trimmedLine);
+                if (unorderedItemMatcher.matches()) {
+                    appendParagraph(html, paragraphLines);
+                    if (!"ul".equals(activeListTag)) {
+                        appendList(html, listItems, activeListTag);
+                        listItems.clear();
+                        activeListTag = "ul";
+                    }
+                    listItems.add(unorderedItemMatcher.group(1).trim());
+                    continue;
+                }
+
+                final var orderedItemMatcher = ORDERED_LIST_ITEM.matcher(trimmedLine);
+                if (orderedItemMatcher.matches()) {
+                    appendParagraph(html, paragraphLines);
+                    if (!"ol".equals(activeListTag)) {
+                        appendList(html, listItems, activeListTag);
+                        listItems.clear();
+                        activeListTag = "ol";
+                    }
+                    listItems.add(orderedItemMatcher.group(1).trim());
+                    continue;
+                }
+
+                appendList(html, listItems, activeListTag);
+                listItems.clear();
+                activeListTag = null;
+                paragraphLines.add(trimmedLine);
             }
+
+            appendParagraph(html, paragraphLines);
+            appendList(html, listItems, activeListTag);
+
+            if (inCodeFence) {
+                html.append("<pre><code")
+                        .append(codeFenceLanguage.isBlank() ? "" : " class=\"language-"
+                                + HtmlUtils.htmlEscape(codeFenceLanguage) + "\"")
+                        .append(">")
+                        .append(HtmlUtils.htmlEscape(codeFenceContent.toString()))
+                        .append("</code></pre>");
+            }
+
             return html.toString();
+        }
+
+        private static void appendParagraph(final StringBuilder html, final List<String> paragraphLines) {
+            if (paragraphLines.isEmpty()) {
+                return;
+            }
+            html.append("<p>")
+                    .append(renderInlineMarkdown(String.join(" ", paragraphLines)))
+                    .append("</p>");
+            paragraphLines.clear();
+        }
+
+        private static void appendList(final StringBuilder html,
+                                       final List<String> items,
+                                       final String listTag) {
+            if (listTag == null || items.isEmpty()) {
+                return;
+            }
+            html.append('<').append(listTag).append('>');
+            for (final String item : items) {
+                html.append("<li>")
+                        .append(renderInlineMarkdown(item))
+                        .append("</li>");
+            }
+            html.append("</").append(listTag).append('>');
         }
 
         private static String renderInlineMarkdown(final String markdown) {
@@ -161,6 +296,26 @@ public final class NarrativeContentService {
             int index = 0;
             while (index < markdown.length()) {
                 final char character = markdown.charAt(index);
+                if (character == '[') {
+                    final int closingBracketIndex = markdown.indexOf(']', index + 1);
+                    final int openingParenIndex = closingBracketIndex + 1;
+                    if (closingBracketIndex > index + 1
+                            && openingParenIndex < markdown.length()
+                            && markdown.charAt(openingParenIndex) == '(') {
+                        final int closingParenIndex = markdown.indexOf(')', openingParenIndex + 1);
+                        if (closingParenIndex > openingParenIndex + 1) {
+                            final String label = markdown.substring(index + 1, closingBracketIndex);
+                            final String href = markdown.substring(openingParenIndex + 1, closingParenIndex).trim();
+                            html.append("<a href=\"")
+                                    .append(HtmlUtils.htmlEscape(href))
+                                    .append("\" target=\"_blank\" rel=\"noreferrer noopener\">")
+                                    .append(HtmlUtils.htmlEscape(label))
+                                    .append("</a>");
+                            index = closingParenIndex + 1;
+                            continue;
+                        }
+                    }
+                }
                 if (character == '`') {
                     final int closingIndex = markdown.indexOf('`', index + 1);
                     if (closingIndex > index + 1) {
@@ -174,8 +329,9 @@ public final class NarrativeContentService {
                 if (character == '*') {
                     final int closingIndex = markdown.indexOf('*', index + 1);
                     if (closingIndex > index + 1) {
+                        final String emphasizedContent = markdown.substring(index + 1, closingIndex);
                         html.append("<em>")
-                                .append(HtmlUtils.htmlEscape(markdown.substring(index + 1, closingIndex)))
+                                .append(renderInlineMarkdown(emphasizedContent))
                                 .append("</em>");
                         index = closingIndex + 1;
                         continue;

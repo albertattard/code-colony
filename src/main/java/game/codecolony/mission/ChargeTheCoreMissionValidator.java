@@ -20,7 +20,7 @@ final class ChargeTheCoreMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            "Mission 02 expects one successful CORE.connect() call to obtain a control reference and enough charge actions to reach full power.",
+                            "Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.",
                             "Fix the runtime problem and run the code again."
                     ),
                     statusFor(simulation.connected(), simulation.connectAttempts(), simulation.batteryLevel()),
@@ -43,7 +43,7 @@ final class ChargeTheCoreMissionValidator {
                     simulationEvents,
                     List.of(
                             "Mission objective completed.",
-                            "CORE.connect() returned a CORE instance you could reuse.",
+                            "Core.connect() returned a Core instance you could reuse.",
                             "Each successful core.charge(); call restored one power segment."
                     ),
                     statusFor(true, simulation.connectAttempts(), simulation.batteryLevel()),
@@ -59,7 +59,7 @@ final class ChargeTheCoreMissionValidator {
                     "CORE-01 is online, but your program did not obtain a control reference.",
                     simulationEvents,
                     List.of(
-                            "Call CORE.connect() and store the returned CORE in a variable before charging it.",
+                            "Call Core.connect() and store the returned Core in a variable before charging it.",
                             "Mission 02 is solved when the battery reaches 5 / 5."
                     ),
                     statusFor(false, simulation.connectAttempts(), simulation.batteryLevel()),
@@ -92,7 +92,7 @@ final class ChargeTheCoreMissionValidator {
                 ? "Battery restored. CORE-01 is ready for low-power field work."
                 : connected
                 ? "Telemetry online. Battery charging in progress. Structural damage still detected."
-                : "CORE-01 remains online from Mission 01. Use CORE.connect() to obtain a control reference for this run.";
+                : "CORE-01 remains online from Mission 01. Use Core.connect() to obtain a control reference for this run.";
         return new MissionCoreStatus("CORE-01", "Online", batteryLevel, 5, 1, 5, "Connected", "B1", note);
     }
 }

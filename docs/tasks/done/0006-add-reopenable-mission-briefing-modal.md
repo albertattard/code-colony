@@ -47,7 +47,7 @@ This task should not include:
 ## Acceptance Criteria
 
 - [x] Mission 01 opens with a briefing modal visible.
-- [x] The modal shows the mission title, short context, objective, and a hint for `CORE.connect();`.
+- [x] The modal shows the mission title, short context, objective, and a hint for `Core.connect();`.
 - [x] The player can close the modal and continue using the mission screen.
 - [x] The mission screen shows a visible `Briefing` action that reopens the same modal.
 - [x] Reopening the briefing does not clear the current editor contents.

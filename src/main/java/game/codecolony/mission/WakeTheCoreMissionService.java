@@ -19,10 +19,10 @@ public final class WakeTheCoreMissionService {
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
-            "When CORE.connect(); works, the status panel should change from Offline to Online and reveal the CORE's condition."
+            "When Core.connect(); works, the status panel should change from Offline to Online and reveal the CORE's condition."
     );
     private static final List<CommandReference> COMMANDS = List.of(
-            new CommandReference("CORE.connect()", "Establishes a control link to the next available CORE unit.")
+            new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit.")
     );
     private static final List<GridTile> GRID = List.of(
             new GridTile("A", "1", "floor", "", "Walkable floor tile"),
@@ -91,14 +91,14 @@ public final class WakeTheCoreMissionService {
     private MissionRunResult initialRunResult() {
         return new MissionRunResult(
                 "Awaiting Run",
-                "Enter CORE.connect(); and click Run to bring CORE-01 online.",
+                "Enter Core.connect(); and click Run to bring CORE-01 online.",
                 List.of(
                         "CORE-01 is docked in Maintenance Room B-1049.",
                         "The control link is offline.",
                         "Running code will update the CORE status and feedback panels."
                 ),
                 List.of(
-                        "Mission 01 expects a single method call: CORE.connect();",
+                        "Mission 01 expects a single method call: Core.connect();",
                         "The first successful run should bring CORE-01 online."
                 ),
                 new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),

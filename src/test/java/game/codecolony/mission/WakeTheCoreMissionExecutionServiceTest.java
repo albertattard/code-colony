@@ -10,7 +10,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void successfulConnectRunBringsCoreOnline() {
-        final MissionRunResult runResult = missionExecutionService.execute("CORE.connect();");
+        final MissionRunResult runResult = missionExecutionService.execute("Core.connect();");
 
         assertThat(runResult.success()).isTrue();
         assertThat(runResult.headline()).isEqualTo("CORE Online");
@@ -28,7 +28,7 @@ class WakeTheCoreMissionExecutionServiceTest {
     @Test
     void successfulConnectCanAlsoShowLearnerStdout() {
         final MissionRunResult runResult = missionExecutionService.execute("""
-                CORE.connect();
+                Core.connect();
                 System.out.println("Hello!!");
                 """);
 
@@ -59,14 +59,14 @@ class WakeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.coreStatus().state()).isEqualTo("Offline");
         assertThat(runResult.coreStatus().batteryLevel()).isNull();
         assertThat(runResult.coreStatus().healthLevel()).isNull();
-        assertThat(runResult.feedbackItems()).contains("Call CORE.connect(); to bring the CORE online.");
+        assertThat(runResult.feedbackItems()).contains("Call Core.connect(); to bring the CORE online.");
     }
 
     @Test
     void duplicateConnectShowsRuntimeFailure() {
         final MissionRunResult runResult = missionExecutionService.execute("""
-                CORE.connect();
-                CORE.connect();
+                Core.connect();
+                Core.connect();
                 """);
 
         assertThat(runResult.success()).isFalse();

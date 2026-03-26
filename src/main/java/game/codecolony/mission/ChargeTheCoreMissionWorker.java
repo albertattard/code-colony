@@ -1,7 +1,7 @@
 package game.codecolony.mission;
 
 import game.codecolony.runtime.MissionExecutionException;
-import game.codecolony.student.CORE;
+import game.codecolony.student.Core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -25,7 +25,7 @@ public final class ChargeTheCoreMissionWorker {
         final Path resultFile = Path.of(args[0]);
         final ChargeTheCoreMissionSimulator simulator = new ChargeTheCoreMissionSimulator();
         final ChargeTheCoreMissionValidator validator = new ChargeTheCoreMissionValidator();
-        CORE.attachSimulator(simulator);
+        Core.attachSimulator(simulator);
 
         final ByteArrayOutputStream stdoutBuffer = new ByteArrayOutputStream();
         final ByteArrayOutputStream stderrBuffer = new ByteArrayOutputStream();
@@ -54,7 +54,7 @@ public final class ChargeTheCoreMissionWorker {
         } finally {
             System.setOut(originalOut);
             System.setErr(originalErr);
-            CORE.detachSimulator();
+            Core.detachSimulator();
         }
 
         MissionRunResultFileCodec.write(resultFile, runResult);

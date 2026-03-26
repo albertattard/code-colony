@@ -164,6 +164,7 @@ Examples:
 - Keep `./mvnw test` focused on fast unit and integration feedback by excluding `e2e` tests.
 - Run browser end-to-end tests with `./mvnw verify`.
 - As part of the normal change flow, run `./mvnw clean verify` before finalizing work.
+- In sandboxed environments, end-to-end tests that start an embedded server may require elevated permissions for port binding.
 
 ## Code Standards
 

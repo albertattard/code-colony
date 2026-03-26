@@ -34,7 +34,7 @@
                 <h3>Available Commands</h3>
                 <dl class="command-list">
                     <div class="command-entry" th:each="command : ${availableCommands}">
-                        <dt th:text="${command.signature}">CORE.connect()</dt>
+                        <dt th:text="${command.signature}">Core.connect()</dt>
                         <dd th:text="${command.description}">Establishes a connection.</dd>
                     </div>
                 </dl>
@@ -43,6 +43,12 @@
                 <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
             </ul>
             <div class="actions" th:if="${!runResult.success or !lockOnSuccess}">
+                <button class="secondary-action secondary-button action-left"
+                        type="submit"
+                        data-explain-action="true"
+                        th:attr="formaction=${missionPath + '/explain'}, hx-post=${missionPath + '/explain'}">
+                    Explain
+                </button>
                 <a class="secondary-action" th:href="${resetPath}">Reset</a>
                 <button class="primary-action" type="submit">Run</button>
             </div>
@@ -57,6 +63,12 @@
 
 <th:block th:fragment="feedbackSlotBody (runResult)">
     <section th:replace="~{fragments/mission-panels :: feedbackPanelBody(runResult=${runResult})}"></section>
+    <section th:if="${codeExplanation != null}" id="explain-section" class="panel feedback-panel">
+        <h2 th:text="${codeExplanation.headline}">Explain</h2>
+        <div class="narrative-markdown" th:utext="${codeExplanation.html}">
+            <p>Explanation text.</p>
+        </div>
+    </section>
     <th:block th:if="${!#strings.isEmpty(runResult.stdout) || !#strings.isEmpty(runResult.stderr)}">
         <section th:replace="~{fragments/mission-panels :: outputPanelBody(runResult=${runResult})}"></section>
     </th:block>

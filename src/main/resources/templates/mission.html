@@ -41,7 +41,7 @@
             </div>
             <div class="header-objective">
                 <p class="objective-label">Primary objective</p>
-                <p class="objective-text" th:text="${missionObjective}">Call CORE.connect(); to bring CORE-01 online.
+                <p class="objective-text" th:text="${missionObjective}">Call Core.connect(); to bring CORE-01 online.
                 </p>
                 <button class="secondary-action secondary-button briefing-trigger" type="button" data-briefing-open>
                     Briefing
@@ -86,29 +86,97 @@
     </main>
     <script>
         (() => {
-            const briefingModal = document.querySelector("[data-briefing-modal]");
-            if (!briefingModal) {
-                return;
-            }
-            const briefingAudio = briefingModal.querySelector("audio");
+            let pendingExplainScroll = false;
 
-            const setBriefingOpen = (open) => {
-                if (!open && briefingAudio) {
-                    briefingAudio.pause();
-                    briefingAudio.currentTime = 0;
-                }
-                briefingModal.hidden = !open;
-                document.body.classList.toggle("modal-open", open);
+            const syncModalOpenClass = () => {
+                const hasOpenModal = Boolean(document.querySelector("[data-briefing-modal]:not([hidden])"));
+                document.body.classList.toggle("modal-open", hasOpenModal);
             };
 
-            document.querySelectorAll("[data-briefing-open]").forEach((element) => {
-                element.addEventListener("click", () => setBriefingOpen(true));
-            });
-            document.querySelectorAll("[data-briefing-close]").forEach((element) => {
-                element.addEventListener("click", () => setBriefingOpen(false));
-            });
+            const bindModal = (modalSelector, openSelector, closeSelector, audioSelector, openByDefault) => {
+                const modal = document.querySelector(modalSelector);
+                if (!modal || modal.dataset.bound === "true") {
+                    syncModalOpenClass();
+                    return;
+                }
+                modal.dataset.bound = "true";
 
-            document.body.classList.add("modal-open");
+                const audio = audioSelector ? modal.querySelector(audioSelector) : null;
+
+                const setOpen = (open) => {
+                    if (!open && audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                    modal.hidden = !open;
+                    syncModalOpenClass();
+                };
+
+                if (openByDefault) {
+                    setOpen(true);
+                } else {
+                    modal.hidden = false;
+                    syncModalOpenClass();
+                }
+
+                if (openSelector) {
+                    document.querySelectorAll(openSelector).forEach((element) => {
+                        element.addEventListener("click", () => setOpen(true));
+                    });
+                }
+                modal.querySelectorAll(closeSelector).forEach((element) => {
+                    element.addEventListener("click", () => setOpen(false));
+                });
+            };
+
+            const bindModals = () => {
+                bindModal(
+                    "[data-briefing-modal]",
+                    "[data-briefing-open]",
+                    "[data-briefing-close]",
+                    "audio",
+                    true
+                );
+            };
+
+            const bindExplainActions = () => {
+                document.querySelectorAll("[data-explain-action]").forEach((button) => {
+                    if (button.dataset.boundExplainAction === "true") {
+                        return;
+                    }
+                    button.dataset.boundExplainAction = "true";
+                    button.addEventListener("click", () => {
+                        pendingExplainScroll = true;
+                    });
+                });
+            };
+
+            const scrollToExplainSectionIfNeeded = () => {
+                if (!pendingExplainScroll) {
+                    return;
+                }
+                const explainSection = document.querySelector("#explain-section");
+                if (!explainSection) {
+                    return;
+                }
+                explainSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                pendingExplainScroll = false;
+            };
+
+            bindModals();
+            bindExplainActions();
+            document.body.addEventListener("htmx:afterSwap", () => {
+                bindModals();
+                bindExplainActions();
+                scrollToExplainSectionIfNeeded();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key !== "Escape") {
+                    return;
+                }
+                document.querySelectorAll("[data-briefing-close]")
+                    .forEach((element) => element.click());
+            });
         })();
     </script>
 </body>

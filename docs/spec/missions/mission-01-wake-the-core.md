@@ -52,7 +52,7 @@ For the first playable version, the briefing should present:
 - a mission heading
 - a short local context paragraph
 - the objective to connect to the docked CORE
-- a beginner-friendly hint showing `CORE.connect();`
+- a beginner-friendly hint showing `Core.connect();`
 
 The briefing should open as a modal when the mission page loads and should be reopenable through a visible `Briefing` button on the mission screen.
 
@@ -166,7 +166,7 @@ Suggested initial state:
 - no health telemetry shown
 - no dock or position telemetry shown
 
-After the learner executes `CORE.connect()`, the panel should visibly change state.
+After the learner executes `Core.connect()`, the panel should visibly change state.
 
 Suggested connected state:
 
@@ -178,7 +178,7 @@ Suggested connected state:
 
 Battery and health should be rendered as five-segment bars once the CORE is connected.
 
-This change is important because it teaches that `CORE.connect()` is not just syntax. It changes the world and reveals the robot's condition.
+This change is important because it teaches that `Core.connect()` is not just syntax. It changes the world and reveals the robot's condition.
 
 Later missions in this same room may also introduce station-dependent actions:
 
@@ -195,7 +195,7 @@ This mission should expose only a very small set of commands.
 
 Required commands:
 
-- `CORE.connect()`
+- `Core.connect()`
 
 The command list shown in the UI should prioritize only what the player actually needs to solve the mission.
 
@@ -206,27 +206,27 @@ This mission introduces the idea that the player must first establish a connecti
 The intended learner code shape is:
 
 ```java
-CORE.connect();
+Core.connect();
 ```
 
 This mission should teach that a single line of Java can trigger a meaningful state change in the world.
 
-Running `CORE.connect()` should also produce a visible status transition in the UI from offline to online.
+Running `Core.connect()` should also produce a visible status transition in the UI from offline to online.
 
-The learner does not need to store the result of `CORE.connect()` in a variable in this mission.
+The learner does not need to store the result of `Core.connect()` in a variable in this mission.
 
 ## Starter Code
 
 Recommended starter code for the first version:
 
 ```java
-CORE.connect();
+Core.connect();
 ```
 
 Alternative starter code for a more guided version:
 
 ```java
-CORE.connect();
+Core.connect();
 ```
 
 This mission should stay fully guided and minimal.
@@ -274,8 +274,8 @@ Invalid actions should not immediately end the run unless the resulting behavior
 
 Examples:
 
-- not calling `CORE.connect()`
-- calling `CORE.connect()` more than once
+- not calling `Core.connect()`
+- calling `Core.connect()` more than once
 
 These should produce readable feedback rather than abrupt punishment.
 
@@ -308,7 +308,7 @@ If the learner prints output during Mission 01, the UI should show it in a separ
 For example, if the learner submits:
 
 ```java
-CORE.connect();
+Core.connect();
 System.out.println("Hello!!");
 ```
 
@@ -340,6 +340,6 @@ The map should remain visible while the player edits and runs code.
 
 ## Open Questions
 
-- Whether the first mission should require the learner to type `CORE.connect()` or whether that line should already be present in starter code
+- Whether the first mission should require the learner to type `Core.connect()` or whether that line should already be present in starter code
 - Whether `moveRight()` alone is enough for the first mission or whether all four movement commands should be visible from the start
 - Whether the relay should be adjacent to the dock or require two movement steps for a slightly stronger sense of travel

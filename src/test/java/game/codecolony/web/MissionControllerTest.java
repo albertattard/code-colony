@@ -62,7 +62,7 @@ class MissionControllerTest {
         assertThat(body).contains("Code Console");
         assertThat(body).contains("Mission Briefing");
         assertThat(body).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
-        assertThat(body).contains("<code>CORE.connect();</code>");
+        assertThat(body).contains("Core.connect();");
         assertThat(body).contains("/audio/briefings/mission-01.mp3");
         assertThat(body).contains("data-briefing-modal");
         assertThat(body).contains("data-briefing-open");
@@ -72,6 +72,7 @@ class MissionControllerTest {
         assertThat(body).doesNotContain("Program Output");
         assertThat(body).contains("<textarea id=\"code\" name=\"code\" spellcheck=\"false\"></textarea>");
         assertThat(body).contains(">Reset</a>");
+        assertThat(body).contains("Explain");
         assertThat(body).contains(">Run</button>");
         assertThat(body).doesNotContain(">Next<");
         assertThat(body).contains(missionOnePath + "/reset");
@@ -91,7 +92,7 @@ class MissionControllerTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .header("HX-Request", "true")
                         .param("code", """
-                                CORE.connect();
+                                Core.connect();
                                 System.out.println(\"Hello!!\");
                                 """))
                 .andExpect(status().isOk())
@@ -121,7 +122,7 @@ class MissionControllerTest {
         final String missionOnePath = createSessionAndGetMissionOnePath();
         final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
         runMissionOne(missionOnePath, """
-                CORE.connect();
+                Core.connect();
                 System.out.println(\"Hello!!\");
                 """);
 
@@ -143,15 +144,36 @@ class MissionControllerTest {
         assertThat(body).contains("name=\"initialCode\"");
         assertThat(body).contains("System.out.println(&quot;Hello!!&quot;);");
         assertThat(body).contains("""
-                <textarea id="code" name="code" spellcheck="false">CORE.connect();
+                <textarea id="code" name="code" spellcheck="false">Core.connect();
                 System.out.println(&quot;Hello!!&quot;);
                 </textarea>""");
     }
 
     @Test
+    void explainEndpointReturnsCodeExplanationWithoutRunningSimulation() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final MvcResult result = mockMvc.perform(post(missionOnePath + "/explain")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", "System.out.println(\"Hello!!\");"))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("Wake CORE-01 with one line of code");
+        assertThat(body).contains("id=\"explain-section\"");
+        assertThat(body).contains("Java is built around");
+        assertThat(body).contains("Core.connect();");
+        assertThat(body).contains("<pre><code>");
+        assertThat(body).doesNotContain("```");
+        assertThat(body).contains("<ul>");
+        assertThat(body).contains("Creating Objects and Calling Methods");
+    }
+
+    @Test
     void completedMissionOneRemainsLockedAfterReload() throws Exception {
         final String missionOnePath = createSessionAndGetMissionOnePath();
-        runMissionOne(missionOnePath, "CORE.connect();");
+        runMissionOne(missionOnePath, "Core.connect();");
 
         final MvcResult result = mockMvc.perform(get(missionOnePath))
                 .andExpect(status().isOk())
@@ -168,13 +190,13 @@ class MissionControllerTest {
     void missionTwoRunEndpointReturnsUpdatedBatteryState() throws Exception {
         final String missionOnePath = createSessionAndGetMissionOnePath();
         final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
-        runMissionOne(missionOnePath, "CORE.connect();");
+        runMissionOne(missionOnePath, "Core.connect();");
 
         final MvcResult result = mockMvc.perform(post(missionTwoPath + "/run")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .header("HX-Request", "true")
                         .param("code", """
-                                var core = CORE.connect();
+                                var core = Core.connect();
                                 core.charge();
                                 core.charge();
                                 core.charge();

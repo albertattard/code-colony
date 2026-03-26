@@ -4,7 +4,7 @@
 
 This document defines the second playable mission in Code Colony.
 
-Its purpose is to build directly on Mission 01 by teaching the learner how to store the result of `CORE.connect()` in a variable and call an instance method repeatedly to change robot state.
+Its purpose is to build directly on Mission 01 by teaching the learner how to store the result of `Core.connect()` in a variable and call an instance method repeatedly to change robot state.
 
 ## Mission Summary
 
@@ -22,7 +22,7 @@ Supporting learning objective:
 
 - calling an instance method multiple times to produce repeated state changes
 
-This mission should teach that `CORE.connect()` returns a usable object and that repeated method calls can accumulate visible results.
+This mission should teach that `Core.connect()` returns a usable object and that repeated method calls can accumulate visible results.
 
 ## Player Fantasy
 
@@ -46,7 +46,7 @@ For the first playable version, the briefing should present:
 - a mission heading
 - a short local context paragraph
 - the objective to fully charge CORE-01
-- a beginner-friendly hint showing `var core = CORE.connect();` and `core.charge();`
+- a beginner-friendly hint showing `var core = Core.connect();` and `core.charge();`
 
 This briefing should open as a modal when the Mission 02 page loads and should be reopenable through the visible `Briefing` button.
 
@@ -95,7 +95,7 @@ The status panel should communicate:
 
 This is important because Mission 02 should look like a continuation of Mission 01 rather than a reset back to an unknown state.
 
-In Mission 02, `CORE.connect()` should still be required in learner code, but its role is to obtain a usable `CORE` reference for that run, not to visually bring the unit online for the first time.
+In Mission 02, `Core.connect()` should still be required in learner code, but its role is to obtain a usable `CORE` reference for that run, not to visually bring the unit online for the first time.
 
 Each successful `core.charge()` call on the docking station should increase the battery by one segment.
 
@@ -105,12 +105,12 @@ The battery display should stop at `5/5`. There is no overcharging state in this
 
 Required commands:
 
-- `CORE.connect()`
+- `Core.connect()`
 - `core.charge()`
 
 The command reference should explain that:
 
-- `CORE.connect()` returns a `CORE`
+- `Core.connect()` returns a `CORE`
 - `core.charge()` restores one battery segment when the CORE is on the docking station
 
 ## Programming Model
@@ -118,7 +118,7 @@ The command reference should explain that:
 This mission introduces a new code shape:
 
 ```java
-var core = CORE.connect();
+var core = Core.connect();
 core.charge();
 ```
 
@@ -137,7 +137,7 @@ The learner should transform that carried-forward code into the Mission 02 solut
 Recommended carried-forward starting point when the learner finished Mission 01 with only the essential solution:
 
 ```java
-CORE.connect();
+Core.connect();
 ```
 
 The mission briefing and command reference should guide the learner toward changing that into a variable-based form.
@@ -157,7 +157,7 @@ The first successful charge should give the CORE enough power for one future mov
 
 The mission succeeds when:
 
-- the player obtains a `CORE` reference by calling `CORE.connect()`
+- the player obtains a `CORE` reference by calling `Core.connect()`
 - the player charges the CORE to full battery
 
 This should be validated from simulator-observed execution behavior.
@@ -177,7 +177,7 @@ The mission run fails when:
 - the learner code does not compile
 - the learner finishes execution without obtaining a CORE reference
 - the learner finishes execution without reaching full battery
-- the learner calls `core.charge()` before storing or obtaining a CORE instance
+- the learner calls `core.charge()` before storing or obtaining a Core instance
 
 These failures should produce readable feedback rather than abrupt punishment.
 

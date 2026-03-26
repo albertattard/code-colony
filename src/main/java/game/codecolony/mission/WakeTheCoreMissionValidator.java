@@ -43,7 +43,7 @@ final class WakeTheCoreMissionValidator {
                     simulationEvents,
                     List.of(
                             "Mission objective completed.",
-                            "CORE.connect(); changed the visible state of the world.",
+                            "Core.connect(); changed the visible state of the world.",
                             "The CORE still needs charging and repair before it can return to field work."
                     ),
                     statusFor(true, simulation.connectAttempts()),
@@ -58,7 +58,7 @@ final class WakeTheCoreMissionValidator {
                 "CORE-01 is still offline.",
                 simulationEvents,
                 List.of(
-                        "Call CORE.connect(); to bring the CORE online.",
+                        "Call Core.connect(); to bring the CORE online.",
                         "Mission 01 only expects a single successful connection."
                 ),
                 statusFor(false, simulation.connectAttempts()),

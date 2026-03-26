@@ -164,8 +164,21 @@ This panel should provide:
 - the editable Java snippet area
 - a clear `Run` action
 - a clear `Reset` action
+- a clear `Explain` action
 
 The code surface should remain focused on learner-written logic, not project structure.
+
+The `Explain` action should show mission-guided teaching notes for the target code shape without running the simulation.
+
+For early missions, explanation behavior should:
+
+- explain key Java concepts used by the mission's target code shape in plain language
+- connect those concepts to mission context and visible simulation outcomes
+- avoid auto-rewriting learner code
+
+When the learner clicks `Explain`, the game should open a focused explanation dialog instead of replacing the normal run feedback panel content inline.
+
+Explain dialog content should come from mission markdown content files, using the same content-authoring workflow as mission briefings.
 
 When a mission builds on a previous mission, the code panel should preload the learner's most recent successful code from that previous mission.
 
@@ -199,8 +212,8 @@ Status changes caused by learner code should be visible here.
 
 For example:
 
-- before `CORE.connect()`, the CORE status may show `Offline` or `Standby`
-- after `CORE.connect()`, the status should visibly change to `Online`
+- before `Core.connect()`, the CORE status may show `Offline` or `Standby`
+- after `Core.connect()`, the status should visibly change to `Online`
 
 When battery or health is known, the UI may show these as fixed-segment bars rather than text only. For early missions, five segments is preferred because it is easy for beginners to read at a glance.
 

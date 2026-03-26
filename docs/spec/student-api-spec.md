@@ -69,12 +69,12 @@ Each learner run should execute in its own worker JVM process.
 In early missions, the learner should not need to construct objects manually. The game should expose a static entry point:
 
 ```java
-CORE.connect()
+Core.connect()
 ```
 
 This method establishes a connection to a mission-defined CORE unit and returns a learner-facing `CORE` instance for later interaction when the mission requires it.
 
-Internally, the static `CORE` API may delegate to a run-scoped mission simulator attached for that worker JVM. The learner should not need to see or understand that runtime structure.
+Internally, the static `Core` API may delegate to a run-scoped mission simulator attached for that worker JVM. The learner should not need to see or understand that runtime structure.
 
 ## API Design Principles
 
@@ -94,8 +94,8 @@ These methods cause the CORE unit to do something in the world.
 
 Entry point examples:
 
-- `CORE.connect()`
-- `CORE.connect(1)`
+- `Core.connect()`
+- `Core.connect(1)`
 
 Instance action examples:
 
@@ -136,20 +136,20 @@ Early missions should use these sparingly.
 
 ## Early Mission Progression Rules
 
-The first missions should reuse the same learner-facing `CORE` type while gradually changing how the learner uses it.
+The first missions should reuse the same learner-facing `Core` type while gradually changing how the learner uses it.
 
 Expected progression:
 
-- Mission 01 introduces `CORE.connect();` as a standalone static call
+- Mission 01 introduces `Core.connect();` as a standalone static call
 - Mission 02 introduces storing the returned `CORE` in a local variable and calling an instance method on it
 
-This means Mission 02 should explicitly teach that `CORE.connect()` returns a `CORE` instance that can be reused for later actions.
+This means Mission 02 should explicitly teach that `Core.connect()` returns a `CORE` instance that can be reused for later actions.
 
 ## Mission Exposure Model
 
 The game should use a layered API model:
 
-- a small common set of `CORE` entry points
+- a small common set of `Core` entry points
 - a small common set of instance commands on connected CORE objects
 - an optional mission-specific subset or helpers
 
@@ -159,8 +159,8 @@ The browser UI should clearly show which commands are available in the current m
 
 Later missions may introduce:
 
-- `var core = CORE.connect();`
-- `CORE.connect(int number)` to connect to a specific mission-defined CORE
+- `var core = Core.connect();`
+- `Core.connect(int number)` to connect to a specific mission-defined CORE
 - instance methods such as `move()`, `rotateClockwise()`, `rotateCounterClockwise()`, `charge()`, and `repair()`
 
 Internally, later instance methods may issue commands against the run's mission simulator, which then applies world rules and records mission events. This is an implementation detail and should not complicate the learner-facing API.
@@ -272,20 +272,20 @@ Mission feedback should be based on observed execution behavior, such as command
 An early mission may present code like:
 
 ```java
-CORE.connect();
+Core.connect();
 ```
 
 A following mission may build on that code like:
 
 ```java
-var core = CORE.connect();
+var core = Core.connect();
 core.charge();
 ```
 
 Later missions may present code like:
 
 ```java
-var core = CORE.connect();
+var core = Core.connect();
 core.rotateClockwise();
 core.move();
 ```
@@ -293,7 +293,7 @@ core.move();
 or:
 
 ```java
-var core = CORE.connect();
+var core = Core.connect();
 core.move();
 core.charge();
 ```
@@ -305,7 +305,7 @@ The learner writes code, clicks run, watches the CORE unit act on screen, and re
 - The browser experience stays simple because the learner edits only the relevant code.
 - The game can teach Java concepts gradually without exposing full project structure.
 - The backend remains responsible for wrapping, compiling, and executing learner code safely.
-- Each learner run can keep a static entry point such as `CORE.connect()` without leaking state across runs because execution happens in a fresh worker JVM.
+- Each learner run can keep a static entry point such as `Core.connect()` without leaking state across runs because execution happens in a fresh worker JVM.
 - The design favors beginner clarity over full Java freedom.
 
 ## Open Questions

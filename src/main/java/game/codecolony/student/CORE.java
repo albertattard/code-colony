@@ -8,13 +8,13 @@ import game.codecolony.runtime.MissionCommandResult;
 import game.codecolony.runtime.MissionExecutionException;
 import game.codecolony.runtime.MissionSimulator;
 
-public final class CORE {
+public final class Core {
 
     private static MissionSimulator simulator;
 
     private final int coreId;
 
-    private CORE(final int coreId) {
+    private Core(final int coreId) {
         this.coreId = coreId;
     }
 
@@ -26,10 +26,10 @@ public final class CORE {
         simulator = null;
     }
 
-    public static CORE connect() {
+    public static Core connect() {
         final MissionCommandResult result = simulator().execute(new ConnectNextCoreCommand());
         if (result instanceof ConnectCoreResult connectCoreResult) {
-            return new CORE(connectCoreResult.coreId());
+            return new Core(connectCoreResult.coreId());
         }
 
         throw new MissionExecutionException("Unable to connect to a CORE unit.");

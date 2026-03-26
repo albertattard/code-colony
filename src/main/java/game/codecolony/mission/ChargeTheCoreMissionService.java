@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 @Service
 public final class ChargeTheCoreMissionService {
 
-    private static final String DEFAULT_CODE = "CORE.connect();";
+    private static final String DEFAULT_CODE = "Core.connect();";
     private static final String MISSION_PATH = "/missions/charge-the-core";
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-02.mp3";
     private static final List<String> HINTS = List.of(
             "Mission 02 starts from the connected CORE state you reached at the end of Mission 01.",
-            "Call CORE.connect() to obtain a CORE reference you can reuse in code.",
+            "Call Core.connect() to obtain a CORE reference you can reuse in code.",
             "Each successful core.charge(); call fills one power segment. Mission 02 needs 5 / 5."
     );
     private static final List<CommandReference> COMMANDS = List.of(
-            new CommandReference("CORE.connect()", "Establishes a control link to the next available CORE unit and returns it."),
+            new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit and returns it."),
             new CommandReference("core.charge()", "Restores one battery segment while the CORE is on the docking station.")
     );
     private static final List<GridTile> GRID = List.of(
@@ -92,14 +92,14 @@ public final class ChargeTheCoreMissionService {
     private MissionRunResult initialRunResult() {
         return new MissionRunResult(
                 "Awaiting Run",
-                "CORE-01 remains online. Obtain a CORE reference with CORE.connect(), then charge it to full power.",
+                "CORE-01 remains online. Obtain a CORE reference with Core.connect(), then charge it to full power.",
                 List.of(
                         "CORE-01 is still docked in Maintenance Room B-1049 and remains online from the previous recovery step.",
                         "The docking station can restore one power segment per successful charge command.",
                         "Mission 02 is complete when the battery reaches 5 / 5."
                 ),
                 List.of(
-                        "Rewrite the carried code so you keep the returned CORE in a variable.",
+                        "Rewrite the carried code so you keep the returned Core in a variable.",
                         "Call core.charge(); enough times to fill all five battery segments."
                 ),
                 new MissionCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1",

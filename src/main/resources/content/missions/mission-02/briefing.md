@@ -11,4 +11,4 @@ Congratulations, engineer. Your connection to CORE-01 is stable, and the unit is
 
 CORE-01 remains docked in Maintenance Room B-1049, where the charging station is still functional. To restore power, you will need to connect to the CORE again through Java, keep the returned unit in a variable, and then issue repeated `charge()` commands until the battery reaches full capacity.
 
-Start by writing code like `var core = CORE.connect();` and then call `core.charge();` several times. Each successful call will restore one segment of battery power. Your objective is to fully charge CORE-01 so it is ready for the next stage of recovery.
+Start by writing code like `var core = Core.connect();` and then call `core.charge();` several times. Each successful call will restore one segment of battery power. Your objective is to fully charge CORE-01 so it is ready for the next stage of recovery.

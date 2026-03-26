@@ -41,3 +41,5 @@ Task files should:
 - [Task 0017: Align Mission 02 Initial State With Mission 01](done/0017-align-mission-02-initial-state-with-mission-01.md)
 - [Task 0018: Lock Completed Mission 02 UI](done/0018-lock-completed-mission-02-ui.md)
 - [Task 0019: Introduce Game Session State](done/0019-introduce-game-session-state.md)
+- [Task 0020: Add Code Explanation Action](done/0020-add-code-explanation-action.md)
+- [Task 0021: Move Explain To Modal And Markdown Content](done/0021-move-explain-to-modal-and-markdown-content.md)

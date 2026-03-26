@@ -11,7 +11,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
     @Test
     void chargingToFullCompletesMissionTwo() {
         final MissionRunResult runResult = missionExecutionService.execute("""
-                var core = CORE.connect();
+                var core = Core.connect();
                 core.charge();
                 core.charge();
                 core.charge();
@@ -31,7 +31,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
     @Test
     void partialChargeLeavesMissionIncomplete() {
         final MissionRunResult runResult = missionExecutionService.execute("""
-                var core = CORE.connect();
+                var core = Core.connect();
                 core.charge();
                 """);
 
@@ -54,13 +54,13 @@ class ChargeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.coreStatus().state()).isEqualTo("Online");
         assertThat(runResult.coreStatus().batteryLevel()).isZero();
         assertThat(runResult.coreStatus().healthLevel()).isEqualTo(1);
-        assertThat(runResult.feedbackItems()).anyMatch(item -> item.contains("store the returned CORE"));
+        assertThat(runResult.feedbackItems()).anyMatch(item -> item.contains("store the returned Core"));
     }
 
     @Test
     void chargingAfterFullDoesNotFailMission() {
         final MissionRunResult runResult = missionExecutionService.execute("""
-                var core = CORE.connect();
+                var core = Core.connect();
                 core.charge();
                 core.charge();
                 core.charge();

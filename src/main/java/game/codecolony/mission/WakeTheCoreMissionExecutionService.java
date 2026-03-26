@@ -13,7 +13,7 @@ import game.codecolony.runtime.MissionCommandResult;
 import game.codecolony.runtime.MissionEvent;
 import game.codecolony.runtime.MissionExecutionException;
 import game.codecolony.runtime.MissionSimulator;
-import game.codecolony.student.CORE;
+import game.codecolony.student.Core;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -152,7 +152,7 @@ public final class WakeTheCoreMissionExecutionService {
         return """
                 package game.codecolony.player;
 
-                import game.codecolony.student.CORE;
+                import game.codecolony.student.Core;
 
                 public final class PlayerProgram {
                     private PlayerProgram() {
@@ -256,7 +256,7 @@ public final class WakeTheCoreMissionExecutionService {
 
     private List<Class<?>> supportClasses() {
         return List.of(
-                CORE.class,
+                Core.class,
                 MissionCommand.class,
                 MissionCommandResult.class,
                 MissionEvent.class,

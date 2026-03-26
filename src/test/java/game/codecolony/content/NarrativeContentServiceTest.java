@@ -28,9 +28,9 @@ class NarrativeContentServiceTest {
 
         assertThat(missionNarrative.title()).isEqualTo("Mission 01: Wake The CORE");
         assertThat(missionNarrative.summary()).contains("Maintenance Room B-1049");
-        assertThat(missionNarrative.objective()).isEqualTo("Call CORE.connect(); to bring CORE-01 online.");
+        assertThat(missionNarrative.objective()).isEqualTo("Call Core.connect(); to bring CORE-01 online.");
         assertThat(missionNarrative.briefingHtml()).contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
-        assertThat(missionNarrative.briefingHtml()).contains("<code>CORE.connect();</code>");
+        assertThat(missionNarrative.briefingHtml()).contains("<code>Core.connect();</code>");
     }
 
     @Test
@@ -42,7 +42,25 @@ class NarrativeContentServiceTest {
         assertThat(missionNarrative.summary()).contains("battery is fully depleted");
         assertThat(missionNarrative.objective()).isEqualTo("Charge CORE-01 to full power.");
         assertThat(missionNarrative.briefingHtml()).contains("Congratulations, engineer.");
-        assertThat(missionNarrative.briefingHtml()).contains("var core = CORE.connect();");
+        assertThat(missionNarrative.briefingHtml()).contains("var core = Core.connect();");
         assertThat(missionNarrative.briefingHtml()).contains("core.charge();");
+    }
+
+    @Test
+    void loadsMissionExplanationFromMarkdownContent() {
+        final NarrativeContentService.MissionExplanationContent explanation =
+                narrativeContentService.loadMissionExplanation("mission-01");
+
+        assertThat(explanation.headline()).isEqualTo("Wake CORE-01 with one line of code");
+        assertThat(explanation.explanationHtml()).contains("Java is built around");
+        assertThat(explanation.explanationHtml()).contains("Core.connect();");
+        assertThat(explanation.explanationHtml()).contains("<pre><code>");
+        assertThat(explanation.explanationHtml()).contains("class Car {");
+        assertThat(explanation.explanationHtml()).doesNotContain("```");
+        assertThat(explanation.explanationHtml()).contains("<ul>");
+        assertThat(explanation.explanationHtml()).contains("<li>");
+        assertThat(explanation.explanationHtml()).contains("<hr>");
+        assertThat(explanation.explanationHtml()).contains("semicolon (<code>;</code>)");
+        assertThat(explanation.explanationHtml()).contains("<a href=\"https://learn.java/learning/tutorials/creatingobjectsandcallingmethods/\"");
     }
 }

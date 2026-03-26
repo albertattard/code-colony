@@ -67,7 +67,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("h1").textContent()).contains("Mission 01: Wake The CORE");
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
         assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Mission Briefing");
-        assertThat(page.locator("[data-briefing-modal]").textContent()).contains("CORE.connect();");
+        assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Core.connect();");
         assertThat(page.locator("[data-briefing-modal]").textContent())
                 .contains("The only way to communicate with the unit is by issuing Java commands through the terminal.");
         assertThat(page.locator("[data-briefing-modal] audio source").getAttribute("src"))
@@ -99,7 +99,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("textarea[name='code']").inputValue()).isEmpty();
 
         page.locator("textarea[name='code']").fill("""
-                CORE.connect();
+                Core.connect();
                 System.out.println("Hello!!");
                 """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
@@ -111,7 +111,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("[data-briefing-modal] audio").evaluate("audio => audio.currentTime"))
                 .isEqualTo(0);
         assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("""
-                CORE.connect();
+                Core.connect();
                 System.out.println("Hello!!");
                 """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
@@ -169,7 +169,7 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator(".status-panel").textContent()).contains("Connected");
         assertThat(page.locator(".status-panel").textContent()).contains("B1");
         assertThat(page.locator("textarea[name='code']").inputValue()).isEqualTo("""
-                CORE.connect();
+                Core.connect();
                 System.out.println("Hello!!");
                 """);
         page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
@@ -179,7 +179,7 @@ class MissionBrowserSmokeTest {
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
 
         page.locator("textarea[name='code']").fill("""
-                var core = CORE.connect();
+                var core = Core.connect();
                 core.charge();
                 core.charge();
                 core.charge();

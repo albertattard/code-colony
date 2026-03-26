@@ -31,7 +31,7 @@ Mission 01 should set up the next recovery step instead of implying the CORE is 
 
 - [x] Mission 01 no longer describes the connected CORE as fully charged.
 - [x] Before connection, the status panel shows no battery or health telemetry.
-- [x] After `CORE.connect();`, the status panel shows:
+- [x] After `Core.connect();`, the status panel shows:
 - [x] an online state
 - [x] a five-segment battery bar with zero filled segments
 - [x] a five-segment health bar with a low filled value
