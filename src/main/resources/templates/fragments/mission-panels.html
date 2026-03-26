@@ -53,9 +53,21 @@
                 <button class="primary-action" type="submit">Run</button>
             </div>
             <div class="actions" th:if="${runResult.success and lockOnSuccess and !#strings.isEmpty(nextMissionPath)}">
+                <button class="secondary-action secondary-button action-left"
+                        type="submit"
+                        data-explain-action="true"
+                        th:attr="formaction=${missionPath + '/explain'}, hx-post=${missionPath + '/explain'}">
+                    Explain
+                </button>
                 <a class="primary-action" th:href="${nextMissionPath}">Next</a>
             </div>
             <div class="actions" th:if="${runResult.success and lockOnSuccess and #strings.isEmpty(nextMissionPath)}">
+                <button class="secondary-action secondary-button action-left"
+                        type="submit"
+                        data-explain-action="true"
+                        th:attr="formaction=${missionPath + '/explain'}, hx-post=${missionPath + '/explain'}">
+                    Explain
+                </button>
                 <button class="primary-action" type="button" disabled>Next</button>
             </div>
         </form>

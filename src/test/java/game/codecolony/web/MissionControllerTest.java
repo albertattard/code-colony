@@ -111,6 +111,7 @@ class MissionControllerTest {
         assertThat(body).contains("stdout");
         assertThat(body).contains("Hello!!");
         assertThat(body).contains("readonly=\"readonly\"");
+        assertThat(body).contains("Explain");
         assertThat(body).contains(">Next</a>");
         assertThat(body).contains(missionTwoPath);
         assertThat(body).doesNotContain(">Run</button>");
@@ -181,6 +182,7 @@ class MissionControllerTest {
         final String body = result.getResponse().getContentAsString();
 
         assertThat(body).contains("readonly=\"readonly\"");
+        assertThat(body).contains("Explain");
         assertThat(body).contains(">Next</a>");
         assertThat(body).doesNotContain(">Run</button>");
         assertThat(body).doesNotContain(">Reset</a>");
@@ -214,6 +216,7 @@ class MissionControllerTest {
         assertThat(body).doesNotContain(">Reset</a>");
         assertThat(body).contains(">Next</button>");
         assertThat(body).contains("readonly=\"readonly\"");
+        assertThat(body).contains("Explain");
     }
 
     @Test
