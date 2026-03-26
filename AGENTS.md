@@ -161,9 +161,9 @@ Examples:
 - Build for observability: logs, turn summaries, and visible state changes should help learners debug their code.
 - Write tests around engine behavior and mission rules, especially where student code interacts with the system.
 - Tag browser end-to-end tests with `@Tag("e2e")`.
-- Keep `mvn test` focused on fast unit and integration feedback by excluding `e2e` tests.
-- Run browser end-to-end tests with `mvn verify`.
-- Prefer `final` for variables, parameters, and fields unless mutation is required.
+- Keep `./mvnw test` focused on fast unit and integration feedback by excluding `e2e` tests.
+- Run browser end-to-end tests with `./mvnw verify`.
+- As part of the normal change flow, run `./mvnw clean verify` before finalizing work.
 
 ## Code Standards
 
@@ -173,6 +173,7 @@ Examples:
 - Prefer composition over deep inheritance.
 - Prefer immutable data and value objects where practical.
 - Treat error messages and feedback text as part of the product, not incidental implementation detail.
+- Prefer `final` for variables, parameters, and fields unless mutation is required.
 
 ## Review Rules
 
