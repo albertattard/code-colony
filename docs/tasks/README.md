@@ -40,3 +40,4 @@ Task files should:
 - [Task 0016: Enrich Mission 02 Briefing](done/0016-enrich-mission-02-briefing.md)
 - [Task 0017: Align Mission 02 Initial State With Mission 01](done/0017-align-mission-02-initial-state-with-mission-01.md)
 - [Task 0018: Lock Completed Mission 02 UI](done/0018-lock-completed-mission-02-ui.md)
+- [Task 0019: Introduce Game Session State](done/0019-introduce-game-session-state.md)

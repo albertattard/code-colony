@@ -1,30 +1,42 @@
 package game.codecolony.web;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class MissionControllerTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
-    void homePageRendersIntroScreen() throws IOException, InterruptedException {
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/"))
-                .GET()
-                .build();
-        final String body = send(request);
+    void homePageRendersIntroScreen() throws Exception {
+        final MvcResult result = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
 
         assertThat(body).contains("Mission Briefing");
         assertThat(body).contains("Investigate the colony site and restore critical systems in stages.");
@@ -33,16 +45,17 @@ class MissionControllerTest {
         assertThat(body).contains("Colony Operations and Repair Engineers");
         assertThat(body).contains("/audio/briefings/intro.mp3");
         assertThat(body).contains("Start");
-        assertThat(body).contains("/missions/wake-the-core");
+        assertThat(body).contains("action=\"/game-sessions\"");
         assertThat(body).doesNotContain("Mission 01: Wake The CORE");
     }
 
     @Test
-    void missionPageRenders() throws IOException, InterruptedException {
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/wake-the-core"))
-                .GET()
-                .build();
-        final String body = send(request);
+    void missionPageRenders() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final MvcResult result = mockMvc.perform(get(missionOnePath))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
 
         assertThat(body).contains("Mission 01: Wake The CORE");
         assertThat(body).contains("Maintenance Room B-1049");
@@ -61,6 +74,7 @@ class MissionControllerTest {
         assertThat(body).contains(">Reset</a>");
         assertThat(body).contains(">Run</button>");
         assertThat(body).doesNotContain(">Next<");
+        assertThat(body).contains(missionOnePath + "/reset");
         assertThat(body).doesNotContain("Battery</dt>");
         assertThat(body).doesNotContain("Power</dt>");
         assertThat(body).doesNotContain("Health</dt>");
@@ -70,49 +84,51 @@ class MissionControllerTest {
     }
 
     @Test
-    void runEndpointReturnsMissionResultFragmentForHtmx() throws IOException, InterruptedException {
-        final String formBody = "code=" + URLEncoder.encode("""
-                CORE.connect();
-                System.out.println("Hello!!");
-                """, StandardCharsets.UTF_8);
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/wake-the-core/run"))
-                .header("HX-Request", "true")
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(formBody))
-                .build();
-        final HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
+    void runEndpointReturnsMissionResultFragmentForHtmx() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        final MvcResult result = mockMvc.perform(post(missionOnePath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", """
+                                CORE.connect();
+                                System.out.println(\"Hello!!\");
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
 
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.body()).contains("CORE Online");
-        assertThat(response.body()).contains("CORE Status");
-        assertThat(response.body()).contains("CORE-01");
-        assertThat(response.body()).contains("Online");
-        assertThat(response.body()).contains("Power");
-        assertThat(response.body()).contains("0 / 5");
-        assertThat(response.body()).contains("Health");
-        assertThat(response.body()).contains("1 / 5");
-        assertThat(response.body()).contains("Program Output");
-        assertThat(response.body()).contains("stdout");
-        assertThat(response.body()).contains("Hello!!");
-        assertThat(response.body()).contains("readonly=\"readonly\"");
-        assertThat(response.body()).contains(">Next</a>");
-        assertThat(response.body()).contains("/missions/charge-the-core");
-        assertThat(response.body()).contains("code=CORE.connect%28%29%3B%0ASystem.out.println%28%22Hello%21%21%22%29%3B%0A");
-        assertThat(response.body()).doesNotContain(">Run</button>");
-        assertThat(response.body()).doesNotContain(">Reset</a>");
+        assertThat(body).contains("CORE Online");
+        assertThat(body).contains("CORE Status");
+        assertThat(body).contains("CORE-01");
+        assertThat(body).contains("Online");
+        assertThat(body).contains("Power");
+        assertThat(body).contains("0 / 5");
+        assertThat(body).contains("Health");
+        assertThat(body).contains("1 / 5");
+        assertThat(body).contains("Program Output");
+        assertThat(body).contains("stdout");
+        assertThat(body).contains("Hello!!");
+        assertThat(body).contains("readonly=\"readonly\"");
+        assertThat(body).contains(">Next</a>");
+        assertThat(body).contains(missionTwoPath);
+        assertThat(body).doesNotContain(">Run</button>");
+        assertThat(body).doesNotContain(">Reset</a>");
     }
 
     @Test
-    void nextMissionPageRenders() throws IOException, InterruptedException {
-        final String carriedCode = URLEncoder.encode("""
+    void nextMissionPageRendersWithCarriedCodeFromSession() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        runMissionOne(missionOnePath, """
                 CORE.connect();
-                System.out.println("Hello!!");
-                """, StandardCharsets.UTF_8);
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core?code=" + carriedCode))
-                .GET()
-                .build();
-        final String body = send(request);
+                System.out.println(\"Hello!!\");
+                """);
+
+        final MvcResult result = mockMvc.perform(get(missionTwoPath))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
 
         assertThat(body).contains("Mission 02: Charge The CORE");
         assertThat(body).contains("Maintenance Room B-1049");
@@ -133,41 +149,79 @@ class MissionControllerTest {
     }
 
     @Test
-    void missionTwoRunEndpointReturnsUpdatedBatteryState() throws IOException, InterruptedException {
-        final String formBody = "code=" + URLEncoder.encode("""
-                var core = CORE.connect();
-                core.charge();
-                core.charge();
-                core.charge();
-                core.charge();
-                core.charge();
-                """, StandardCharsets.UTF_8)
-                + "&initialCode=" + URLEncoder.encode("CORE.connect();", StandardCharsets.UTF_8);
-        final HttpRequest request = HttpRequest.newBuilder(baseUri("/missions/charge-the-core/run"))
-                .header("HX-Request", "true")
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(formBody))
-                .build();
-        final HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
+    void completedMissionOneRemainsLockedAfterReload() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        runMissionOne(missionOnePath, "CORE.connect();");
 
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.body()).contains("CORE Charged");
-        assertThat(response.body()).contains("5 / 5");
-        assertThat(response.body()).contains("Charged CORE-01 to 5/5.");
-        assertThat(response.body()).doesNotContain(">Run</button>");
-        assertThat(response.body()).doesNotContain(">Reset</a>");
-        assertThat(response.body()).contains(">Next</button>");
-        assertThat(response.body()).contains("readonly=\"readonly\"");
+        final MvcResult result = mockMvc.perform(get(missionOnePath))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("readonly=\"readonly\"");
+        assertThat(body).contains(">Next</a>");
+        assertThat(body).doesNotContain(">Run</button>");
+        assertThat(body).doesNotContain(">Reset</a>");
     }
 
-    private URI baseUri(final String path) {
-        return URI.create("http://localhost:" + port + path);
+    @Test
+    void missionTwoRunEndpointReturnsUpdatedBatteryState() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
+        runMissionOne(missionOnePath, "CORE.connect();");
+
+        final MvcResult result = mockMvc.perform(post(missionTwoPath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", """
+                                var core = CORE.connect();
+                                core.charge();
+                                core.charge();
+                                core.charge();
+                                core.charge();
+                                core.charge();
+                                """))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("CORE Charged");
+        assertThat(body).contains("5 / 5");
+        assertThat(body).contains("Charged CORE-01 to 5/5.");
+        assertThat(body).doesNotContain(">Run</button>");
+        assertThat(body).doesNotContain(">Reset</a>");
+        assertThat(body).contains(">Next</button>");
+        assertThat(body).contains("readonly=\"readonly\"");
     }
 
-    private String send(final HttpRequest request) throws IOException, InterruptedException {
-        return HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString())
-                .body();
+    @Test
+    void unknownGameSessionShowsExpiredSessionPage() throws Exception {
+        final UUID gameSessionId = UUID.randomUUID();
+        final MvcResult result = mockMvc.perform(get("/sessions/" + gameSessionId + "/missions/wake-the-core"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("Session Expired");
+        assertThat(body).contains("Start New Session");
+        assertThat(body).contains("action=\"/game-sessions\"");
+    }
+
+    private String createSessionAndGetMissionOnePath() throws Exception {
+        final MvcResult result = mockMvc.perform(post("/game-sessions"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/sessions/*/missions/wake-the-core"))
+                .andReturn();
+        final String location = result.getResponse().getRedirectedUrl();
+        assertThat(location).isNotBlank();
+        return location;
+    }
+
+    private void runMissionOne(final String missionOnePath, final String code) throws Exception {
+        mockMvc.perform(post(missionOnePath + "/run")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("HX-Request", "true")
+                        .param("code", code))
+                .andExpect(status().isOk());
     }
 }

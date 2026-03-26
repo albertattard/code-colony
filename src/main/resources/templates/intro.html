@@ -35,7 +35,9 @@
                     </audio>
                 </div>
                 <div class="actions intro-actions">
-                    <a class="primary-action" th:href="@{/missions/wake-the-core}">Start</a>
+                    <form th:action="@{/game-sessions}" method="post">
+                        <button class="primary-action" type="submit">Start</button>
+                    </form>
                 </div>
             </div>
         </section>

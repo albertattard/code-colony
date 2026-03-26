@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Colony | Session Expired</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+<main class="layout intro-layout">
+    <section class="panel intro-card intro-briefing">
+        <p class="eyebrow">Code Colony</p>
+        <h1>Session Expired</h1>
+        <p class="panel-copy">This game session is no longer available. Start a new mission session to continue.</p>
+        <div class="actions intro-actions">
+            <form th:action="@{/game-sessions}" method="post">
+                <button class="primary-action" type="submit">Start New Session</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+
+</html>

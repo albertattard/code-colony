@@ -59,10 +59,10 @@ class MissionBrowserSmokeTest {
         assertThat(page.locator("body").textContent()).contains("Colony Operations and Repair Engineers");
         assertThat(page.locator("audio source").getAttribute("src")).isEqualTo("/audio/briefings/intro.mp3");
 
-        page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
+        page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Start"))
                 .click();
-        page.waitForURL("**/missions/wake-the-core");
+        page.waitForURL("**/sessions/**/missions/wake-the-core");
 
         assertThat(page.locator("h1").textContent()).contains("Mission 01: Wake The CORE");
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
@@ -121,7 +121,8 @@ class MissionBrowserSmokeTest {
                 .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
 
         final Response response = page.waitForResponse(
-                runResponse -> runResponse.url().contains("/missions/wake-the-core/run"),
+                runResponse -> runResponse.url().contains("/missions/wake-the-core/run")
+                        && runResponse.url().contains("/sessions/"),
                 () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                         new Page.GetByRoleOptions().setName("Run"))
                         .click()
@@ -156,7 +157,7 @@ class MissionBrowserSmokeTest {
         page.getByRole(com.microsoft.playwright.options.AriaRole.LINK,
                 new Page.GetByRoleOptions().setName("Next"))
                 .click();
-        page.waitForURL("**/missions/charge-the-core**");
+        page.waitForURL("**/sessions/**/missions/charge-the-core**");
         assertThat(page.locator("h1").textContent()).contains("Mission 02: Charge The CORE");
         assertThat(page.locator("[data-briefing-modal]").isVisible()).isTrue();
         assertThat(page.locator("[data-briefing-modal]").textContent()).contains("Congratulations, engineer.");
@@ -188,7 +189,8 @@ class MissionBrowserSmokeTest {
                 """);
 
         final Response missionTwoResponse = page.waitForResponse(
-                runResponse -> runResponse.url().contains("/missions/charge-the-core/run"),
+                runResponse -> runResponse.url().contains("/missions/charge-the-core/run")
+                        && runResponse.url().contains("/sessions/"),
                 () -> page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                         new Page.GetByRoleOptions().setName("Run"))
                         .click()

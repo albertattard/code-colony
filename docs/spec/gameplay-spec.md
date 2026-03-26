@@ -64,6 +64,29 @@ This carried code should:
 - serve as the starting point for the next task
 - reinforce that the learner is extending a working solution rather than starting over
 
+## Game Session State
+
+For the current prototype, mission progression should be tied to an explicit game session identifier rather than to browser cookies or account login.
+
+When the player clicks `Start` on the intro screen:
+
+- the server creates a new `gameSessionId` (UUID)
+- the player is redirected into Mission 01 under that session-scoped route
+- all mission navigation and run requests continue to include the same `gameSessionId`
+
+The server should keep a per-session state model:
+
+- one `GameSession` per `gameSessionId`
+- mission state stored as `Map<MissionId, MissionState>`
+- each `MissionState` tracks learner `startCode`, learner `currentCode`, and completion status
+
+Mission state should be used for mission continuity:
+
+- Mission 01 success marks Mission 01 as completed
+- Mission 02 preloads `startCode` from Mission 01 `currentCode` only when Mission 01 is completed and no Mission 02 state exists yet
+
+For this stage, game sessions may be stored in memory and may expire after inactivity. Expired or unknown session IDs should produce clear player-facing guidance to start a new session.
+
 ## Mission Structure
 
 Each mission should include:
