@@ -87,6 +87,7 @@ Before implementing a feature, identify which existing spec governs it. If none 
 - If behavior is discovered or clarified during development, update the relevant spec before treating that behavior as established.
 - Do not leave mission progression, carried learner state, or learner-facing rules implicit in code when they affect gameplay or teaching.
 - Update the relevant spec in the same change as any behavior-changing implementation.
+- If implementation and spec differ, treat the implementation as wrong until the spec is intentionally updated.
 
 ## Architectural Decisions
 
@@ -109,9 +110,10 @@ Task directories:
 - `docs/tasks/done/` for completed tasks kept as project history
 
 - Use task files to describe concrete units of work.
-- Link each task to the relevant spec documents when applicable.
+- Link each task to the relevant spec documents. If no spec exists, create or update the spec before starting the task unless the change is trivial.
 - Do not start meaningful implementation work until the task is clear enough to execute.
 - Update task files as work progresses rather than treating them as disposable notes.
+- Each task should define the expected behavior or outcome clearly enough that it can be verified after implementation.
 
 ## Trigger Phrases
 
@@ -128,7 +130,7 @@ When asked to `commit changes`, use this workflow:
 4. Commit only the files related to the current task.
 5. Exclude unrelated pending changes from the commit.
 6. Show the commit message.
-7. Ask for confirmation before pushing upstream.
+7. Push upstream automatically after committing.
 
 ### `build`
 
@@ -180,5 +182,7 @@ Changes should be reviewed against both product and teaching goals:
 - Does this preserve a small, stable student-facing API?
 - Does this introduce unnecessary technical complexity?
 - Does this fit the current specs?
+- If implementation and spec differ, require either a spec update or a rollback before approving.
+- All automated tests must pass before approving a change unless a failing state is explicitly agreed upon.
 
 If the answer to any of these is unclear, stop and update the specs before continuing.
