@@ -1,0 +1,32 @@
+version: 1
+name: maintenance-room-b-1049
+size:
+  rows: 3
+  cols: 3
+
+legend:
+  ".":
+    type: floor
+    label: "Walkable floor tile"
+  "D":
+    type: dock
+    label: "Docking station"
+  "R":
+    type: repair
+    label: "Repair station"
+
+base:
+  - "..."
+  - "D.R"
+  - "..."
+
+spawns:
+  - id: core_01
+    type: core
+    at: "B1"
+    battery:
+      level: 0
+      capacity: 5
+    health:
+      level: 1
+      capacity: 5

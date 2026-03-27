@@ -20,12 +20,27 @@ import java.util.List;
 final class ChargeTheCoreMissionSimulator implements MissionSimulator {
 
     private static final int CORE_ID = 1;
-    private static final int BATTERY_CAPACITY = 5;
 
     private final List<MissionEvent> events = new ArrayList<>();
+    private final String startPosition;
+    private final int batteryCapacity;
+    private final int healthLevel;
+    private final int healthCapacity;
     private boolean connected;
     private int connectAttempts;
     private int batteryLevel;
+
+    ChargeTheCoreMissionSimulator(final String startPosition,
+                                  final int batteryLevel,
+                                  final int batteryCapacity,
+                                  final int healthLevel,
+                                  final int healthCapacity) {
+        this.startPosition = startPosition;
+        this.batteryLevel = batteryLevel;
+        this.batteryCapacity = batteryCapacity;
+        this.healthLevel = healthLevel;
+        this.healthCapacity = healthCapacity;
+    }
 
     @Override
     public MissionCommandResult execute(final MissionCommand command) {
@@ -40,7 +55,16 @@ final class ChargeTheCoreMissionSimulator implements MissionSimulator {
     }
 
     ChargeTheCoreMissionSimulation finish() {
-        return new ChargeTheCoreMissionSimulation(connected, connectAttempts, batteryLevel, List.copyOf(events));
+        return new ChargeTheCoreMissionSimulation(
+                connected,
+                connectAttempts,
+                startPosition,
+                batteryLevel,
+                batteryCapacity,
+                healthLevel,
+                healthCapacity,
+                List.copyOf(events)
+        );
     }
 
     private ConnectCoreResult executeConnect() {
@@ -61,13 +85,13 @@ final class ChargeTheCoreMissionSimulator implements MissionSimulator {
             throw new MissionExecutionException("CORE-01 must be connected before it can be charged.");
         }
 
-        if (batteryLevel >= BATTERY_CAPACITY) {
-            events.add(new CoreChargeCappedEvent(CORE_ID, BATTERY_CAPACITY, BATTERY_CAPACITY));
-            return new ChargeCoreResult(CORE_ID, BATTERY_CAPACITY, BATTERY_CAPACITY);
+        if (batteryLevel >= batteryCapacity) {
+            events.add(new CoreChargeCappedEvent(CORE_ID, batteryCapacity, batteryCapacity));
+            return new ChargeCoreResult(CORE_ID, batteryCapacity, batteryCapacity);
         }
 
         batteryLevel++;
-        events.add(new CoreChargedEvent(CORE_ID, batteryLevel, BATTERY_CAPACITY));
-        return new ChargeCoreResult(CORE_ID, batteryLevel, BATTERY_CAPACITY);
+        events.add(new CoreChargedEvent(CORE_ID, batteryLevel, batteryCapacity));
+        return new ChargeCoreResult(CORE_ID, batteryLevel, batteryCapacity);
     }
 }

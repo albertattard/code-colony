@@ -33,6 +33,29 @@ class MissionMapLoaderTest {
     }
 
     @Test
+    void loadMission02MapFromResources() {
+        final MissionMap map = missionMapLoader.load("mission-02");
+
+        assertThat(map.version()).isEqualTo(1);
+        assertThat(map.name()).isEqualTo("maintenance-room-b-1049");
+        assertThat(map.size().rows()).isEqualTo(3);
+        assertThat(map.size().cols()).isEqualTo(3);
+        assertThat(map.base()).containsExactly("...", "D.R", "...");
+        assertThat(map.legend().get("D").type()).isEqualTo("dock");
+        assertThat(map.legend().get("R").type()).isEqualTo("repair");
+
+        assertThat(map.spawns()).singleElement().satisfies(spawn -> {
+            assertThat(spawn.id()).isEqualTo("core_01");
+            assertThat(spawn.type()).isEqualTo("core");
+            assertThat(spawn.at()).isEqualTo("B1");
+            assertThat(spawn.battery().level()).isEqualTo(0);
+            assertThat(spawn.battery().capacity()).isEqualTo(5);
+            assertThat(spawn.health().level()).isEqualTo(1);
+            assertThat(spawn.health().capacity()).isEqualTo(5);
+        });
+    }
+
+    @Test
     void loadMission03MapFromResources() {
         final MissionMap map = missionMapLoader.load("mission-03");
 

@@ -25,7 +25,7 @@ final class ChargeTheCoreMissionValidator {
                             "Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.",
                             "Fix the runtime problem and run the code again."
                     ),
-                    statusFor(simulation.connected(), simulation.connectAttempts(), simulation.batteryLevel()),
+                    statusFor(simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     false
@@ -38,7 +38,8 @@ final class ChargeTheCoreMissionValidator {
         final boolean rejectedConnection = simulation.events().stream()
                 .anyMatch(ConnectionRejectedEvent.class::isInstance);
 
-        if (successfulConnections == 1 && !rejectedConnection && simulation.batteryLevel() == 5) {
+        if (successfulConnections == 1 && !rejectedConnection
+                && simulation.batteryLevel() == simulation.batteryCapacity()) {
             return new MissionRunResult(
                     "CORE Charged",
                     "CORE-01 battery restored to full capacity. The unit now has enough power for basic movement.",
@@ -48,7 +49,7 @@ final class ChargeTheCoreMissionValidator {
                             "Core.connect() returned a Core instance you could reuse.",
                             "Each successful core.charge(); call restored one power segment."
                     ),
-                    statusFor(true, simulation.connectAttempts(), simulation.batteryLevel()),
+                    statusFor(true, simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     true
@@ -62,39 +63,53 @@ final class ChargeTheCoreMissionValidator {
                     simulationEvents,
                     List.of(
                             "Call Core.connect() and store the returned Core in a variable before charging it.",
-                            "Mission 02 is solved when the battery reaches 5 / 5."
+                            "Mission 02 is solved when the battery reaches %d / %d."
+                                    .formatted(simulation.batteryCapacity(), simulation.batteryCapacity())
                     ),
-                    statusFor(false, simulation.connectAttempts(), simulation.batteryLevel()),
+                    statusFor(false, simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     false
             );
         }
 
-        final int remainingCharge = 5 - simulation.batteryLevel();
+        final int remainingCharge = simulation.batteryCapacity() - simulation.batteryLevel();
         return new MissionRunResult(
                 "Mission Incomplete",
                 "CORE-01 is online, but the battery is not full yet.",
                 simulationEvents,
                 List.of(
                         "Store the connected CORE in a variable so you can call core.charge(); repeatedly.",
-                        "Charge CORE-01 %d more time(s) to reach 5 / 5.".formatted(remainingCharge)
+                        "Charge CORE-01 %d more time(s) to reach %d / %d."
+                                .formatted(remainingCharge, simulation.batteryCapacity(), simulation.batteryCapacity())
                 ),
-                statusFor(true, simulation.connectAttempts(), simulation.batteryLevel()),
+                statusFor(true, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 false
         );
     }
 
-    private MissionCoreStatus statusFor(final boolean connected, final int connectAttempts, final int batteryLevel) {
+    private MissionCoreStatus statusFor(final boolean connected,
+                                        final int connectAttempts,
+                                        final ChargeTheCoreMissionSimulation simulation) {
         final String note = connectAttempts > 1
                 ? "Control reference acquired, then an invalid duplicate connect was attempted."
-                : connected && batteryLevel == 5
+                : connected && simulation.batteryLevel() == simulation.batteryCapacity()
                 ? "Battery restored. CORE-01 is ready for low-power field work."
                 : connected
                 ? "Telemetry online. Battery charging in progress. Structural damage still detected."
                 : "CORE-01 remains online from Mission 01. Use Core.connect() to obtain a control reference for this run.";
-        return new MissionCoreStatus("CORE-01", "Online", batteryLevel, 5, 1, 5, "Connected", "B1", note);
+        return new MissionCoreStatus(
+                "CORE-01",
+                "Online",
+                simulation.batteryLevel(),
+                simulation.batteryCapacity(),
+                simulation.healthLevel(),
+                simulation.healthCapacity(),
+                "Connected",
+                simulation.startPosition(),
+                note
+        );
     }
 }
