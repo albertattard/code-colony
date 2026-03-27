@@ -1,4 +1,6 @@
-package game.codecolony.mission;
+package game.codecolony.mission.mission02;
+
+import game.codecolony.mission.*;
 
 import game.codecolony.runtime.ChargeCoreCommand;
 import game.codecolony.runtime.ChargeCoreResult;
@@ -83,7 +85,7 @@ public final class ChargeTheCoreMissionExecutionService {
                     List.of(
                             javaTool("java").toString(),
                             "-cp", classesDirectory + System.getProperty("path.separator") + supportClassesDirectory,
-                            "game.codecolony.mission.ChargeTheCoreMissionWorker",
+                            "game.codecolony.mission.mission02.ChargeTheCoreMissionWorker",
                             resultFile.toString()
                     ),
                     RUN_TIMEOUT

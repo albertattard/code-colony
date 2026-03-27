@@ -2,6 +2,7 @@ package game.codecolony.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import game.codecolony.mission.mission02.ChargeTheCoreMissionExecutionService;
 import org.junit.jupiter.api.Test;
 
 class ChargeTheCoreMissionExecutionServiceTest {

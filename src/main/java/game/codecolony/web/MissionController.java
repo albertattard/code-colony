@@ -1,11 +1,11 @@
 package game.codecolony.web;
 
-import game.codecolony.mission.ChargeTheCoreMissionService;
+import game.codecolony.mission.mission02.ChargeTheCoreMissionService;
 import game.codecolony.mission.CodeExplanation;
 import game.codecolony.mission.CodeExplanationService;
-import game.codecolony.mission.repaircore.RepairTheCoreMissionService;
+import game.codecolony.mission.mission03.RepairTheCoreMissionService;
 import game.codecolony.mission.MissionPage;
-import game.codecolony.mission.WakeTheCoreMissionService;
+import game.codecolony.mission.mission01.WakeTheCoreMissionService;
 import game.codecolony.session.GameSessionNotFoundException;
 import game.codecolony.session.GameSessionService;
 

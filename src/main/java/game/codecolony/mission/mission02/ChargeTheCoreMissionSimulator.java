@@ -1,4 +1,6 @@
-package game.codecolony.mission;
+package game.codecolony.mission.mission02;
+
+import game.codecolony.mission.*;
 
 import game.codecolony.runtime.ChargeCoreCommand;
 import game.codecolony.runtime.ChargeCoreResult;

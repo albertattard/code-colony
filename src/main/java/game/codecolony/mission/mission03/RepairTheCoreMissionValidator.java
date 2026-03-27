@@ -1,4 +1,4 @@
-package game.codecolony.mission.repaircore;
+package game.codecolony.mission.mission03;
 
 import game.codecolony.mission.MissionCoreStatus;
 import game.codecolony.mission.MissionRunResult;

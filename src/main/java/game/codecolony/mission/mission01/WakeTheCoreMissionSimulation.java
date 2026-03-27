@@ -1,4 +1,6 @@
-package game.codecolony.mission;
+package game.codecolony.mission.mission01;
+
+import game.codecolony.mission.*;
 
 import game.codecolony.runtime.MissionEvent;
 

@@ -1,8 +1,7 @@
-package game.codecolony.mission.repaircore;
+package game.codecolony.mission.mission01;
 
-import game.codecolony.mission.MissionCoreStatus;
-import game.codecolony.mission.MissionRunResult;
-import game.codecolony.mission.MissionRunResultFileCodec;
+import game.codecolony.mission.*;
+
 import game.codecolony.runtime.ChargeCoreCommand;
 import game.codecolony.runtime.ChargeCoreResult;
 import game.codecolony.runtime.ConnectCoreResult;
@@ -23,6 +22,7 @@ import game.codecolony.runtime.MoveCoreResult;
 import game.codecolony.runtime.RepairCoreCommand;
 import game.codecolony.runtime.RepairCoreResult;
 import game.codecolony.student.Core;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,13 +39,11 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.stereotype.Service;
-
 @Service
-public final class RepairTheCoreMissionExecutionService {
+public final class WakeTheCoreMissionExecutionService {
 
     private static final String PLAYER_PROGRAM_SOURCE = "PlayerProgram.java";
-    private static final String RESULT_FILE = "repair-the-core-result.properties";
+    private static final String RESULT_FILE = "wake-the-core-result.properties";
     private static final String SUPPORT_CLASSES_DIRECTORY = "support-classes";
     private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(10);
     private static final Duration RUN_TIMEOUT = Duration.ofSeconds(5);
@@ -56,7 +54,7 @@ public final class RepairTheCoreMissionExecutionService {
     public MissionRunResult execute(final String code) {
         Path workingDirectory = null;
         try {
-            workingDirectory = Files.createTempDirectory("repair-the-core-");
+            workingDirectory = Files.createTempDirectory("wake-the-core-");
             final Path sourceDirectory = workingDirectory.resolve("src/game/codecolony/player");
             final Path classesDirectory = workingDirectory.resolve("classes");
             final Path supportClassesDirectory = workingDirectory.resolve(SUPPORT_CLASSES_DIRECTORY);
@@ -87,7 +85,7 @@ public final class RepairTheCoreMissionExecutionService {
                     List.of(
                             javaTool("java").toString(),
                             "-cp", classesDirectory + System.getProperty("path.separator") + supportClassesDirectory,
-                            "game.codecolony.mission.repaircore.RepairTheCoreMissionWorker",
+                            "game.codecolony.mission.mission01.WakeTheCoreMissionWorker",
                             resultFile.toString()
                     ),
                     RUN_TIMEOUT
@@ -112,10 +110,10 @@ public final class RepairTheCoreMissionExecutionService {
         final List<String> feedbackItems = parseCompilerFeedback(compilerOutput);
         return new MissionRunResult(
                 "Compilation Failed",
-                "The code could not be compiled for Mission 03.",
+                "The code could not be compiled for Mission 01.",
                 List.of("Compilation stopped before the mission could run."),
                 feedbackItems,
-                missionThreeInitialStatus(),
+                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
                 "",
                 "",
                 false
@@ -126,20 +124,15 @@ public final class RepairTheCoreMissionExecutionService {
         return new MissionRunResult(
                 "Run Failed",
                 "The mission worker did not return a valid result.",
-                List.of("Execution stopped before Mission 03 could be evaluated."),
+                List.of("Execution stopped before Mission 01 could be evaluated."),
                 List.of(processOutput == null || processOutput.isBlank()
                         ? "No runtime diagnostics were returned."
                         : processOutput.strip()),
-                missionThreeInitialStatus(),
+                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
                 "",
                 "",
                 false
         );
-    }
-
-    private MissionCoreStatus missionThreeInitialStatus() {
-        return new MissionCoreStatus("CORE-01", "Online", 5, 5, 1, 5, "Connected", "B1",
-                "CORE-01 is stable and charged. Move to B3 and repair structural damage.");
     }
 
     private List<String> parseCompilerFeedback(final String compilerOutput) {
@@ -294,10 +287,10 @@ public final class RepairTheCoreMissionExecutionService {
                 MissionCoreStatus.class,
                 MissionRunResult.class,
                 MissionRunResultFileCodec.class,
-                RepairTheCoreMissionSimulation.class,
-                RepairTheCoreMissionSimulator.class,
-                RepairTheCoreMissionValidator.class,
-                RepairTheCoreMissionWorker.class
+                WakeTheCoreMissionSimulation.class,
+                WakeTheCoreMissionSimulator.class,
+                WakeTheCoreMissionValidator.class,
+                WakeTheCoreMissionWorker.class
         );
     }
 
