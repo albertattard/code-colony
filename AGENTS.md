@@ -88,6 +88,8 @@ Before implementing a feature, identify which existing spec governs it. If none 
 - Do not leave mission progression, carried learner state, or learner-facing rules implicit in code when they affect gameplay or teaching.
 - Update the relevant spec in the same change as any behavior-changing implementation.
 - If implementation and spec differ, treat the implementation as wrong until the spec is intentionally updated.
+- Before proposing implementation steps for non-trivial behavior changes, start with a `Spec impact` check and state explicitly whether a spec update is required.
+- If a spec update is required, propose or apply that spec change first, then outline implementation steps aligned to the updated spec.
 
 ## Architectural Decisions
 
