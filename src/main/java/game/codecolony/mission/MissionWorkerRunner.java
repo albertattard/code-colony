@@ -23,8 +23,8 @@ public final class MissionWorkerRunner {
                                final MissionSimulator simulator,
                                final Supplier<T> simulationResultSupplier,
                                final MissionResultValidator<T> validator) throws Exception {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("Expected one argument: result file path");
+        if (args.length < 1) {
+            throw new IllegalArgumentException("Expected at least one argument: result file path");
         }
 
         final Path resultFile = Path.of(args[0]);

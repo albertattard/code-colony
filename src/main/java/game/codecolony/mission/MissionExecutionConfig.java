@@ -12,6 +12,7 @@ public final class MissionExecutionConfig {
     private final String executionStoppedSummary;
     private final MissionCoreStatus missionInitialStatus;
     private final List<Class<?>> missionSupportClasses;
+    private final List<String> workerArguments;
 
     private MissionExecutionConfig(final Builder builder) {
         this.temporaryDirectoryPrefix = requireNonBlank(builder.temporaryDirectoryPrefix, "temporaryDirectoryPrefix");
@@ -28,6 +29,7 @@ public final class MissionExecutionConfig {
             throw new IllegalArgumentException("missionSupportClasses must not be empty");
         }
         this.missionSupportClasses = List.copyOf(builder.missionSupportClasses);
+        this.workerArguments = List.copyOf(builder.workerArguments);
     }
 
     public static Builder builder() {
@@ -62,6 +64,10 @@ public final class MissionExecutionConfig {
         return missionSupportClasses;
     }
 
+    public List<String> workerArguments() {
+        return workerArguments;
+    }
+
     public static final class Builder {
 
         private String temporaryDirectoryPrefix;
@@ -71,6 +77,7 @@ public final class MissionExecutionConfig {
         private String executionStoppedSummary;
         private MissionCoreStatus missionInitialStatus;
         private final List<Class<?>> missionSupportClasses = new ArrayList<>();
+        private final List<String> workerArguments = new ArrayList<>();
 
         private Builder() {
         }
@@ -109,6 +116,14 @@ public final class MissionExecutionConfig {
             this.missionSupportClasses.clear();
             if (value != null) {
                 this.missionSupportClasses.addAll(value);
+            }
+            return this;
+        }
+
+        public Builder workerArguments(final List<String> value) {
+            this.workerArguments.clear();
+            if (value != null) {
+                this.workerArguments.addAll(value);
             }
             return this;
         }

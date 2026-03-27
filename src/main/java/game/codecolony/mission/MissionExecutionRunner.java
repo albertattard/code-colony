@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -50,15 +51,15 @@ public final class MissionExecutionRunner {
             }
 
             final Path resultFile = workingDirectory.resolve(config.resultFileName());
-            final ProcessResult execution = runProcess(
-                    List.of(
-                            javaTool("java").toString(),
-                            "-cp", classesDirectory + File.pathSeparator + supportClassesDirectory,
-                            config.workerClassName(),
-                            resultFile.toString()
-                    ),
-                    RUN_TIMEOUT
-            );
+            final List<String> executionCommand = new ArrayList<>(List.of(
+                    javaTool("java").toString(),
+                    "-cp", classesDirectory + File.pathSeparator + supportClassesDirectory,
+                    config.workerClassName(),
+                    resultFile.toString()
+            ));
+            executionCommand.addAll(config.workerArguments());
+
+            final ProcessResult execution = runProcess(executionCommand, RUN_TIMEOUT);
 
             if (Files.exists(resultFile)) {
                 return MissionRunResultFileCodec.read(resultFile);

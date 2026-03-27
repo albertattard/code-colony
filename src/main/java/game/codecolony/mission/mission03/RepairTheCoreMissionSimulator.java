@@ -26,17 +26,38 @@ import java.util.List;
 final class RepairTheCoreMissionSimulator implements MissionSimulator {
 
     private static final int CORE_ID = 1;
-    private static final int BATTERY_CAPACITY = 5;
-    private static final int HEALTH_CAPACITY = 5;
 
     private final List<MissionEvent> events = new ArrayList<>();
+    private final String dockPosition;
+    private final String repairPosition;
+    private final int maxColumn;
+    private final int batteryCapacity;
+    private final int healthCapacity;
     private boolean connected;
     private int connectAttempts;
     private int moves;
-    private String position = "B1";
-    private int batteryLevel = BATTERY_CAPACITY;
-    private int healthLevel = 1;
+    private String position;
+    private int batteryLevel;
+    private int healthLevel;
     private boolean repaired;
+
+    RepairTheCoreMissionSimulator(final String startPosition,
+                                  final String dockPosition,
+                                  final String repairPosition,
+                                  final int maxColumn,
+                                  final int batteryLevel,
+                                  final int batteryCapacity,
+                                  final int healthLevel,
+                                  final int healthCapacity) {
+        this.position = startPosition;
+        this.dockPosition = dockPosition;
+        this.repairPosition = repairPosition;
+        this.maxColumn = maxColumn;
+        this.batteryLevel = batteryLevel;
+        this.batteryCapacity = batteryCapacity;
+        this.healthLevel = healthLevel;
+        this.healthCapacity = healthCapacity;
+    }
 
     @Override
     public MissionCommandResult execute(final MissionCommand command) {
@@ -63,9 +84,9 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
                 position,
                 moves,
                 batteryLevel,
-                BATTERY_CAPACITY,
+                batteryCapacity,
                 healthLevel,
-                HEALTH_CAPACITY,
+                healthCapacity,
                 repaired,
                 List.copyOf(events)
         );
@@ -86,17 +107,17 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
 
     private ChargeCoreResult executeCharge(final ChargeCoreCommand command) {
         requireConnectedCore(command.coreId());
-        if (!"B1".equals(position)) {
-            throw new MissionExecutionException("CORE-01 must be on docking station B1 before charge().");
+        if (!dockPosition.equals(position)) {
+            throw new MissionExecutionException("CORE-01 must be on docking station %s before charge().".formatted(dockPosition));
         }
-        if (batteryLevel >= BATTERY_CAPACITY) {
-            events.add(new CoreChargeCappedEvent(CORE_ID, batteryLevel, BATTERY_CAPACITY));
-            return new ChargeCoreResult(CORE_ID, batteryLevel, BATTERY_CAPACITY);
+        if (batteryLevel >= batteryCapacity) {
+            events.add(new CoreChargeCappedEvent(CORE_ID, batteryLevel, batteryCapacity));
+            return new ChargeCoreResult(CORE_ID, batteryLevel, batteryCapacity);
         }
 
         batteryLevel++;
-        events.add(new CoreChargedEvent(CORE_ID, batteryLevel, BATTERY_CAPACITY));
-        return new ChargeCoreResult(CORE_ID, batteryLevel, BATTERY_CAPACITY);
+        events.add(new CoreChargedEvent(CORE_ID, batteryLevel, batteryCapacity));
+        return new ChargeCoreResult(CORE_ID, batteryLevel, batteryCapacity);
     }
 
     private MoveCoreResult executeMove(final MoveCoreCommand command) {
@@ -104,13 +125,12 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
         if (batteryLevel <= 0) {
             throw new MissionExecutionException("CORE-01 has no battery remaining.");
         }
-        if ("B1".equals(position)) {
-            position = "B2";
-        } else if ("B2".equals(position)) {
-            position = "B3";
-        } else {
+        final char row = position.charAt(0);
+        final int column = Integer.parseInt(position.substring(1));
+        if (column >= maxColumn) {
             throw new MissionExecutionException("CORE-01 cannot move further east in this room.");
         }
+        position = row + Integer.toString(column + 1);
         batteryLevel--;
         moves++;
         events.add(new CoreMovedEvent(CORE_ID, position));
@@ -119,13 +139,13 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
 
     private RepairCoreResult executeRepair(final RepairCoreCommand command) {
         requireConnectedCore(command.coreId());
-        if (!"B3".equals(position)) {
+        if (!repairPosition.equals(position)) {
             throw new MissionExecutionException("CORE-01 must be on the repair station tile before repair().");
         }
-        healthLevel = HEALTH_CAPACITY;
+        healthLevel = healthCapacity;
         repaired = true;
-        events.add(new CoreRepairedEvent(CORE_ID, healthLevel, HEALTH_CAPACITY));
-        return new RepairCoreResult(CORE_ID, healthLevel, HEALTH_CAPACITY);
+        events.add(new CoreRepairedEvent(CORE_ID, healthLevel, healthCapacity));
+        return new RepairCoreResult(CORE_ID, healthLevel, healthCapacity);
     }
 
     private void requireConnectedCore(final int coreId) {

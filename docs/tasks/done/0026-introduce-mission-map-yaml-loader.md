@@ -35,8 +35,8 @@ Mission layout and station coordinates are currently hardcoded in Java. Moving t
 - [x] `src/main/resources/content/missions/mission-03/map.yaml` exists and follows spec schema.
 - [x] Map loader parses mission map YAML and validates required fields.
 - [x] Invalid maps fail fast with contributor-readable diagnostics.
-- [ ] Mission 03 no longer hardcodes station coordinates for charge/repair logic.
-- [ ] Mission 03 initial CORE position, battery, and health come from map spawn data.
-- [ ] Existing Mission 03 behavior remains unchanged for learners.
-- [ ] Automated tests cover parsing, validation, and Mission 03 map-driven behavior.
-- [ ] `./mvnw clean verify` passes.
+- [x] Mission 03 no longer hardcodes station coordinates for charge/repair logic.
+- [x] Mission 03 initial CORE position, battery, and health come from map spawn data.
+- [x] Existing Mission 03 behavior remains unchanged for learners.
+- [x] Automated tests cover parsing, validation, and Mission 03 map-driven behavior.
+- [x] `./mvnw clean verify` passes.
