@@ -75,9 +75,15 @@ The goal is to preserve visual continuity while the programming task becomes sli
 
 Mission 02 should reuse the same maintenance room and station layout as Mission 01.
 
+Mission 02 map should be authored in:
+
+- `src/main/resources/content/missions/mission-02/map.yaml`
+
+Map semantics follow `docs/spec/gameplay-spec.md` (`base` + `legend` for static tiles, `spawns` for dynamic entities).
+
 This means:
 
-- CORE-01 starts on the docking station tile
+- CORE-01 starts at `B1` on the docking station tile (from spawn data)
 - the docking station is the tile from which charging is possible
 - the repair station remains visible for later missions but is not part of the Mission 02 objective
 

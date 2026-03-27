@@ -10,6 +10,13 @@ class MissionMapLoaderTest {
     private final MissionMapLoader missionMapLoader = new MissionMapLoader();
 
     @Test
+    void allCurrentMissionMapsLoad() {
+        assertThat(missionMapLoader.load("mission-01")).isNotNull();
+        assertThat(missionMapLoader.load("mission-02")).isNotNull();
+        assertThat(missionMapLoader.load("mission-03")).isNotNull();
+    }
+
+    @Test
     void loadMission01MapFromResources() {
         final MissionMap map = missionMapLoader.load("mission-01");
 

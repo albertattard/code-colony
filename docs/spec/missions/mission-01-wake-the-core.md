@@ -78,32 +78,23 @@ The room should be represented as a 3x3 top-down grid for clarity.
 
 ## Map
 
-Initial proposed layout:
+Mission 01 map should be authored in:
 
-```text
-+---+---+---+
-| . | . | . |
-+---+---+---+
-| D | . | S |
-+---+---+---+
-| . | . | . |
-+---+---+---+
-```
+- `src/main/resources/content/missions/mission-01/map.yaml`
 
-Legend:
+Map semantics follow `docs/spec/gameplay-spec.md`:
 
-- `D` = docking station tile, currently occupied by the CORE
-- `C` = CORE unit starting position
-- `S` = repair station
-- `.` = walkable floor tile
+- static tiles are encoded in `base` using symbols defined in `legend`
+- dynamic entities (including CORE-01 start position and telemetry) are encoded in `spawns`
 
-Interpretation:
+Required mission interpretation:
 
-- The CORE unit starts on the docking station in the center-left area of the room.
+- The room is a 3x3 maintenance bay.
+- CORE-01 starts at `B1` on the docking station (via spawn data).
 - The repair station is reachable by moving right from the start position.
 - The room is intentionally small and highly readable.
 
-The final visual presentation may be richer than the ASCII map, but the underlying logic should remain simple.
+The final visual presentation may be richer than the map source, but the underlying logic should remain simple.
 
 ## Visual Direction
 
