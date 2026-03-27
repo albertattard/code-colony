@@ -128,19 +128,19 @@ public final class RepairTheCoreMissionService {
         final String tilePosition = tile.rowLabel() + tile.columnLabel();
         if (tilePosition.equals(position)) {
             if ("B1".equals(tilePosition)) {
-                return new GridTile(tile.rowLabel(), tile.columnLabel(), "core", "C", "Docked CORE unit");
+                return new GridTile(tile.rowLabel(), tile.columnLabel(), "core", "Docked CORE unit");
             }
             if ("B3".equals(tilePosition)) {
-                return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-repair", "C", "CORE unit on repair station");
+                return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-repair", "CORE unit on repair station");
             }
-            return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-floor", "C", "CORE unit");
+            return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-floor", "CORE unit");
         }
         if ("B1".equals(tilePosition)) {
-            return new GridTile(tile.rowLabel(), tile.columnLabel(), "dock", "D", "Docking station");
+            return new GridTile(tile.rowLabel(), tile.columnLabel(), "dock", "Docking station");
         }
         if ("B3".equals(tilePosition)) {
             return tile;
         }
-        return new GridTile(tile.rowLabel(), tile.columnLabel(), "floor", "", "Walkable floor tile");
+        return new GridTile(tile.rowLabel(), tile.columnLabel(), "floor", "Walkable floor tile");
     }
 }

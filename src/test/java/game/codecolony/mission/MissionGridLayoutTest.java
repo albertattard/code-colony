@@ -12,14 +12,14 @@ class MissionGridLayoutTest {
     @Test
     void parseReadsPipeSeparatedTilesAndSkipsComments() {
         final List<GridTile> tiles = MissionGridLayout.parse(List.of(
-                "# row|column|cellType|shortLabel|fullLabel",
-                "A|1|floor||Walkable floor tile",
-                "B|1|core|C|Docking station"
+                "# row|column|cellType|fullLabel",
+                "A|1|floor|Walkable floor tile",
+                "B|1|core|Docking station"
         ));
 
         assertThat(tiles).containsExactly(
-                new GridTile("A", "1", "floor", "", "Walkable floor tile"),
-                new GridTile("B", "1", "core", "C", "Docking station")
+                new GridTile("A", "1", "floor", "Walkable floor tile"),
+                new GridTile("B", "1", "core", "Docking station")
         );
     }
 
@@ -27,6 +27,6 @@ class MissionGridLayoutTest {
     void parseFailsWhenColumnCountIsInvalid() {
         assertThatThrownBy(() -> MissionGridLayout.parse(List.of("A|1|floor")))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("expected 5 fields");
+                .hasMessageContaining("expected 4 fields");
     }
 }

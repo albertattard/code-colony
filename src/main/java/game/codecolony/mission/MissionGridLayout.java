@@ -29,16 +29,15 @@ public final class MissionGridLayout {
             }
 
             final String[] tokens = line.split("\\|", -1);
-            if (tokens.length != 5) {
-                throw new IllegalStateException("Invalid grid line %d: expected 5 fields".formatted(index + 1));
+            if (tokens.length != 4) {
+                throw new IllegalStateException("Invalid grid line %d: expected 4 fields".formatted(index + 1));
             }
 
             tiles.add(new GridTile(
                     tokens[0].trim(),
                     tokens[1].trim(),
                     tokens[2].trim(),
-                    tokens[3].trim(),
-                    tokens[4].trim()
+                    tokens[3].trim()
             ));
         }
         return List.copyOf(tiles);
