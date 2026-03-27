@@ -18,8 +18,25 @@ final class WakeTheCoreMissionSimulator implements MissionSimulator {
     private static final int CORE_ID = 1;
 
     private final List<MissionEvent> events = new ArrayList<>();
+    private final String startPosition;
+    private final int batteryLevel;
+    private final int batteryCapacity;
+    private final int healthLevel;
+    private final int healthCapacity;
     private boolean connected;
     private int connectAttempts;
+
+    WakeTheCoreMissionSimulator(final String startPosition,
+                                final int batteryLevel,
+                                final int batteryCapacity,
+                                final int healthLevel,
+                                final int healthCapacity) {
+        this.startPosition = startPosition;
+        this.batteryLevel = batteryLevel;
+        this.batteryCapacity = batteryCapacity;
+        this.healthLevel = healthLevel;
+        this.healthCapacity = healthCapacity;
+    }
 
     @Override
     public MissionCommandResult execute(final MissionCommand command) {
@@ -31,7 +48,16 @@ final class WakeTheCoreMissionSimulator implements MissionSimulator {
     }
 
     WakeTheCoreMissionSimulation finish() {
-        return new WakeTheCoreMissionSimulation(connected, connectAttempts, List.copyOf(events));
+        return new WakeTheCoreMissionSimulation(
+                connected,
+                connectAttempts,
+                startPosition,
+                batteryLevel,
+                batteryCapacity,
+                healthLevel,
+                healthCapacity,
+                List.copyOf(events)
+        );
     }
 
     private ConnectCoreResult executeConnect() {

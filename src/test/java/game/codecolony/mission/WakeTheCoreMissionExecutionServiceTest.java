@@ -8,19 +8,22 @@ import org.junit.jupiter.api.Test;
 class WakeTheCoreMissionExecutionServiceTest {
 
     private final WakeTheCoreMissionExecutionService missionExecutionService = new WakeTheCoreMissionExecutionService();
+    private final MissionMapLoader missionMapLoader = new MissionMapLoader();
 
     @Test
     void successfulConnectRunBringsCoreOnline() {
+        final MissionMapSpawn coreSpawn = MissionMapAdapter.requireCoreSpawn(missionMapLoader.load("mission-01"), "core_01");
         final MissionRunResult runResult = missionExecutionService.execute("Core.connect();");
 
         assertThat(runResult.success()).isTrue();
         assertThat(runResult.headline()).isEqualTo("CORE Online");
         assertThat(runResult.coreStatus().unitName()).isEqualTo("CORE-01");
         assertThat(runResult.coreStatus().state()).isEqualTo("Online");
-        assertThat(runResult.coreStatus().batteryLevel()).isZero();
-        assertThat(runResult.coreStatus().batteryCapacity()).isEqualTo(5);
-        assertThat(runResult.coreStatus().healthLevel()).isEqualTo(1);
-        assertThat(runResult.coreStatus().healthCapacity()).isEqualTo(5);
+        assertThat(runResult.coreStatus().position()).isEqualTo(coreSpawn.at());
+        assertThat(runResult.coreStatus().batteryLevel()).isEqualTo(coreSpawn.battery().level());
+        assertThat(runResult.coreStatus().batteryCapacity()).isEqualTo(coreSpawn.battery().capacity());
+        assertThat(runResult.coreStatus().healthLevel()).isEqualTo(coreSpawn.health().level());
+        assertThat(runResult.coreStatus().healthCapacity()).isEqualTo(coreSpawn.health().capacity());
         assertThat(runResult.simulationEvents()).contains("Connected to CORE-01.");
         assertThat(runResult.stdout()).isEmpty();
         assertThat(runResult.stderr()).isEmpty();

@@ -25,7 +25,7 @@ final class WakeTheCoreMissionValidator {
                             "Mission 01 allows the CORE to be connected once.",
                             "Fix the runtime problem and run the code again."
                     ),
-                    statusFor(simulation.connected(), simulation.connectAttempts()),
+                    statusFor(simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     false
@@ -48,7 +48,7 @@ final class WakeTheCoreMissionValidator {
                             "Core.connect(); changed the visible state of the world.",
                             "The CORE still needs charging and repair before it can return to field work."
                     ),
-                    statusFor(true, simulation.connectAttempts()),
+                    statusFor(true, simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     true
@@ -63,19 +63,31 @@ final class WakeTheCoreMissionValidator {
                         "Call Core.connect(); to bring the CORE online.",
                         "Mission 01 only expects a single successful connection."
                 ),
-                statusFor(false, simulation.connectAttempts()),
+                statusFor(false, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 false
         );
     }
 
-    private MissionCoreStatus statusFor(final boolean connected, final int connectAttempts) {
+    private MissionCoreStatus statusFor(final boolean connected,
+                                        final int connectAttempts,
+                                        final WakeTheCoreMissionSimulation simulation) {
         if (connected) {
             final String note = connectAttempts > 1
                     ? "Connection established, then an invalid duplicate connect was attempted"
                     : "Telemetry online. Battery depleted. Structural damage detected.";
-            return new MissionCoreStatus("CORE-01", "Online", 0, 5, 1, 5, "Connected", "B1", note);
+            return new MissionCoreStatus(
+                    "CORE-01",
+                    "Online",
+                    simulation.batteryLevel(),
+                    simulation.batteryCapacity(),
+                    simulation.healthLevel(),
+                    simulation.healthCapacity(),
+                    "Connected",
+                    simulation.startPosition(),
+                    note
+            );
         }
 
         return new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline.");
