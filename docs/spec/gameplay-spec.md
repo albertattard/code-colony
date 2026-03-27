@@ -106,6 +106,111 @@ Where practical, mission briefing text should come from runtime content files ra
 
 Each mission must identify its primary learning concept and should not depend on hidden rules that the player cannot infer from the UI or mission text.
 
+## Mission Map Files
+
+Mission layout and initial unit state should be defined in mission-scoped map files instead of hardcoded Java constants.
+
+### Map File Location
+
+Each mission should provide one map file at:
+
+- `src/main/resources/content/missions/mission-##/map.yaml`
+
+Examples:
+
+- `src/main/resources/content/missions/mission-01/map.yaml`
+- `src/main/resources/content/missions/mission-02/map.yaml`
+- `src/main/resources/content/missions/mission-03/map.yaml`
+
+### Map Schema (YAML)
+
+Mission map files should use this structure:
+
+```yaml
+version: 1
+name: maintenance-room-b-1049
+size:
+  rows: 3
+  cols: 3
+
+legend:
+  ".":
+    type: floor
+    label: "Walkable floor tile"
+  "D":
+    type: dock
+    label: "Docking station"
+  "R":
+    type: repair
+    label: "Repair station"
+
+base:
+  - "..."
+  - "D.R"
+  - "..."
+
+spawns:
+  - id: core_01
+    type: core
+    at: "B1"
+    battery:
+      level: 5
+      capacity: 5
+    health:
+      level: 1
+      capacity: 5
+```
+
+Required fields:
+
+- `version`
+- `size`
+- `legend`
+- `base`
+- `spawns`
+
+### Tile Semantics
+
+For current missions, tile behavior should be derived from `legend[*].type`:
+
+- `dock` tiles allow charging
+- `repair` tiles allow repair
+- `floor` tiles are walkable with no station action
+
+No additional tag system is required for this stage.
+
+### Spawn Semantics
+
+`spawns` defines dynamic entities and their initial runtime state.
+
+For CORE units:
+
+- `at` defines the starting grid coordinate
+- `battery.level` and `battery.capacity` define initial battery state
+- `health.level` and `health.capacity` define initial health state
+
+Mission initialization should read these values from the map file instead of hardcoded mission constants.
+
+Coordinate format:
+
+- Coordinates use `RowLetter + ColumnNumber` (for example `B1`).
+- Rows start at `A` and increase alphabetically (`A`, `B`, `C`, ...).
+- Columns start at `1` and increase numerically (`1`, `2`, `3`, ...).
+
+### Validation Rules
+
+Map loading should fail fast when any of the following is invalid:
+
+- `base` row count does not match `size.rows`
+- row width does not match `size.cols`
+- a base symbol is missing from `legend`
+- spawn coordinate is outside bounds
+- spawn coordinate format is invalid
+- battery or health capacities are non-positive
+- battery or health levels are outside `0..capacity`
+
+Invalid maps should produce clear diagnostics for contributors.
+
 ## Browser Mission Layout
 
 The mission screen should include these core areas.
