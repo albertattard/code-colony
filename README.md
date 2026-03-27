@@ -4,13 +4,59 @@ Code Colony is a programming-driven strategy game about investigating and restor
 
 Players take the role of a remote engineer and control CORE maintenance units by writing Java code. The game is intended as a beginner-friendly way to introduce Java to kids and other early learners through short, mission-based challenges.
 
-## Project Status
+## Current Status
 
-This project is currently in the specification phase.
+Code Colony is in active development with a playable browser prototype and mission flow implemented.
 
-The intended product is a browser-based game in which players write Java code in a built-in interface, run their solution, watch the resulting actions play out on screen, and receive feedback on whether the mission objective was achieved.
+Current implementation includes:
 
-The first mission specification now defines a small maintenance room scenario in which the player wakes a docked CORE unit, moves it across the room, and repairs a damaged relay.
+- Session-based mission progression in the browser
+- Mission execution of learner Java snippets
+- Mission feedback, status panel updates, and simulation grid playback
+- Mission content and explanation markdown
+- Automated unit, integration, and browser smoke test coverage
+
+The intended product remains a browser-based game where players write Java code, run it, observe outcomes, and iterate toward mission objectives.
+
+## Quick Start
+
+### Prerequisites
+
+- Java 25
+- A POSIX shell environment (project uses `./mvnw`)
+
+### Build And Verify
+
+```bash
+./mvnw clean verify
+```
+
+### Run The App
+
+```bash
+./mvnw spring-boot:run
+```
+
+Open `http://localhost:8080`.
+
+## Development Workflow
+
+- Use `./mvnw test` for fast unit and integration feedback.
+- Use `./mvnw clean verify` for full verification, including browser-tagged `e2e` coverage.
+- Follow spec-first, task-tracked changes under `docs/spec/` and `docs/tasks/`.
+
+## Project Structure
+
+- `src/main/java/game/codecolony/runtime/`
+  Engine-level commands, events, and simulator contracts.
+- `src/main/java/game/codecolony/mission/`
+  Mission state models and mission implementations (organized by mission package).
+- `src/main/java/game/codecolony/student/`
+  Learner-facing API surface (`Core`).
+- `src/main/resources/templates/`
+  Server-rendered mission and layout templates.
+- `src/main/resources/content/`
+  Player-facing markdown content (briefings and explanations).
 
 ## Documentation
 
