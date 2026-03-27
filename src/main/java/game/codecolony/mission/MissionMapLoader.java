@@ -6,13 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class MissionMapLoader {
 
     private static final String MAP_RESOURCE_PATH_TEMPLATE = "content/missions/%s/map.yaml";
+    private static final Set<String> CURRENT_MISSIONS = Set.of("mission-01", "mission-02", "mission-03");
 
     public MissionMap load(final String missionId) {
         final String resourcePath = MAP_RESOURCE_PATH_TEMPLATE.formatted(missionId);
@@ -22,13 +25,23 @@ public final class MissionMapLoader {
             }
 
             final String yaml = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            return parseYaml(yaml, resourcePath);
+            return parseYamlForMission(yaml, resourcePath, missionId);
         } catch (IOException ioException) {
             throw new IllegalStateException("Unable to load mission map: " + resourcePath, ioException);
         }
     }
 
+    static MissionMap parseYamlForMission(final String yamlText, final String sourceName, final String missionId) {
+        final MissionMap map = parseMap(yamlText, sourceName);
+        validateMissionRules(map, missionId, sourceName);
+        return map;
+    }
+
     static MissionMap parseYaml(final String yamlText, final String sourceName) {
+        return parseMap(yamlText, sourceName);
+    }
+
+    private static MissionMap parseMap(final String yamlText, final String sourceName) {
         final Yaml yaml = new Yaml();
         final Object loaded = yaml.load(yamlText);
         if (!(loaded instanceof Map<?, ?> root)) {
@@ -55,6 +68,53 @@ public final class MissionMapLoader {
         final List<MissionMapSpawn> spawns = parseSpawns(requireList(root, "spawns", sourceName), size, sourceName);
 
         return new MissionMap(version, name, size, Map.copyOf(legend), List.copyOf(base), List.copyOf(spawns));
+    }
+
+    private static void validateMissionRules(final MissionMap map, final String missionId, final String sourceName) {
+        if (!CURRENT_MISSIONS.contains(missionId)) {
+            return;
+        }
+
+        final long coreSpawnCount = map.spawns().stream()
+                .filter(spawn -> "core_01".equals(spawn.id()))
+                .filter(spawn -> "core".equals(spawn.type()))
+                .count();
+        if (coreSpawnCount != 1) {
+            throw new IllegalStateException(
+                    "Invalid map %s: mission '%s' requires exactly one core spawn with id 'core_01'"
+                            .formatted(sourceName, missionId)
+            );
+        }
+
+        final Set<String> tileTypes = tileTypesInBase(map);
+        requireTileType(tileTypes, "dock", missionId, sourceName);
+        requireTileType(tileTypes, "repair", missionId, sourceName);
+    }
+
+    private static Set<String> tileTypesInBase(final MissionMap map) {
+        final Set<String> tileTypes = new HashSet<>();
+        for (final String row : map.base()) {
+            for (int index = 0; index < row.length(); index++) {
+                final String symbol = String.valueOf(row.charAt(index));
+                final MissionMapLegendEntry entry = map.legend().get(symbol);
+                if (entry != null) {
+                    tileTypes.add(entry.type());
+                }
+            }
+        }
+        return tileTypes;
+    }
+
+    private static void requireTileType(final Set<String> tileTypes,
+                                        final String requiredType,
+                                        final String missionId,
+                                        final String sourceName) {
+        if (!tileTypes.contains(requiredType)) {
+            throw new IllegalStateException(
+                    "Invalid map %s: mission '%s' requires at least one '%s' tile type"
+                            .formatted(sourceName, missionId, requiredType)
+            );
+        }
     }
 
     private static Map<String, MissionMapLegendEntry> parseLegend(final Map<?, ?> legendMap,

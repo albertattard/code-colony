@@ -165,4 +165,143 @@ class MissionMapLoaderTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("battery level must be between 0 and capacity");
     }
+
+    @Test
+    void parseYamlForMissionFailsWhenCoreSpawnIsMissing() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 3
+                  cols: 3
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                  "D":
+                    type: dock
+                    label: Docking station
+                  "R":
+                    type: repair
+                    label: Repair station
+                base:
+                  - "..."
+                  - "D.R"
+                  - "..."
+                spawns:
+                  - id: helper_01
+                    type: core
+                    at: B1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYamlForMission(yaml, "inline", "mission-01"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("requires exactly one core spawn with id 'core_01'");
+    }
+
+    @Test
+    void parseYamlForMissionFailsWhenCoreSpawnIsDuplicated() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 3
+                  cols: 3
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                  "D":
+                    type: dock
+                    label: Docking station
+                  "R":
+                    type: repair
+                    label: Repair station
+                base:
+                  - "..."
+                  - "D.R"
+                  - "..."
+                spawns:
+                  - id: core_01
+                    type: core
+                    at: B1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                  - id: core_01
+                    type: core
+                    at: B2
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYamlForMission(yaml, "inline", "mission-02"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("requires exactly one core spawn with id 'core_01'");
+    }
+
+    @Test
+    void parseYamlForMissionFailsWhenDockTileTypeIsMissing() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 3
+                  cols: 3
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                  "R":
+                    type: repair
+                    label: Repair station
+                base:
+                  - "..."
+                  - "..R"
+                  - "..."
+                spawns:
+                  - id: core_01
+                    type: core
+                    at: B1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYamlForMission(yaml, "inline", "mission-03"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("requires at least one 'dock' tile type");
+    }
+
+    @Test
+    void parseYamlForMissionFailsWhenRepairTileTypeIsMissing() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 3
+                  cols: 3
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                  "D":
+                    type: dock
+                    label: Docking station
+                base:
+                  - "..."
+                  - "D.."
+                  - "..."
+                spawns:
+                  - id: core_01
+                    type: core
+                    at: B1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYamlForMission(yaml, "inline", "mission-01"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("requires at least one 'repair' tile type");
+    }
 }

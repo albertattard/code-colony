@@ -209,6 +209,12 @@ Map loading should fail fast when any of the following is invalid:
 - battery or health capacities are non-positive
 - battery or health levels are outside `0..capacity`
 
+For current missions (`mission-01` to `mission-03`), loading should also fail when:
+
+- there is not exactly one core spawn with id `core_01`
+- no tile in the map resolves to type `dock`
+- no tile in the map resolves to type `repair`
+
 Invalid maps should produce clear diagnostics for contributors.
 
 ## Browser Mission Layout
