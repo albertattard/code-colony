@@ -14,12 +14,12 @@ class MissionGridLayoutTest {
         final List<GridTile> tiles = MissionGridLayout.parse(List.of(
                 "# row|column|cellType|shortLabel|fullLabel",
                 "A|1|floor||Walkable floor tile",
-                "B|1|core|C|Docked CORE unit"
+                "B|1|core|C|Docking station"
         ));
 
         assertThat(tiles).containsExactly(
                 new GridTile("A", "1", "floor", "", "Walkable floor tile"),
-                new GridTile("B", "1", "core", "C", "Docked CORE unit")
+                new GridTile("B", "1", "core", "C", "Docking station")
         );
     }
 

@@ -2,7 +2,7 @@
 A|1|floor||Walkable floor tile
 A|2|floor||Walkable floor tile
 A|3|floor||Walkable floor tile
-B|1|core|C|Docked CORE unit
+B|1|core|C|Docking station
 B|2|floor||Walkable floor tile
 B|3|repair|S|Repair station
 C|1|floor||Walkable floor tile
