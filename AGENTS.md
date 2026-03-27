@@ -177,6 +177,22 @@ Examples:
 - Treat error messages and feedback text as part of the product, not incidental implementation detail.
 - Prefer `final` for variables, parameters, and fields unless mutation is required.
 
+## Design Heuristics (Value Objects)
+
+When two or more fields repeatedly represent the same concept shape (for example `xLevel`/`xCapacity` pairs such as battery, health, shield), prefer introducing a dedicated value object rather than duplicating primitives.
+
+Examples:
+
+- `batteryLevel` + `batteryCapacity`
+- `healthLevel` + `healthCapacity`
+
+Preferred approach:
+
+1. Create a small immutable value object (for example `StatusMeter`).
+2. Move validation/invariants into that object (`capacity > 0`, `0 <= level <= capacity`).
+3. Use it in records/DTOs instead of repeated primitive pairs.
+4. Keep names domain-oriented and beginner-readable.
+
 ## Review Rules
 
 Changes should be reviewed against both product and teaching goals:
@@ -187,5 +203,10 @@ Changes should be reviewed against both product and teaching goals:
 - Does this fit the current specs?
 - If implementation and spec differ, require either a spec update or a rollback before approving.
 - All automated tests must pass before approving a change unless a failing state is explicitly agreed upon.
+
+For each changed model/record:
+
+- Check for repeated primitive clusters.
+- If found, either extract a value object or document why extraction is deferred.
 
 If the answer to any of these is unclear, stop and update the specs before continuing.
