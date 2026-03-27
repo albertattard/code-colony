@@ -290,6 +290,7 @@ public final class ChargeTheCoreMissionExecutionService {
                 CoreMovedEvent.class,
                 CoreRepairedEvent.class,
                 MissionCoreStatus.class,
+                MissionStatusMeter.class,
                 MissionRunResult.class,
                 MissionRunResultFileCodec.class,
                 ChargeTheCoreMissionSimulation.class,

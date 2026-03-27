@@ -285,6 +285,7 @@ public final class WakeTheCoreMissionExecutionService {
                 CoreMovedEvent.class,
                 CoreRepairedEvent.class,
                 MissionCoreStatus.class,
+                MissionStatusMeter.class,
                 MissionRunResult.class,
                 MissionRunResultFileCodec.class,
                 WakeTheCoreMissionSimulation.class,

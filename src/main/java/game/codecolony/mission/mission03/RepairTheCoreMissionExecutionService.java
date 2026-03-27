@@ -3,6 +3,7 @@ package game.codecolony.mission.mission03;
 import game.codecolony.mission.MissionCoreStatus;
 import game.codecolony.mission.MissionRunResult;
 import game.codecolony.mission.MissionRunResultFileCodec;
+import game.codecolony.mission.MissionStatusMeter;
 import game.codecolony.runtime.ChargeCoreCommand;
 import game.codecolony.runtime.ChargeCoreResult;
 import game.codecolony.runtime.ConnectCoreResult;
@@ -292,6 +293,7 @@ public final class RepairTheCoreMissionExecutionService {
                 CoreMovedEvent.class,
                 CoreRepairedEvent.class,
                 MissionCoreStatus.class,
+                MissionStatusMeter.class,
                 MissionRunResult.class,
                 MissionRunResultFileCodec.class,
                 RepairTheCoreMissionSimulation.class,
