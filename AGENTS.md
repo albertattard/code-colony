@@ -193,6 +193,26 @@ Preferred approach:
 3. Use it in records/DTOs instead of repeated primitive pairs.
 4. Keep names domain-oriented and beginner-readable.
 
+## Incremental Refactoring Policy
+
+Prefer small, behavior-preserving refactors over large rewrites.
+
+Default expectation: one refactor stage per commit unless the user asks otherwise.
+
+When refactoring, use staged migrations:
+
+1. Introduce the new structure with temporary compatibility bridges when needed.
+2. Migrate call sites in small, verifiable batches.
+3. Remove temporary bridges only after migrations are complete and tests pass.
+
+This policy applies broadly (package moves, naming cleanups, controller/service reshaping, API surface tightening), not only model extraction.
+
+When introducing a new model/type, treat it as a specific case of staged migration:
+
+1. Introduce the new type and keep compatibility bridges (for example overloaded constructors/getters).
+2. Migrate call sites incrementally.
+3. Remove compatibility bridges in a dedicated follow-up step.
+
 ## Review Rules
 
 Changes should be reviewed against both product and teaching goals:
@@ -208,5 +228,12 @@ For each changed model/record:
 
 - Check for repeated primitive clusters.
 - If found, either extract a value object or document why extraction is deferred.
+
+For staged refactors:
+
+- Confirm the current stage goal is small and isolated.
+- Verify behavior is unchanged for that stage.
+- If compatibility bridges remain, create a follow-up task to remove them.
+- Avoid big-bang cleanup in the same change unless explicitly requested.
 
 If the answer to any of these is unclear, stop and update the specs before continuing.
