@@ -116,6 +116,10 @@ Task directories:
 - Do not start meaningful implementation work until the task is clear enough to execute.
 - Update task files as work progresses rather than treating them as disposable notes.
 - Each task should define the expected behavior or outcome clearly enough that it can be verified after implementation.
+- Before any non-trivial code change, create or update a task file in `docs/tasks/in-progress/`.
+- Treat a change as non-trivial when it alters behavior, data format/schema, architecture, mission logic, or spans multiple files.
+- Trivial changes (for example single-file wording, comment, or formatting updates with no behavior change) may proceed without a task file.
+- If there is uncertainty about whether a change is trivial, default to creating a task first.
 
 ## Trigger Phrases
 
@@ -124,6 +128,7 @@ Task directories:
 When asked to `commit changes`, use this workflow:
 
 1. Update the related task files and move completed tasks to `docs/tasks/done/` when applicable.
+   If non-trivial code changed without an associated task, stop and create or update the task before committing.
 2. Run verification appropriate to the scope of change.
    For code changes, run `./mvnw clean verify`.
    For docs-only or content-only changes that do not affect executable behavior, run a lighter validation pass if practical and note what was checked.
