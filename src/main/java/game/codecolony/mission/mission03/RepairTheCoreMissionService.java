@@ -5,6 +5,7 @@ import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.CommandReference;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
+import game.codecolony.mission.MissionGridLayout;
 import game.codecolony.mission.MissionPage;
 import game.codecolony.mission.MissionRunResult;
 
@@ -30,17 +31,7 @@ public final class RepairTheCoreMissionService {
             new CommandReference("core.move()", "Moves CORE-01 one tile east in this mission room."),
             new CommandReference("core.repair()", "Repairs CORE-01 when it is on the repair station tile.")
     );
-    private static final List<GridTile> GRID = List.of(
-            new GridTile("A", "1", "floor", "", "Walkable floor tile"),
-            new GridTile("A", "2", "floor", "", "Walkable floor tile"),
-            new GridTile("A", "3", "floor", "", "Walkable floor tile"),
-            new GridTile("B", "1", "core", "C", "Docked CORE unit"),
-            new GridTile("B", "2", "floor", "", "Walkable floor tile"),
-            new GridTile("B", "3", "repair", "S", "Repair station"),
-            new GridTile("C", "1", "floor", "", "Walkable floor tile"),
-            new GridTile("C", "2", "floor", "", "Walkable floor tile"),
-            new GridTile("C", "3", "floor", "", "Walkable floor tile")
-    );
+    private static final List<GridTile> GRID = MissionGridLayout.defaultGrid();
 
     private final RepairTheCoreMissionExecutionService missionExecutionService;
     private final NarrativeContentService narrativeContentService;
