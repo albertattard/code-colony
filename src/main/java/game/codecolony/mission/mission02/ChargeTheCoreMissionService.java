@@ -1,9 +1,12 @@
 package game.codecolony.mission.mission02;
 
-import game.codecolony.mission.*;
-
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
+import game.codecolony.mission.CommandReference;
+import game.codecolony.mission.GridTile;
+import game.codecolony.mission.MissionCoreStatus;
+import game.codecolony.mission.MissionPage;
+import game.codecolony.mission.MissionRunResult;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

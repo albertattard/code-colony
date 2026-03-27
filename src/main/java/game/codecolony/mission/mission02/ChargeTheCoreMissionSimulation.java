@@ -1,7 +1,5 @@
 package game.codecolony.mission.mission02;
 
-import game.codecolony.mission.*;
-
 import game.codecolony.runtime.MissionEvent;
 
 import java.util.List;

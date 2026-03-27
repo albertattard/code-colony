@@ -1,7 +1,5 @@
 package game.codecolony.mission.mission01;
 
-import game.codecolony.mission.*;
-
 import game.codecolony.runtime.ConnectCoreResult;
 import game.codecolony.runtime.ConnectNextCoreCommand;
 import game.codecolony.runtime.ConnectionRejectedEvent;

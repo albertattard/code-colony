@@ -1,7 +1,7 @@
 package game.codecolony.mission.mission02;
 
-import game.codecolony.mission.*;
-
+import game.codecolony.mission.MissionCoreStatus;
+import game.codecolony.mission.MissionRunResult;
 import game.codecolony.runtime.ConnectionRejectedEvent;
 import game.codecolony.runtime.CoreConnectedEvent;
 import game.codecolony.runtime.MissionEvent;

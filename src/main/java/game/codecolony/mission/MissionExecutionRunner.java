@@ -1,26 +1,5 @@
 package game.codecolony.mission;
 
-import game.codecolony.runtime.ChargeCoreCommand;
-import game.codecolony.runtime.ChargeCoreResult;
-import game.codecolony.runtime.ConnectCoreResult;
-import game.codecolony.runtime.ConnectNextCoreCommand;
-import game.codecolony.runtime.ConnectionRejectedEvent;
-import game.codecolony.runtime.CoreChargeCappedEvent;
-import game.codecolony.runtime.CoreChargedEvent;
-import game.codecolony.runtime.CoreConnectedEvent;
-import game.codecolony.runtime.CoreMovedEvent;
-import game.codecolony.runtime.CoreRepairedEvent;
-import game.codecolony.runtime.MissionCommand;
-import game.codecolony.runtime.MissionCommandResult;
-import game.codecolony.runtime.MissionEvent;
-import game.codecolony.runtime.MissionExecutionException;
-import game.codecolony.runtime.MissionSimulator;
-import game.codecolony.runtime.MoveCoreCommand;
-import game.codecolony.runtime.MoveCoreResult;
-import game.codecolony.runtime.RepairCoreCommand;
-import game.codecolony.runtime.RepairCoreResult;
-import game.codecolony.student.Core;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class MissionExecutionRunner {
@@ -44,10 +20,6 @@ public final class MissionExecutionRunner {
     private static final String SUPPORT_CLASSES_DIRECTORY = "support-classes";
     private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(10);
     private static final Duration RUN_TIMEOUT = Duration.ofSeconds(5);
-    private static final Pattern COMPILER_ERROR_PATTERN =
-            Pattern.compile("(?m)^.*PlayerProgram\\.java:(\\d+): error: (.+)$");
-    private static final int WRAPPER_LINE_OFFSET = 9;
-
     public MissionRunResult execute(final String code, final MissionExecutionConfig config) {
         Path workingDirectory = null;
         try {
@@ -104,7 +76,7 @@ public final class MissionExecutionRunner {
     }
 
     private MissionRunResult compilationFailure(final String compilerOutput, final MissionExecutionConfig config) {
-        final List<String> feedbackItems = parseCompilerFeedback(compilerOutput);
+        final List<String> feedbackItems = CompilerFeedbackParser.parse(compilerOutput);
         return new MissionRunResult(
                 "Compilation Failed",
                 config.compilationFailureSummary(),
@@ -130,27 +102,6 @@ public final class MissionExecutionRunner {
                 "",
                 false
         );
-    }
-
-    private List<String> parseCompilerFeedback(final String compilerOutput) {
-        final Matcher matcher = COMPILER_ERROR_PATTERN.matcher(compilerOutput);
-        final List<String> feedback = new ArrayList<>();
-        while (matcher.find()) {
-            final int sourceLine = Integer.parseInt(matcher.group(1));
-            final int learnerLine = Math.max(1, sourceLine - WRAPPER_LINE_OFFSET);
-            feedback.add("Line %d: %s".formatted(learnerLine, matcher.group(2)));
-        }
-
-        if (!feedback.isEmpty()) {
-            return List.copyOf(feedback);
-        }
-
-        return compilerOutput.lines()
-                .map(String::trim)
-                .filter(line -> !line.isBlank())
-                .map(line -> line.replaceAll("^.+PlayerProgram\\.java:", "Line "))
-                .limit(5)
-                .toList();
     }
 
     private String wrapSnippet(final String code) {
@@ -261,39 +212,8 @@ public final class MissionExecutionRunner {
     }
 
     private List<Class<?>> supportClasses(final MissionExecutionConfig config) {
-        return Stream.concat(commonSupportClasses().stream(), config.missionSupportClasses().stream())
+        return Stream.concat(MissionSupportClassCatalog.commonSupportClasses().stream(), config.missionSupportClasses().stream())
                 .toList();
-    }
-
-    private List<Class<?>> commonSupportClasses() {
-        return List.of(
-                Core.class,
-                MissionCommand.class,
-                MissionCommandResult.class,
-                MissionEvent.class,
-                MissionExecutionException.class,
-                MissionSimulator.class,
-                ChargeCoreCommand.class,
-                ChargeCoreResult.class,
-                ConnectCoreResult.class,
-                ConnectNextCoreCommand.class,
-                MoveCoreCommand.class,
-                MoveCoreResult.class,
-                RepairCoreCommand.class,
-                RepairCoreResult.class,
-                ConnectionRejectedEvent.class,
-                CoreChargeCappedEvent.class,
-                CoreChargedEvent.class,
-                CoreConnectedEvent.class,
-                CoreMovedEvent.class,
-                CoreRepairedEvent.class,
-                MissionCoreStatus.class,
-                MissionResultValidator.class,
-                MissionStatusMeter.class,
-                MissionRunResult.class,
-                MissionRunResultFileCodec.class,
-                MissionWorkerRunner.class
-        );
     }
 
     private record ProcessResult(int exitCode, String stdout, String stderr) {
