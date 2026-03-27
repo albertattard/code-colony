@@ -122,8 +122,10 @@ Task directories:
 When asked to `commit changes`, use this workflow:
 
 1. Update the related task files and move completed tasks to `docs/tasks/done/` when applicable.
-2. Compile the project and run tests when the repository contains code.
-   If the build or tests fail, stop and fix the issue before committing unless the user explicitly approves committing a known failing state.
+2. Run verification appropriate to the scope of change.
+   For code changes, run `./mvnw clean verify`.
+   For docs-only or content-only changes that do not affect executable behavior, run a lighter validation pass if practical and note what was checked.
+   If required verification fails, stop and fix the issue before committing unless the user explicitly approves committing a known failing state.
 3. Prepare a two-part commit message:
    - a short subject starting with a present-tense verb
    - a longer body describing the business reason for the change
@@ -138,7 +140,8 @@ When asked to `commit changes`, use this workflow:
 When asked to `build`, use this workflow:
 
 1. Build and verify the project with `./mvnw clean verify`.
-2. Start the application with `./mvnw spring-boot:run` as a long-running process.
+2. Start the application with `./mvnw spring-boot:run` only when the user wants a running local instance.
+   Treat this as an interactive, long-running process and do not leave it running unless requested.
 
 ### `generate audio for <source>`
 
@@ -177,7 +180,13 @@ Examples:
 - Treat error messages and feedback text as part of the product, not incidental implementation detail.
 - Prefer `final` for variables, parameters, and fields unless mutation is required.
 
-## Design Heuristics (Value Objects)
+## Refactoring Heuristics
+
+Prefer small, behavior-preserving refactors over large rewrites.
+
+Default expectation: one refactor stage per commit unless the user asks otherwise.
+
+### Value Objects
 
 When two or more fields repeatedly represent the same concept shape (for example `xLevel`/`xCapacity` pairs such as battery, health, shield), prefer introducing a dedicated value object rather than duplicating primitives.
 
@@ -193,11 +202,7 @@ Preferred approach:
 3. Use it in records/DTOs instead of repeated primitive pairs.
 4. Keep names domain-oriented and beginner-readable.
 
-## Incremental Refactoring Policy
-
-Prefer small, behavior-preserving refactors over large rewrites.
-
-Default expectation: one refactor stage per commit unless the user asks otherwise.
+### Incremental Migration
 
 When refactoring, use staged migrations:
 
@@ -205,13 +210,31 @@ When refactoring, use staged migrations:
 2. Migrate call sites in small, verifiable batches.
 3. Remove temporary bridges only after migrations are complete and tests pass.
 
-This policy applies broadly (package moves, naming cleanups, controller/service reshaping, API surface tightening), not only model extraction.
+This applies broadly (package moves, naming cleanups, controller/service reshaping, API surface tightening), not only model extraction.
 
 When introducing a new model/type, treat it as a specific case of staged migration:
 
 1. Introduce the new type and keep compatibility bridges (for example overloaded constructors/getters).
 2. Migrate call sites incrementally.
 3. Remove compatibility bridges in a dedicated follow-up step.
+
+### Duplication And Consolidation
+
+During implementation and review, actively look for near-identical classes or functions across missions or layers.
+
+Trigger pattern:
+
+- same control-flow structure
+- same error handling and I/O flow
+- differences mostly limited to type names, mission IDs, or small constants
+
+When this pattern is found:
+
+1. Call it out explicitly in the review or summary.
+2. Propose an incremental consolidation plan.
+3. Prefer extracting shared logic into a reusable component and keeping thin mission-specific wrappers.
+
+Default expectation: when duplication is detected, propose consolidation before adding new duplicate code.
 
 ## Review Rules
 
@@ -235,5 +258,11 @@ For staged refactors:
 - Verify behavior is unchanged for that stage.
 - If compatibility bridges remain, create a follow-up task to remove them.
 - Avoid big-bang cleanup in the same change unless explicitly requested.
+
+For changed areas:
+
+- Check whether two or more classes have substantially similar structure.
+- Check whether differences can be represented as parameters, strategy, or lambda.
+- If yes, either extract shared logic in the current change or create a follow-up task and document why extraction is deferred.
 
 If the answer to any of these is unclear, stop and update the specs before continuing.
