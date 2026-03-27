@@ -179,6 +179,7 @@ Examples:
 - Prefer immutable data and value objects where practical.
 - Treat error messages and feedback text as part of the product, not incidental implementation detail.
 - Prefer `final` for variables, parameters, and fields unless mutation is required.
+- For intentionally unused exception variables in catch blocks, use `_` instead of names like `ignored` (for example `catch (IOException _)`).
 
 ## Refactoring Heuristics
 
