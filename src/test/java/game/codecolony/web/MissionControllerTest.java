@@ -340,6 +340,20 @@ class MissionControllerTest {
         assertThat(body).contains("<body class=\"flat-bg\">");
     }
 
+    @Test
+    void unknownMissionShowsExpiredSessionPage() throws Exception {
+        final String missionOnePath = createSessionAndGetMissionOnePath();
+        final String unknownMissionPath = missionOnePath.replace("/wake-the-core", "/unknown-mission");
+
+        final MvcResult result = mockMvc.perform(get(unknownMissionPath))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        final String body = result.getResponse().getContentAsString();
+
+        assertThat(body).contains("Session Expired");
+        assertThat(body).contains("Start New Session");
+    }
+
     private String createSessionAndGetMissionOnePath() throws Exception {
         final MvcResult result = mockMvc.perform(post("/game-sessions"))
                 .andExpect(status().is3xxRedirection())
