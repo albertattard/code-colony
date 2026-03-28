@@ -23,6 +23,7 @@ class MissionBehaviorLoaderTest {
         assertThat(behavior.version()).isEqualTo(1);
         assertThat(behavior.missionId()).isEqualTo("mission-01");
         assertThat(behavior.allowedCommands()).containsExactly("Core.connect()");
+        assertThat(behavior.allowedRuntimeCommands()).containsExactly("connect");
         assertThat(behavior.execution().temporaryDirectoryPrefix()).isEqualTo("wake-the-core-");
         assertThat(behavior.execution().resultFileName()).isEqualTo("wake-the-core-result.properties");
         assertThat(behavior.execution().compilationFailureSummary())
@@ -72,6 +73,65 @@ class MissionBehaviorLoaderTest {
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("allowedCommands must not contain duplicates");
+    }
+
+    @Test
+    void parseYamlFailsWhenAllowedRuntimeCommandsContainDuplicates() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                allowedRuntimeCommands:
+                  - connect
+                  - connect
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                """;
+
+        assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("allowedRuntimeCommands must not contain duplicates");
+    }
+
+    @Test
+    void parseYamlAllowsMissingAllowedRuntimeCommands() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                """;
+
+        final MissionBehaviorConfig behavior = MissionBehaviorLoader.parseYaml(yaml, "inline");
+
+        assertThat(behavior.allowedRuntimeCommands()).isEmpty();
     }
 
     @Test

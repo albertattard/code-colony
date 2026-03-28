@@ -2,6 +2,8 @@ version: 1
 missionId: mission-01
 allowedCommands:
   - Core.connect()
+allowedRuntimeCommands:
+  - connect
 execution:
   temporaryDirectoryPrefix: wake-the-core-
   resultFileName: wake-the-core-result.properties

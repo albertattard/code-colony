@@ -57,6 +57,7 @@ public final class MissionExecutionFacade {
                     context -> List.of(
                             context.behavior().objective().kind(),
                             encodeValidationPayload(context.behavior().validation()),
+                            encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -74,6 +75,7 @@ public final class MissionExecutionFacade {
                     context -> List.of(
                             context.behavior().objective().kind(),
                             encodeValidationPayload(context.behavior().validation()),
+                            encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -97,6 +99,7 @@ public final class MissionExecutionFacade {
                         return List.of(
                                 context.behavior().objective().kind(),
                                 encodeValidationPayload(context.behavior().validation()),
+                                encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
                                 context.coreSpawn().at(),
                                 dockPosition,
                                 repairPosition,
@@ -136,6 +139,14 @@ public final class MissionExecutionFacade {
         builder.append("runtimeRetryHint=").append(validation.runtimeRetryHint()).append('\n');
         validation.messages().forEach((key, value) -> builder.append(key).append('=').append(value).append('\n'));
         return Base64.getEncoder().encodeToString(builder.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String encodeAllowedRuntimeCommands(final List<String> allowedRuntimeCommands) {
+        if (allowedRuntimeCommands.isEmpty()) {
+            return "";
+        }
+
+        return String.join(",", allowedRuntimeCommands);
     }
 
     private record ObjectiveExecutionProfile(Class<?> workerClass,

@@ -22,12 +22,14 @@ import game.codecolony.runtime.RepairCoreResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 final class GenericMissionSimulator implements MissionSimulator {
 
     private static final int CORE_ID = 1;
 
     private final String objectiveKind;
+    private final Set<String> allowedRuntimeCommands;
     private final List<MissionEvent> events = new ArrayList<>();
     private final String startPosition;
     private final String dockPosition;
@@ -44,6 +46,7 @@ final class GenericMissionSimulator implements MissionSimulator {
     private boolean repaired;
 
     GenericMissionSimulator(final String objectiveKind,
+                            final Set<String> allowedRuntimeCommands,
                             final String startPosition,
                             final String dockPosition,
                             final String repairPosition,
@@ -53,6 +56,7 @@ final class GenericMissionSimulator implements MissionSimulator {
                             final int healthLevel,
                             final int healthCapacity) {
         this.objectiveKind = objectiveKind;
+        this.allowedRuntimeCommands = Set.copyOf(allowedRuntimeCommands);
         this.startPosition = startPosition;
         this.position = startPosition;
         this.dockPosition = dockPosition;
@@ -67,25 +71,21 @@ final class GenericMissionSimulator implements MissionSimulator {
     @Override
     public MissionCommandResult execute(final MissionCommand command) {
         if (command instanceof ConnectNextCoreCommand) {
+            requireAllowedRuntimeCommand("connect", command);
             return executeConnect();
         }
 
-        if ("connect_once".equals(objectiveKind)) {
-            throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
-        }
-
         if (command instanceof ChargeCoreCommand chargeCoreCommand) {
+            requireAllowedRuntimeCommand("charge", command);
             return executeCharge(chargeCoreCommand);
         }
 
-        if ("charge_to_full".equals(objectiveKind)) {
-            throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
-        }
-
         if (command instanceof MoveCoreCommand moveCoreCommand) {
+            requireAllowedRuntimeCommand("move", command);
             return executeMove(moveCoreCommand);
         }
         if (command instanceof RepairCoreCommand repairCoreCommand) {
+            requireAllowedRuntimeCommand("repair", command);
             return executeRepair(repairCoreCommand);
         }
 
@@ -169,6 +169,12 @@ final class GenericMissionSimulator implements MissionSimulator {
     private void requireConnectedCore(final int coreId) {
         if (!connected || coreId != CORE_ID) {
             throw new MissionExecutionException("CORE-01 must be connected before this action.");
+        }
+    }
+
+    private void requireAllowedRuntimeCommand(final String commandName, final MissionCommand command) {
+        if (!allowedRuntimeCommands.isEmpty() && !allowedRuntimeCommands.contains(commandName)) {
+            throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
         }
     }
 }

@@ -3,6 +3,9 @@ missionId: mission-02
 allowedCommands:
   - Core.connect()
   - core.charge()
+allowedRuntimeCommands:
+  - connect
+  - charge
 execution:
   temporaryDirectoryPrefix: charge-the-core-
   resultFileName: charge-the-core-result.properties

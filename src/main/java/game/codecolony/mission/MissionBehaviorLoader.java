@@ -56,6 +56,12 @@ public final class MissionBehaviorLoader {
             throw new IllegalStateException("Invalid mission behavior %s: allowedCommands must not contain duplicates"
                     .formatted(sourceName));
         }
+        final List<String> allowedRuntimeCommands = optionalStringList(root, "allowedRuntimeCommands", sourceName);
+        final Set<String> uniqueAllowedRuntimeCommands = new LinkedHashSet<>(allowedRuntimeCommands);
+        if (uniqueAllowedRuntimeCommands.size() != allowedRuntimeCommands.size()) {
+            throw new IllegalStateException("Invalid mission behavior %s: allowedRuntimeCommands must not contain duplicates"
+                    .formatted(sourceName));
+        }
 
         final Map<?, ?> executionMap = requireMap(root, "execution", sourceName);
         final MissionBehaviorConfig.MissionExecutionSettings execution = new MissionBehaviorConfig.MissionExecutionSettings(
@@ -79,7 +85,15 @@ public final class MissionBehaviorLoader {
                 requireStringMap(validationMap, "messages", sourceName)
         );
 
-        return new MissionBehaviorConfig(version, missionId, uniqueAllowedCommands.stream().toList(), execution, objective, validation);
+        return new MissionBehaviorConfig(
+                version,
+                missionId,
+                uniqueAllowedCommands.stream().toList(),
+                uniqueAllowedRuntimeCommands.stream().toList(),
+                execution,
+                objective,
+                validation
+        );
     }
 
     private static Map<?, ?> requireMap(final Map<?, ?> source, final String key, final String sourceName) {
@@ -109,6 +123,13 @@ public final class MissionBehaviorLoader {
                     );
                 })
                 .toList();
+    }
+
+    private static List<String> optionalStringList(final Map<?, ?> source, final String key, final String sourceName) {
+        if (!source.containsKey(key)) {
+            return List.of();
+        }
+        return requireStringList(source, key, sourceName);
     }
 
     private static String requireString(final Map<?, ?> source, final String key, final String sourceName) {

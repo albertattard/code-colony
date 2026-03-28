@@ -100,6 +100,7 @@ Owns behavior configuration:
 
 - mission id and metadata (for routing and progression)
 - allowed command set for the mission UI
+- optional runtime command set (`allowedRuntimeCommands`) for simulation command gating; when omitted, runtime allows all supported commands
 - objective definition (for example: connect once, battery target, health target, required position)
 - execution-facing learner copy needed by runtime bootstrap (for example initial status note templates)
 - validation-facing learner copy needed during runtime result evaluation (for example mission-specific runtime guidance text)

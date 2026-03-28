@@ -6,12 +6,14 @@ import java.util.Map;
 public record MissionBehaviorConfig(int version,
                                     String missionId,
                                     List<String> allowedCommands,
+                                    List<String> allowedRuntimeCommands,
                                     MissionExecutionSettings execution,
                                     MissionObjectiveSettings objective,
                                     MissionValidationSettings validation) {
 
     public MissionBehaviorConfig {
         allowedCommands = List.copyOf(allowedCommands);
+        allowedRuntimeCommands = List.copyOf(allowedRuntimeCommands);
     }
 
     public record MissionExecutionSettings(String temporaryDirectoryPrefix,
