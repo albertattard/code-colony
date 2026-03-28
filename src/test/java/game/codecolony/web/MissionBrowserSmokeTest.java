@@ -26,6 +26,7 @@ class MissionBrowserSmokeTest {
         try (WebApplication application = new WebApplication(port)) {
             application.navigateToHomePage()
                     .assertThatPageShowsIntroBriefing()
+                    .clickOnIntroNext()
                     .clickOnStart()
                     .waitForMission01Page()
                     .assertThatPageShowsMission01Briefing()
@@ -104,6 +105,10 @@ class MissionBrowserSmokeTest {
 
         private WebApplication clickOnStart() {
             return clickOn("Start");
+        }
+
+        private WebApplication clickOnIntroNext() {
+            return clickOn("Next");
         }
 
         private WebApplication clickOnClose() {
@@ -199,6 +204,9 @@ class MissionBrowserSmokeTest {
             assertThat(page.locator("body").textContent()).contains("Operational Briefing");
             assertThat(page.locator("body").textContent()).contains("Eryndor-IV");
             assertThat(page.locator("body").textContent()).contains("Colony Operations and Repair Engineers");
+            assertThat(page.locator("body").textContent()).contains("Legacy Control Interface");
+            assertThat(page.locator("body").textContent()).contains("Each Run starts from the mission start state");
+            assertThat(page.locator(".intro-diagram img").getAttribute("src")).isEqualTo("/images/intro/mission-flow.svg");
             assertThat(page.locator("audio source").getAttribute("src")).isEqualTo("/audio/briefings/intro.mp3");
             return this;
         }

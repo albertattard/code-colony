@@ -1,0 +1,65 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="Mission Flow" id="_viwkvz25AXlQtfKLD6Y">
+    <mxGraphModel dx="2946" dy="1272" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-1" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" value="Objective met?" vertex="1">
+          <mxGeometry height="100" width="100" x="350" y="538" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-2" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" value="Start" vertex="1">
+          <mxGeometry height="60" width="100" x="350" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-3" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" value="Next" vertex="1">
+          <mxGeometry height="60" width="100" x="350" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-4" parent="1" style="html=1;strokeWidth=2;shape=manualInput;whiteSpace=wrap;rounded=1;size=26;arcSize=11;" value="Write Code" vertex="1">
+          <mxGeometry height="60" width="100" x="350" y="333" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-5" edge="1" parent="1" source="rvmqCEZ9wc2Dkah1mvhz-2" style="endArrow=classic;html=1;rounded=0;" target="rvmqCEZ9wc2Dkah1mvhz-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="670" as="sourcePoint" />
+            <mxPoint x="440" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-6" edge="1" parent="1" source="rvmqCEZ9wc2Dkah1mvhz-4" style="endArrow=classic;html=1;rounded=0;" target="rvmqCEZ9wc2Dkah1mvhz-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="670" as="sourcePoint" />
+            <mxPoint x="440" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-7" edge="1" parent="1" source="rvmqCEZ9wc2Dkah1mvhz-1" style="endArrow=classic;html=1;rounded=0;" target="rvmqCEZ9wc2Dkah1mvhz-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="390" y="670" as="sourcePoint" />
+            <mxPoint x="440" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-8" edge="1" parent="1" source="rvmqCEZ9wc2Dkah1mvhz-1" style="endArrow=classic;html=1;rounded=0;" target="rvmqCEZ9wc2Dkah1mvhz-4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="588" />
+              <mxPoint x="520" y="363" />
+            </Array>
+            <mxPoint x="660" y="500" as="sourcePoint" />
+            <mxPoint x="440" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Yes" vertex="1">
+          <mxGeometry height="30" width="60" x="388" y="638" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="No" vertex="1">
+          <mxGeometry height="30" width="60" x="441" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-11" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.process;whiteSpace=wrap;" value="Run Program" vertex="1">
+          <mxGeometry height="60" width="120" x="340" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="rvmqCEZ9wc2Dkah1mvhz-12" edge="1" parent="1" source="rvmqCEZ9wc2Dkah1mvhz-11" style="endArrow=classic;html=1;rounded=0;" target="rvmqCEZ9wc2Dkah1mvhz-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="400" y="550" as="sourcePoint" />
+            <mxPoint x="400" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -19,6 +19,8 @@ class NarrativeContentServiceTest {
         assertThat(introNarrative.briefingTitle()).isEqualTo("Operational Briefing");
         assertThat(introNarrative.briefingHtml()).contains("<p>");
         assertThat(introNarrative.briefingHtml()).contains("<em>Colony Operations and Repair Engineers</em>");
+        assertThat(introNarrative.interfaceTitle()).isEqualTo("Legacy Control Interface");
+        assertThat(introNarrative.interfaceOrientationHtml()).contains("Each <strong>Run</strong> starts from the mission start state");
     }
 
     @Test

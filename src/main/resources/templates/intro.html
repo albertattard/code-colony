@@ -22,7 +22,7 @@
             </div>
         </header>
 
-        <section class="panel intro-card intro-briefing">
+        <section class="panel intro-card intro-briefing" data-intro-step="briefing">
             <p class="eyebrow">Helix Dynamics</p>
             <h2 th:text="${briefingTitle}">Operational Briefing</h2>
             <div class="intro-copy narrative-markdown" th:utext="${briefingHtml}">
@@ -35,13 +35,58 @@
                     </audio>
                 </div>
                 <div class="actions intro-actions">
-                    <form th:action="@{/game-sessions}" method="post">
-                        <button class="primary-action" type="submit">Start</button>
-                    </form>
+                    <button class="primary-action" type="button" data-intro-next>Next</button>
                 </div>
             </div>
         </section>
+
+        <section class="panel intro-card intro-orientation" data-intro-step="orientation" hidden>
+            <p class="eyebrow">Interface Orientation</p>
+            <h2 th:text="${interfaceTitle}">Legacy Control Interface</h2>
+            <div class="intro-orientation-layout">
+                <div class="intro-copy narrative-markdown" th:utext="${interfaceOrientationHtml}">
+                    <p class="panel-copy">Orientation text</p>
+                </div>
+                <figure class="intro-diagram">
+                    <img src="/images/intro/mission-flow.svg"
+                        alt="Mission flow diagram showing Write Code, Run Program, objective check, and retry loop">
+                    <figcaption>Write code, run, inspect results, then iterate until the objective is complete.</figcaption>
+                </figure>
+            </div>
+            <div class="actions intro-actions intro-step-actions">
+                <button class="secondary-button action-left" type="button" data-intro-back>Back</button>
+                <form th:action="@{/game-sessions}" method="post">
+                    <button class="primary-action" type="submit">Start</button>
+                </form>
+            </div>
+        </section>
     </main>
+    <script>
+        (() => {
+            const briefingStep = document.querySelector("[data-intro-step='briefing']");
+            const orientationStep = document.querySelector("[data-intro-step='orientation']");
+            if (!briefingStep || !orientationStep) {
+                return;
+            }
+
+            const showStep = (stepName) => {
+                const showingOrientation = stepName === "orientation";
+                briefingStep.hidden = showingOrientation;
+                orientationStep.hidden = !showingOrientation;
+                if (showingOrientation) {
+                    briefingStep.querySelectorAll("audio").forEach((audio) => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    });
+                }
+            };
+
+            briefingStep.querySelectorAll("[data-intro-next]")
+                    .forEach((button) => button.addEventListener("click", () => showStep("orientation")));
+            orientationStep.querySelectorAll("[data-intro-back]")
+                    .forEach((button) => button.addEventListener("click", () => showStep("briefing")));
+        })();
+    </script>
 </body>
 
 </html>

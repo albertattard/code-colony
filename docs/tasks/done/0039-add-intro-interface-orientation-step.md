@@ -27,7 +27,7 @@ Players understand the mission narrative, but the interaction loop and UI panel 
 
 ## Acceptance Criteria
 
-- [ ] Intro experience includes an interface orientation segment before Mission 01.
-- [ ] Orientation includes loop guidance and explicitly states each Run starts fresh.
-- [ ] Existing intro and browser smoke tests are updated to reflect the new intro content.
-- [ ] `./mvnw clean verify` passes.
+- [x] Intro experience includes an interface orientation segment before Mission 01.
+- [x] Orientation includes loop guidance and explicitly states each Run starts fresh.
+- [x] Existing intro and browser smoke tests are updated to reflect the new intro content.
+- [x] `./mvnw clean verify` passes.

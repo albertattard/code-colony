@@ -23,7 +23,9 @@ public final class NarrativeContentService {
                 document.requiredPlainText("summary"),
                 document.requiredPlainText("objective"),
                 document.requiredPlainText("briefing title"),
-                document.requiredHtml("briefing")
+                document.requiredHtml("briefing"),
+                document.requiredPlainText("interface title"),
+                document.requiredHtml("interface orientation")
         );
     }
 
@@ -56,7 +58,9 @@ public final class NarrativeContentService {
     }
 
     public record IntroNarrativeContent(String title, String summary, String objective, String briefingTitle,
-                                        String briefingHtml) {
+                                        String briefingHtml,
+                                        String interfaceTitle,
+                                        String interfaceOrientationHtml) {
     }
 
     public record MissionNarrativeContent(String title, String summary, String objective, String briefingHtml) {

@@ -19,3 +19,25 @@ Instead, you will operate CORE units (*Colony Operations and Repair Engineers*),
 Helix Dynamics is committed to transparency, safety, and the continued success of its colonies.
 
 Your work will ensure that commitment is upheld.
+
+## Interface Title
+Legacy Control Interface
+
+## Interface Orientation
+The colony still relies on an older control interface. It is limited, but reliable for recovery operations.
+
+Use this loop each time you work on a mission:
+
+- Write code in the **Code Console**
+- Click **Run** to execute your program
+- Review **Feedback** and **CORE Status**
+- Edit code and run again until the objective is complete
+
+Each **Run** starts from the mission start state for that mission.
+
+Panel guide:
+
+- **Grid**: shows room tiles and CORE position
+- **Code Console**: where you write Java commands
+- **Feedback**: mission result, hints, and runtime messages
+- **CORE Status**: battery, health, and location telemetry

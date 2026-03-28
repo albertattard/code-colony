@@ -24,6 +24,8 @@ public final class HomeController {
         model.addAttribute("missionObjective", introNarrative.objective());
         model.addAttribute("briefingTitle", introNarrative.briefingTitle());
         model.addAttribute("briefingHtml", introNarrative.briefingHtml());
+        model.addAttribute("interfaceTitle", introNarrative.interfaceTitle());
+        model.addAttribute("interfaceOrientationHtml", introNarrative.interfaceOrientationHtml());
         return "intro";
     }
 }

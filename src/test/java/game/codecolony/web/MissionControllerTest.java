@@ -43,7 +43,12 @@ class MissionControllerTest {
         assertThat(body).contains("Operational Briefing");
         assertThat(body).contains("Eryndor-IV");
         assertThat(body).contains("Colony Operations and Repair Engineers");
+        assertThat(body).contains("Legacy Control Interface");
+        assertThat(body).contains("Each <strong>Run</strong> starts from the mission start state");
+        assertThat(body).contains("/images/intro/mission-flow.svg");
         assertThat(body).contains("/audio/briefings/intro.mp3");
+        assertThat(body).contains(">Next</button>");
+        assertThat(body).contains(">Back</button>");
         assertThat(body).contains("Start");
         assertThat(body).contains("action=\"/game-sessions\"");
         assertThat(body).doesNotContain("Mission 01: Wake The CORE");
