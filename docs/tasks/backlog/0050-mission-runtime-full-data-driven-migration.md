@@ -122,7 +122,7 @@ Success criteria:
 - [x] Stage 0 complete
 - [x] Stage 1 complete
 - [x] Stage 2 complete
-- [ ] Stage 3 complete
+- [x] Stage 3 complete
 - [ ] Stage 4 complete
 - [ ] Stage 5 complete
 - [ ] Stage 6 complete

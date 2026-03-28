@@ -61,3 +61,4 @@ Task files should:
 - [Task 0054: Manifest-Driven Mission Routing (Stage 2B)](done/0054-manifest-driven-mission-routing.md)
 - [Task 0055: Introduce Generic Mission Execution Service (Stage 3A)](done/0055-introduce-generic-mission-execution-service-stage-3a.md)
 - [Task 0056: Migrate Mission 02 And 03 To Generic Execution Service (Stage 3B)](done/0056-migrate-mission-02-and-03-to-generic-execution-service-stage-3b.md)
+- [Task 0057: Extract Mission Execution Config Factory (Stage 3C)](done/0057-extract-mission-execution-config-factory-stage-3c.md)
