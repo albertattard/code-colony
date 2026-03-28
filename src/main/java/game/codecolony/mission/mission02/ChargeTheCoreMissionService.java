@@ -25,7 +25,7 @@ public final class ChargeTheCoreMissionService {
     private static final String MISSION_PATH = "/missions/charge-the-core";
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-02.mp3";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-02");
-    private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
     private static final List<String> HINTS = List.of(

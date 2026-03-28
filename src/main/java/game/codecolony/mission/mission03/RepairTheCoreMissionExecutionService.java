@@ -4,7 +4,6 @@ import game.codecolony.mission.MissionExecutionConfig;
 import game.codecolony.mission.MissionExecutionRunner;
 import game.codecolony.mission.MissionInitialStatusFactory;
 import game.codecolony.mission.MissionMap;
-import game.codecolony.mission.MissionMapAdapter;
 import game.codecolony.mission.MissionMapLoader;
 import game.codecolony.mission.MissionMapSpawn;
 import game.codecolony.mission.MissionRunResult;
@@ -18,9 +17,9 @@ public final class RepairTheCoreMissionExecutionService {
 
     private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-03");
-    private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
-    private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
-    private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
+    private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
+    private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
+    private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
             .temporaryDirectoryPrefix("repair-the-core-")
             .resultFileName("repair-the-core-result.properties")

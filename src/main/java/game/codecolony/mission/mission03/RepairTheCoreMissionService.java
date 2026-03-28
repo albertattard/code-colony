@@ -25,10 +25,10 @@ public final class RepairTheCoreMissionService {
     private static final String MISSION_PATH = "/missions/repair-the-core";
     private static final String BRIEFING_AUDIO_PATH = "";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-03");
-    private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
-    private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
-    private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
+    private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
+    private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
     private static final List<String> HINTS = List.of(
             "Mission 03 expects movement from %s to %s before repair.".formatted(DOCK_POSITION, REPAIR_POSITION),
             "Use core.move(); to reach the repair station.",

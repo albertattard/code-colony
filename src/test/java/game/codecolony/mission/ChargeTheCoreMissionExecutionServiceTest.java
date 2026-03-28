@@ -12,7 +12,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
 
     @Test
     void chargingToFullCompletesMissionTwo() {
-        final MissionMapSpawn coreSpawn = MissionMapAdapter.requireCoreSpawn(missionMapLoader.load("mission-02"), "core_01");
+        final MissionMapSpawn coreSpawn = missionMapLoader.load("mission-02").requireCoreSpawn("core_01");
         final MissionRunResult runResult = missionExecutionService.execute("""
                 var core = Core.connect();
                 core.charge();

@@ -12,7 +12,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void successfulConnectRunBringsCoreOnline() {
-        final MissionMapSpawn coreSpawn = MissionMapAdapter.requireCoreSpawn(missionMapLoader.load("mission-01"), "core_01");
+        final MissionMapSpawn coreSpawn = missionMapLoader.load("mission-01").requireCoreSpawn("core_01");
         final MissionRunResult runResult = missionExecutionService.execute("Core.connect();");
 
         assertThat(runResult.success()).isTrue();

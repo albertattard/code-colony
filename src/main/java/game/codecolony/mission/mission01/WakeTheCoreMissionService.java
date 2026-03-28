@@ -26,10 +26,10 @@ public final class WakeTheCoreMissionService {
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-01.mp3";
     private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-01");
-    private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
-    private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
-    private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
+    private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
+    private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
     private static final List<String> HINTS = List.of(
             "Mission 01 expects a single method call.",
             "You do not need a variable yet.",
