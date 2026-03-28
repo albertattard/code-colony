@@ -1,4 +1,4 @@
-package game.codecolony.mission.mission03;
+package game.codecolony.mission;
 
 import game.codecolony.runtime.ChargeCoreCommand;
 import game.codecolony.runtime.ChargeCoreResult;
@@ -23,11 +23,13 @@ import game.codecolony.runtime.RepairCoreResult;
 import java.util.ArrayList;
 import java.util.List;
 
-final class RepairTheCoreMissionSimulator implements MissionSimulator {
+final class GenericMissionSimulator implements MissionSimulator {
 
     private static final int CORE_ID = 1;
 
+    private final String objectiveKind;
     private final List<MissionEvent> events = new ArrayList<>();
+    private final String startPosition;
     private final String dockPosition;
     private final String repairPosition;
     private final int maxColumn;
@@ -41,14 +43,17 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
     private int healthLevel;
     private boolean repaired;
 
-    RepairTheCoreMissionSimulator(final String startPosition,
-                                  final String dockPosition,
-                                  final String repairPosition,
-                                  final int maxColumn,
-                                  final int batteryLevel,
-                                  final int batteryCapacity,
-                                  final int healthLevel,
-                                  final int healthCapacity) {
+    GenericMissionSimulator(final String objectiveKind,
+                            final String startPosition,
+                            final String dockPosition,
+                            final String repairPosition,
+                            final int maxColumn,
+                            final int batteryLevel,
+                            final int batteryCapacity,
+                            final int healthLevel,
+                            final int healthCapacity) {
+        this.objectiveKind = objectiveKind;
+        this.startPosition = startPosition;
         this.position = startPosition;
         this.dockPosition = dockPosition;
         this.repairPosition = repairPosition;
@@ -64,9 +69,19 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
         if (command instanceof ConnectNextCoreCommand) {
             return executeConnect();
         }
+
+        if ("connect_once".equals(objectiveKind)) {
+            throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
+        }
+
         if (command instanceof ChargeCoreCommand chargeCoreCommand) {
             return executeCharge(chargeCoreCommand);
         }
+
+        if ("charge_to_full".equals(objectiveKind)) {
+            throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
+        }
+
         if (command instanceof MoveCoreCommand moveCoreCommand) {
             return executeMove(moveCoreCommand);
         }
@@ -77,10 +92,11 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
         throw new IllegalArgumentException("Unsupported command: " + command.getClass().getName());
     }
 
-    RepairTheCoreMissionSimulation finish() {
-        return new RepairTheCoreMissionSimulation(
+    GenericMissionSimulation finish() {
+        return new GenericMissionSimulation(
                 connected,
                 connectAttempts,
+                startPosition,
                 position,
                 moves,
                 batteryLevel,
@@ -107,7 +123,7 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
 
     private ChargeCoreResult executeCharge(final ChargeCoreCommand command) {
         requireConnectedCore(command.coreId());
-        if (!dockPosition.equals(position)) {
+        if ("repair_to_full".equals(objectiveKind) && !dockPosition.equals(position)) {
             throw new MissionExecutionException("CORE-01 must be on docking station %s before charge().".formatted(dockPosition));
         }
         if (batteryLevel >= batteryCapacity) {

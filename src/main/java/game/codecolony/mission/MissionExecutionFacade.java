@@ -1,9 +1,5 @@
 package game.codecolony.mission;
 
-import game.codecolony.mission.mission01.WakeTheCoreMissionWorker;
-import game.codecolony.mission.mission02.ChargeTheCoreMissionWorker;
-import game.codecolony.mission.mission03.RepairTheCoreMissionWorker;
-
 import java.util.List;
 import java.util.Map;
 
@@ -44,32 +40,20 @@ public final class MissionExecutionFacade {
                 context,
                 profile.workerClass(),
                 profile.initialStatusBuilder().build(context),
-                profile.supportClassSupplier().get(),
+                profile.supportClasses(),
                 profile.workerArgumentsBuilder().build(context)
         );
     }
 
-    private static Class<?> classForName(final String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Unable to load mission execution class: " + className, e);
-        }
-    }
-
     private static final Map<String, ObjectiveExecutionProfile> PROFILE_BY_OBJECTIVE_KIND = Map.of(
             "connect_once", new ObjectiveExecutionProfile(
-                    WakeTheCoreMissionWorker.class,
-                    () -> List.of(
-                            classForName("game.codecolony.mission.mission01.WakeTheCoreMissionSimulation"),
-                            classForName("game.codecolony.mission.mission01.WakeTheCoreMissionSimulator"),
-                            classForName("game.codecolony.mission.mission01.WakeTheCoreMissionValidator"),
-                            WakeTheCoreMissionWorker.class
-                    ),
+                    GenericMissionWorker.class,
+                    genericSupportClasses(),
                     context -> MissionInitialStatusFactory.withoutTelemetry(
                             context.coreSpawn(),
                             "No telemetry available while offline."),
                     context -> List.of(
+                            context.behavior().objective().kind(),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -77,19 +61,15 @@ public final class MissionExecutionFacade {
                             Integer.toString(context.coreSpawn().health().capacity()))
             ),
             "charge_to_full", new ObjectiveExecutionProfile(
-                    ChargeTheCoreMissionWorker.class,
-                    () -> List.of(
-                            classForName("game.codecolony.mission.mission02.ChargeTheCoreMissionSimulation"),
-                            classForName("game.codecolony.mission.mission02.ChargeTheCoreMissionSimulator"),
-                            classForName("game.codecolony.mission.mission02.ChargeTheCoreMissionValidator"),
-                            ChargeTheCoreMissionWorker.class
-                    ),
+                    GenericMissionWorker.class,
+                    genericSupportClasses(),
                     context -> MissionInitialStatusFactory.withTelemetry(
                             context.coreSpawn(),
                             "Connected",
                             context.coreSpawn().at(),
                             "CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit."),
                     context -> List.of(
+                            context.behavior().objective().kind(),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -97,13 +77,8 @@ public final class MissionExecutionFacade {
                             Integer.toString(context.coreSpawn().health().capacity()))
             ),
             "repair_to_full", new ObjectiveExecutionProfile(
-                    RepairTheCoreMissionWorker.class,
-                    () -> List.of(
-                            classForName("game.codecolony.mission.mission03.RepairTheCoreMissionSimulation"),
-                            classForName("game.codecolony.mission.mission03.RepairTheCoreMissionSimulator"),
-                            classForName("game.codecolony.mission.mission03.RepairTheCoreMissionValidator"),
-                            RepairTheCoreMissionWorker.class
-                    ),
+                    GenericMissionWorker.class,
+                    genericSupportClasses(),
                     context -> {
                         final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
                         return MissionInitialStatusFactory.withTelemetry(
@@ -118,6 +93,7 @@ public final class MissionExecutionFacade {
                         final String dockPosition = context.missionMap().requireFirstCoordinateByType("dock");
                         final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
                         return List.of(
+                                context.behavior().objective().kind(),
                                 context.coreSpawn().at(),
                                 dockPosition,
                                 repairPosition,
@@ -131,15 +107,19 @@ public final class MissionExecutionFacade {
             )
     );
 
-    private record ObjectiveExecutionProfile(Class<?> workerClass,
-                                             SupportClassSupplier supportClassSupplier,
-                                             InitialStatusBuilder initialStatusBuilder,
-                                             WorkerArgumentsBuilder workerArgumentsBuilder) {
+    private static List<Class<?>> genericSupportClasses() {
+        return List.of(
+                GenericMissionWorker.class,
+                GenericMissionSimulator.class,
+                GenericMissionSimulation.class,
+                GenericMissionValidator.class
+        );
     }
 
-    @FunctionalInterface
-    private interface SupportClassSupplier {
-        List<Class<?>> get();
+    private record ObjectiveExecutionProfile(Class<?> workerClass,
+                                             List<Class<?>> supportClasses,
+                                             InitialStatusBuilder initialStatusBuilder,
+                                             WorkerArgumentsBuilder workerArgumentsBuilder) {
     }
 
     @FunctionalInterface

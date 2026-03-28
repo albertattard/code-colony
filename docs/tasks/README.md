@@ -68,3 +68,4 @@ Task files should:
 - [Task 0059: Introduce Mission Page Facade (Stage 4B Slice 1)](done/0059-introduce-mission-page-facade-stage-4b-slice-1.md)
 - [Task 0060: Remove Mission-Specific Page Services (Stage 4B Slice 2)](done/0060-remove-mission-specific-page-services-stage-4b-slice-2.md)
 - [Task 0061: Remove Mission-ID Hardcoding From Execution Facade (Stage 4C)](done/0061-remove-mission-id-hardcoding-from-execution-facade-stage-4c.md)
+- [Task 0062: Remove Mission-Specific Runtime Classes (Stage 4D)](done/0062-remove-mission-specific-runtime-classes-stage-4d.md)
