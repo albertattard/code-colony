@@ -12,6 +12,7 @@ These documents define the product, learning model, student programming surface,
 - [Student API Spec](student-api-spec.md)
 - [Gameplay Spec](gameplay-spec.md)
 - [Game Intro Spec](game-intro-spec.md)
+- [Mission Definition Spec](mission-definition-spec.md)
 
 ## Mission Specifications
 

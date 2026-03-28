@@ -18,6 +18,8 @@ Task files should:
 
 ### In Progress
 
+- [Task 0047: Introduce Data-Driven Mission Runtime (Stage 1)](in-progress/0047-introduce-data-driven-mission-runtime-stage-1.md)
+
 ### Backlog
 
 ### Done
