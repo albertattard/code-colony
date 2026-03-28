@@ -62,7 +62,7 @@
                 </dl>
             </div>
             <ul class="hint-list">
-                <li th:each="hint : ${missionHints}" th:text="${hint}">Hint</li>
+                <li th:each="hint : ${missionHints}" th:utext="${hint}">Hint</li>
             </ul>
             <div class="actions" th:if="${!runResult.success or !lockOnSuccess}">
                 <button class="secondary-action secondary-button action-left"

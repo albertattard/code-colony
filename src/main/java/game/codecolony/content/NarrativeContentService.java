@@ -1,9 +1,12 @@
 package game.codecolony.content;
 
+import game.codecolony.mission.CommandReference;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,14 @@ public final class NarrativeContentService {
         );
     }
 
+    public MissionConsoleContent loadMissionConsoleContent(final String missionId) {
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
+        return new MissionConsoleContent(
+                document.optionalHtmlList("hints"),
+                parseCommandReferences(document.optionalPlainTextList("available commands"), missionId)
+        );
+    }
+
     public MissionExplanationContent loadMissionExplanation(final String missionId) {
         final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/explain.md");
         return new MissionExplanationContent(
@@ -66,7 +77,42 @@ public final class NarrativeContentService {
     public record MissionNarrativeContent(String title, String summary, String objective, String briefingHtml) {
     }
 
+    public record MissionConsoleContent(List<String> hints, List<CommandReference> commands) {
+        public MissionConsoleContent {
+            hints = List.copyOf(hints);
+            commands = List.copyOf(commands);
+        }
+    }
+
     public record MissionExplanationContent(String headline, String explanationHtml) {
+    }
+
+    private static List<CommandReference> parseCommandReferences(final List<String> commandLines, final String missionId) {
+        if (commandLines.isEmpty()) {
+            return List.of();
+        }
+
+        final List<CommandReference> commands = new ArrayList<>();
+        for (final String commandLine : commandLines) {
+            final String[] parts = commandLine.split("\\|", 2);
+            if (parts.length != 2) {
+                throw new IllegalStateException(
+                        "Invalid command entry in " + missionId + " briefing. Expected '<signature> | <description>' but found: "
+                                + commandLine
+                );
+            }
+
+            final String signature = parts[0].trim();
+            final String description = parts[1].trim();
+            if (signature.isBlank() || description.isBlank()) {
+                throw new IllegalStateException(
+                        "Invalid command entry in " + missionId + " briefing. Signature and description are required: "
+                                + commandLine
+                );
+            }
+            commands.add(new CommandReference(signature, description));
+        }
+        return commands;
     }
 
     static final class StructuredMarkdownDocument {
@@ -142,12 +188,60 @@ public final class NarrativeContentService {
             return renderMarkdown(markdown);
         }
 
+        List<String> optionalPlainTextList(final String sectionName) {
+            final String markdown = sections.get(normalizeSectionName(sectionName));
+            if (markdown == null || markdown.isBlank()) {
+                return List.of();
+            }
+
+            final List<String> values = new ArrayList<>();
+            for (final String line : markdown.split("\\R", -1)) {
+                final String normalized = toPlainTextLine(line);
+                if (!normalized.isBlank()) {
+                    values.add(normalized);
+                }
+            }
+            return Collections.unmodifiableList(values);
+        }
+
+        List<String> optionalHtmlList(final String sectionName) {
+            final String markdown = sections.get(normalizeSectionName(sectionName));
+            if (markdown == null || markdown.isBlank()) {
+                return List.of();
+            }
+
+            final List<String> values = new ArrayList<>();
+            for (final String line : markdown.split("\\R", -1)) {
+                final String normalized = stripListPrefix(line);
+                if (!normalized.isBlank()) {
+                    values.add(renderInlineMarkdown(normalized));
+                }
+            }
+            return Collections.unmodifiableList(values);
+        }
+
         private String requiredSection(final String sectionName) {
             final String markdown = sections.get(normalizeSectionName(sectionName));
             if (markdown == null || markdown.isBlank()) {
                 throw new IllegalStateException("Missing content section: " + sectionName);
             }
             return markdown;
+        }
+
+        private static String toPlainTextLine(final String line) {
+            String normalized = stripListPrefix(line);
+            return normalized
+                    .replace("`", "")
+                    .replace("*", "")
+                    .replaceAll("\\s+", " ")
+                    .trim();
+        }
+
+        private static String stripListPrefix(final String line) {
+            String normalized = line.trim();
+            normalized = normalized.replaceFirst("^[-*]\\s+", "");
+            normalized = normalized.replaceFirst("^\\d+\\.\\s+", "");
+            return normalized;
         }
 
         private static void storeSection(final Map<String, String> sections,

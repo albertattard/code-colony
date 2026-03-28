@@ -2,6 +2,7 @@ package game.codecolony.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import game.codecolony.mission.CommandReference;
 import org.junit.jupiter.api.Test;
 
 class NarrativeContentServiceTest {
@@ -58,6 +59,24 @@ class NarrativeContentServiceTest {
         assertThat(missionNarrative.objective()).isEqualTo("Move CORE-01 to the repair station and repair it.");
         assertThat(missionNarrative.briefingHtml()).contains("core.move();");
         assertThat(missionNarrative.briefingHtml()).contains("core.repair();");
+    }
+
+    @Test
+    void loadsMissionOneConsoleContentFromMarkdown() {
+        final NarrativeContentService.MissionConsoleContent missionConsole =
+                narrativeContentService.loadMissionConsoleContent("mission-01");
+
+        assertThat(missionConsole.hints()).containsExactly(
+                "Mission 01 expects a single method call.",
+                "You do not need a variable yet.",
+                "When <code>Core.connect();</code> works, the status panel should change from Offline to Online and reveal the CORE&#39;s condition."
+        );
+        assertThat(missionConsole.commands()).containsExactly(
+                new CommandReference(
+                        "Core.connect()",
+                        "Establishes a control link to the next available CORE unit."
+                )
+        );
     }
 
     @Test

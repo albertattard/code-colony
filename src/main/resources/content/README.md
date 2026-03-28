@@ -31,3 +31,10 @@ This keeps the content readable for authors, renderable in the browser, and easy
 - `intro/` for game-level entry content
 - `missions/<mission-id>/` for mission-local briefings, explain-dialog content, and future mission content
 - `lore/` reserved for future logs, fragments, and other narrative material
+
+## Mission Briefing Sections
+
+Mission briefing files can also carry code-panel copy for the same mission, including:
+
+- `## Available Commands` with one entry per line in `<signature> | <description>` form
+- `## Hints` with one hint per line (optionally as Markdown bullet items)

@@ -272,6 +272,8 @@ The command reference should reflect only what the learner can actually use in t
 
 In early missions, this reference may sit inside the code area rather than occupying a separate major panel.
 
+Command-reference entries and mission hint copy shown in this area should be loaded from mission content files, not hardcoded in mission service classes.
+
 ### 3. Code Panel
 
 This panel should provide:

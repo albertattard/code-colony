@@ -190,6 +190,8 @@ Required commands:
 
 The command list shown in the UI should prioritize only what the player actually needs to solve the mission.
 
+Mission 01 command-reference text and learner hints should be authored in mission Markdown content under `src/main/resources/content/missions/mission-01/` so copy updates do not require Java code changes.
+
 ## Programming Model
 
 This mission introduces the idea that the player must first establish a connection to the robot.
