@@ -19,13 +19,14 @@ public final class WakeTheCoreMissionExecutionService {
     private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-01");
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
             .temporaryDirectoryPrefix("wake-the-core-")
             .resultFileName("wake-the-core-result.properties")
             .workerClass(WakeTheCoreMissionWorker.class)
             .compilationFailureSummary("The code could not be compiled for Mission 01.")
             .executionStoppedSummary("Execution stopped before Mission 01 could be evaluated.")
-            .missionInitialStatus(new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "",
+            .missionInitialStatus(new MissionCoreStatus("CORE-01", CORE_STATE, null, null, null, null, "", "",
                     "No telemetry available while offline."))
             .missionSupportClasses(List.of(
                     WakeTheCoreMissionSimulation.class,
@@ -44,5 +45,9 @@ public final class WakeTheCoreMissionExecutionService {
 
     public MissionRunResult execute(final String code) {
         return RUNNER.execute(code, CONFIG);
+    }
+
+    private static String toStatusState(final String mapState) {
+        return "online".equalsIgnoreCase(mapState) ? "Online" : "Offline";
     }
 }

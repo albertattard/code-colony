@@ -23,6 +23,7 @@ base:
 spawns:
   - id: core_01
     type: core
+    state: online
     at: "B1"
     battery:
       level: 0

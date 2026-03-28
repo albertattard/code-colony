@@ -185,6 +185,7 @@ public final class MissionMapLoader {
 
             final String id = requireString(spawnMap, "id", sourceName);
             final String type = requireString(spawnMap, "type", sourceName);
+            final String state = parseSpawnState(spawnMap, type, sourceName);
             final String at = requireString(spawnMap, "at", sourceName);
 
             validateCoordinate(at, size, sourceName);
@@ -192,10 +193,25 @@ public final class MissionMapLoader {
             final MissionMapMeter battery = parseMeter(requireMap(spawnMap, "battery", sourceName), "battery", sourceName);
             final MissionMapMeter health = parseMeter(requireMap(spawnMap, "health", sourceName), "health", sourceName);
 
-            spawns.add(new MissionMapSpawn(id, type, at, battery, health));
+            spawns.add(new MissionMapSpawn(id, type, state, at, battery, health));
         }
 
         return List.copyOf(spawns);
+    }
+
+    private static String parseSpawnState(final Map<?, ?> spawnMap,
+                                          final String spawnType,
+                                          final String sourceName) {
+        if (!"core".equals(spawnType)) {
+            return "";
+        }
+
+        final String state = requireString(spawnMap, "state", sourceName).toLowerCase();
+        if (!"offline".equals(state) && !"online".equals(state)) {
+            throw new IllegalStateException("Invalid map %s: core spawn state must be 'offline' or 'online'"
+                    .formatted(sourceName));
+        }
+        return state;
     }
 
     private static MissionMapMeter parseMeter(final Map<?, ?> meterMap,

@@ -31,6 +31,7 @@ class MissionMapLoaderTest {
         assertThat(map.spawns()).singleElement().satisfies(spawn -> {
             assertThat(spawn.id()).isEqualTo("core_01");
             assertThat(spawn.type()).isEqualTo("core");
+            assertThat(spawn.state()).isEqualTo("offline");
             assertThat(spawn.at()).isEqualTo("B1");
             assertThat(spawn.battery().level()).isEqualTo(0);
             assertThat(spawn.battery().capacity()).isEqualTo(5);
@@ -54,6 +55,7 @@ class MissionMapLoaderTest {
         assertThat(map.spawns()).singleElement().satisfies(spawn -> {
             assertThat(spawn.id()).isEqualTo("core_01");
             assertThat(spawn.type()).isEqualTo("core");
+            assertThat(spawn.state()).isEqualTo("online");
             assertThat(spawn.at()).isEqualTo("B1");
             assertThat(spawn.battery().level()).isEqualTo(0);
             assertThat(spawn.battery().capacity()).isEqualTo(5);
@@ -77,6 +79,7 @@ class MissionMapLoaderTest {
         assertThat(map.spawns()).singleElement().satisfies(spawn -> {
             assertThat(spawn.id()).isEqualTo("core_01");
             assertThat(spawn.type()).isEqualTo("core");
+            assertThat(spawn.state()).isEqualTo("online");
             assertThat(spawn.at()).isEqualTo("B1");
             assertThat(spawn.battery().level()).isEqualTo(5);
             assertThat(spawn.battery().capacity()).isEqualTo(5);
@@ -102,6 +105,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: A1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -129,6 +133,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: B1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -156,6 +161,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: A1
                     battery: { level: 6, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -191,6 +197,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: helper_01
                     type: core
+                    state: online
                     at: B1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -226,11 +233,13 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: B1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
                   - id: core_01
                     type: core
+                    state: online
                     at: B2
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -263,6 +272,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: B1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -295,6 +305,7 @@ class MissionMapLoaderTest {
                 spawns:
                   - id: core_01
                     type: core
+                    state: online
                     at: B1
                     battery: { level: 0, capacity: 5 }
                     health: { level: 1, capacity: 5 }
@@ -303,5 +314,60 @@ class MissionMapLoaderTest {
         assertThatThrownBy(() -> MissionMapLoader.parseYamlForMission(yaml, "inline", "mission-01"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("requires at least one 'repair' tile type");
+    }
+
+    @Test
+    void parseYamlFailsWhenCoreSpawnStateIsMissing() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 1
+                  cols: 1
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                base:
+                  - "."
+                spawns:
+                  - id: core_01
+                    type: core
+                    at: A1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("'state' must be a non-blank string");
+    }
+
+    @Test
+    void parseYamlFailsWhenCoreSpawnStateIsInvalid() {
+        final String yaml = """
+                version: 1
+                name: bad-map
+                size:
+                  rows: 1
+                  cols: 1
+                legend:
+                  ".":
+                    type: floor
+                    label: Walkable floor tile
+                base:
+                  - "."
+                spawns:
+                  - id: core_01
+                    type: core
+                    state: standby
+                    at: A1
+                    battery: { level: 0, capacity: 5 }
+                    health: { level: 1, capacity: 5 }
+                """;
+
+        assertThatThrownBy(() -> MissionMapLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("core spawn state must be 'offline' or 'online'");
     }
 }

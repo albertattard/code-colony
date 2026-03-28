@@ -26,6 +26,7 @@ public final class ChargeTheCoreMissionService {
     private static final String BRIEFING_AUDIO_PATH = "/audio/briefings/mission-02.mp3";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-02");
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
     private static final List<String> HINTS = List.of(
             "CORE-01 remains online from Mission 01.",
@@ -107,7 +108,7 @@ public final class ChargeTheCoreMissionService {
                         "Rewrite the carried code so you keep the returned Core in a variable.",
                         "Call core.charge(); enough times to fill all five battery segments."
                 ),
-                new MissionCoreStatus("CORE-01", "Online",
+                new MissionCoreStatus("CORE-01", CORE_STATE,
                         CORE_SPAWN.battery().level(),
                         CORE_SPAWN.battery().capacity(),
                         CORE_SPAWN.health().level(),
@@ -142,5 +143,9 @@ public final class ChargeTheCoreMissionService {
             return new GridTile(tile.rowLabel(), tile.columnLabel(), "core", "Docked CORE unit");
         }
         return tile;
+    }
+
+    private static String toStatusState(final String mapState) {
+        return "online".equalsIgnoreCase(mapState) ? "Online" : "Offline";
     }
 }

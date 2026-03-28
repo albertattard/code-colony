@@ -26,6 +26,7 @@ public final class RepairTheCoreMissionService {
     private static final String BRIEFING_AUDIO_PATH = "";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-03");
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
     private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
     private static final List<String> HINTS = List.of(
@@ -108,7 +109,7 @@ public final class RepairTheCoreMissionService {
                         "Connect to CORE-01 and keep the returned Core in a variable.",
                         "Use two moves to reach B3, then call core.repair()."
                 ),
-                new MissionCoreStatus("CORE-01", "Online",
+                new MissionCoreStatus("CORE-01", CORE_STATE,
                         CORE_SPAWN.battery().level(),
                         CORE_SPAWN.battery().capacity(),
                         CORE_SPAWN.health().level(),
@@ -155,5 +156,9 @@ public final class RepairTheCoreMissionService {
             return tile;
         }
         return new GridTile(tile.rowLabel(), tile.columnLabel(), "floor", "Walkable floor tile");
+    }
+
+    private static String toStatusState(final String mapState) {
+        return "online".equalsIgnoreCase(mapState) ? "Online" : "Offline";
     }
 }

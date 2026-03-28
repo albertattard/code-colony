@@ -27,6 +27,7 @@ public final class WakeTheCoreMissionService {
     private static final String NEXT_MISSION_PATH = "/missions/charge-the-core";
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-01");
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
     private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
     private static final List<String> HINTS = List.of(
@@ -107,7 +108,7 @@ public final class WakeTheCoreMissionService {
                         "Mission 01 expects a single method call: Core.connect();",
                         "The first successful run should bring CORE-01 online."
                 ),
-                new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline."),
+                new MissionCoreStatus("CORE-01", CORE_STATE, null, null, null, null, "", "", "No telemetry available while offline."),
                 "",
                 "",
                 false
@@ -137,5 +138,9 @@ public final class WakeTheCoreMissionService {
             return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-floor", "CORE unit");
         }
         return tile;
+    }
+
+    private static String toStatusState(final String mapState) {
+        return "online".equalsIgnoreCase(mapState) ? "Online" : "Offline";
     }
 }

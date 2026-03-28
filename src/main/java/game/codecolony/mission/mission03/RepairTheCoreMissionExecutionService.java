@@ -19,6 +19,7 @@ public final class RepairTheCoreMissionExecutionService {
     private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-03");
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
+    private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final String DOCK_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "dock");
     private static final String REPAIR_POSITION = MissionMapAdapter.requireFirstCoordinateByType(MISSION_MAP, "repair");
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
@@ -27,7 +28,7 @@ public final class RepairTheCoreMissionExecutionService {
             .workerClass(RepairTheCoreMissionWorker.class)
             .compilationFailureSummary("The code could not be compiled for Mission 03.")
             .executionStoppedSummary("Execution stopped before Mission 03 could be evaluated.")
-            .missionInitialStatus(new MissionCoreStatus("CORE-01", "Online",
+            .missionInitialStatus(new MissionCoreStatus("CORE-01", CORE_STATE,
                     CORE_SPAWN.battery().level(),
                     CORE_SPAWN.battery().capacity(),
                     CORE_SPAWN.health().level(),
@@ -55,5 +56,9 @@ public final class RepairTheCoreMissionExecutionService {
 
     public MissionRunResult execute(final String code) {
         return RUNNER.execute(code, CONFIG);
+    }
+
+    private static String toStatusState(final String mapState) {
+        return "online".equalsIgnoreCase(mapState) ? "Online" : "Offline";
     }
 }

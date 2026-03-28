@@ -152,6 +152,7 @@ base:
 spawns:
   - id: core_01
     type: core
+    state: online
     at: "B1"
     battery:
       level: 5
@@ -185,6 +186,7 @@ No additional tag system is required for this stage.
 
 For CORE units:
 
+- `state` defines initial connection state (`offline` or `online`)
 - `at` defines the starting grid coordinate
 - `battery.level` and `battery.capacity` define initial battery state
 - `health.level` and `health.capacity` define initial health state
@@ -206,6 +208,7 @@ Map loading should fail fast when any of the following is invalid:
 - a base symbol is missing from `legend`
 - spawn coordinate is outside bounds
 - spawn coordinate format is invalid
+- core spawn state is missing or not `offline`/`online`
 - battery or health capacities are non-positive
 - battery or health levels are outside `0..capacity`
 
