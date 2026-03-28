@@ -14,7 +14,7 @@ public final class CodeExplanationService {
         this.narrativeContentService = narrativeContentService;
     }
 
-    public CodeExplanation explain(final String missionId, final String code) {
+    public CodeExplanation explain(final String missionId) {
         final MissionExplanationContent explanation = narrativeContentService.loadMissionExplanation(missionId);
         return new CodeExplanation(explanation.headline(), explanation.explanationHtml());
     }

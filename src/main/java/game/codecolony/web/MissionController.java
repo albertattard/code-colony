@@ -100,7 +100,7 @@ public class MissionController {
 
         gameSessionService.updateCurrentCode(gameSessionId, missionId, code);
         final MissionPage missionPage = buildMissionPageForCurrentState(gameSessionId, missionName);
-        final CodeExplanation codeExplanation = codeExplanationService.explain(missionId, code);
+        final CodeExplanation codeExplanation = codeExplanationService.explain(missionId);
 
         populateModel(model, scopeMissionPage(gameSessionId, missionName, missionPage), codeExplanation);
         return isHtmxRequest(htmxRequest) ? RESULT_FRAGMENT : MISSION_VIEW;
