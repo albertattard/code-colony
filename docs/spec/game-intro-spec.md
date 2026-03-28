@@ -57,9 +57,10 @@ The intended opening flow is:
 1. The player lands on the intro screen.
 2. The player reads a short narrative setup.
 3. The player reads a short explanation of how the game works.
-4. The player sees what is expected in the first mission.
-5. The player clicks `Start`.
-6. The player enters the Mission 01 screen.
+4. The player views an interface orientation section framed as the colony's legacy ("old") control interface.
+5. The player sees what is expected in the first mission.
+6. The player clicks `Start`.
+7. The player enters the Mission 01 screen.
 
 This flow should be short enough to read in one sitting without scrolling through a large wall of text.
 
@@ -109,8 +110,28 @@ It should communicate that the player will:
 - revise the code if needed
 
 It should explicitly say that the player does not need an IDE or local Java setup.
+It should explicitly say that each `Run` starts from the mission's start state.
 
-### 4. First Mission Setup
+### 4. Interface Orientation
+
+This section should introduce the mission UI before Mission 01 starts.
+
+It should communicate:
+
+- the interface is an older colony control system that is still operational
+- where the player writes code
+- where mission feedback appears
+- where CORE status appears
+- where the simulation grid appears
+
+It should include a simple loop diagram that matches the run cycle:
+
+- `Write Code`
+- `Run Program`
+- decision: objective complete?
+- if no, return to code editing and run again
+
+### 5. First Mission Setup
 
 This section should prepare the player for Mission 01.
 
@@ -122,7 +143,7 @@ It should communicate that:
 
 This should lower the barrier for beginners before they see the mission editor.
 
-### 5. Primary Call To Action
+### 6. Primary Call To Action
 
 The intro screen should end with one clear action:
 

@@ -387,6 +387,7 @@ When the player clicks `Run`, the system should perform the following sequence:
 If learner code writes to `stdout` or `stderr`, that output should also be captured and presented in the dedicated program output area.
 
 Each run should start from a clean mission state unless the game explicitly introduces persistent state later.
+This reset model should also be communicated to learners in onboarding copy before Mission 01 (for example, in intro loop guidance and interface orientation).
 
 Mission results should be derived from the observed runtime behavior of the learner program, including simulator state changes and recorded execution events, rather than from matching source text patterns.
 
