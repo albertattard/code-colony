@@ -18,6 +18,7 @@ public final class MissionMapLoader {
     private static final String MAP_RESOURCE_PATH_TEMPLATE = "content/missions/%s/map.yaml";
 
     public MissionMap load(final String missionId) {
+        MissionCatalog.requireMissionFiles(missionId);
         final String resourcePath = MAP_RESOURCE_PATH_TEMPLATE.formatted(missionId);
         final String yaml = loadText(resourcePath);
         return parseYamlForMission(yaml, resourcePath, missionId);

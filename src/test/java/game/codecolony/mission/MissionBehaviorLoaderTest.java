@@ -34,6 +34,13 @@ class MissionBehaviorLoaderTest {
     }
 
     @Test
+    void loadFailsFastWhenMissionDirectoryIsMissing() {
+        assertThatThrownBy(() -> missionBehaviorLoader.load("mission-does-not-exist"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing mission directory");
+    }
+
+    @Test
     void parseYamlFailsWhenAllowedCommandsContainDuplicates() {
         final String yaml = """
                 version: 1

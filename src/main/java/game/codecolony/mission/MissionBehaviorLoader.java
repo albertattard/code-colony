@@ -16,6 +16,7 @@ public final class MissionBehaviorLoader {
     private static final String BEHAVIOR_RESOURCE_PATH_TEMPLATE = "content/missions/%s/mission.yaml";
 
     public MissionBehaviorConfig load(final String missionId) {
+        MissionCatalog.requireMissionFiles(missionId);
         final String resourcePath = BEHAVIOR_RESOURCE_PATH_TEMPLATE.formatted(missionId);
         final String yaml = loadText(resourcePath);
         return parseYamlForMission(yaml, resourcePath, missionId);

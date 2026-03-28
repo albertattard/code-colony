@@ -89,6 +89,13 @@ class MissionMapLoaderTest {
     }
 
     @Test
+    void loadFailsFastWhenMissionDirectoryIsMissing() {
+        assertThatThrownBy(() -> missionMapLoader.load("mission-does-not-exist"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing mission directory");
+    }
+
+    @Test
     void parseYamlFailsWhenBaseContainsUnknownSymbol() {
         final String yaml = """
                 version: 1

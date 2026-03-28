@@ -106,6 +106,9 @@ Where practical, mission briefing text should come from runtime content files ra
 
 Each mission must identify its primary learning concept and should not depend on hidden rules that the player cannot infer from the UI or mission text.
 
+For missions that use already-supported mechanics, adding a mission should be content/config only (mission directory + required files) and should not require mission-specific Java classes.
+When new mechanics are introduced, corresponding runtime code changes are expected.
+
 ## Mission Map Files
 
 Mission layout and initial unit state should be defined in mission-scoped map files instead of hardcoded Java constants.

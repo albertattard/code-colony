@@ -119,8 +119,8 @@ Success criteria:
 
 ## Progress Tracking
 
-- [ ] Stage 0 complete
-- [ ] Stage 1 complete
+- [x] Stage 0 complete
+- [x] Stage 1 complete
 - [ ] Stage 2 complete
 - [ ] Stage 3 complete
 - [ ] Stage 4 complete

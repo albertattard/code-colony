@@ -32,6 +32,24 @@ Required files:
 
 Goal: adding a new mission should primarily require adding one new directory with these files and no mission-specific Java classes.
 
+### No-Code Mission Addition Rule
+
+When a new mission uses already-supported mechanics and objective kinds, adding that mission must require only:
+
+- one new directory under `content/missions/`
+- `content.md`
+- `map.yaml`
+- `mission.yaml`
+
+No mission-specific Java service, worker, simulator, validator, or controller wiring should be required for that case.
+
+Java code changes are still required when introducing new mechanics or runtime concepts, for example:
+
+- new dock/station types
+- enemies or new active entity categories
+- new learner actions or command semantics
+- new objective/evaluation kinds not supported by existing runtime behavior
+
 ## File Responsibilities
 
 ### `map.yaml`

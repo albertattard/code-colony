@@ -55,3 +55,5 @@ Task files should:
 - [Task 0047: Introduce Data-Driven Mission Runtime (Stage 1)](done/0047-introduce-data-driven-mission-runtime-stage-1.md)
 - [Task 0048: Load Content From Working Directory](done/0048-load-content-from-working-directory.md)
 - [Task 0049: Move Runtime Content Out Of Classpath](done/0049-move-content-out-of-classpath.md)
+- [Task 0051: Lock No-Code Mission Contract (Stage 0)](done/0051-lock-no-code-mission-contract.md)
+- [Task 0052: Introduce Dynamic Mission Discovery (Stage 1)](done/0052-introduce-dynamic-mission-discovery.md)
