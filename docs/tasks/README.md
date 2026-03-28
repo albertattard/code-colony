@@ -73,3 +73,4 @@ Task files should:
 - [Task 0064: Move Runtime Failure Guidance To mission.yaml (Stage 5 Slice 2)](done/0064-move-runtime-failure-guidance-to-mission-yaml-stage-5-slice-2.md)
 - [Task 0065: Move Validation Outcome Copy To mission.yaml (Stage 5 Slice 3)](done/0065-move-validation-outcome-copy-to-mission-yaml-stage-5-slice-3.md)
 - [Task 0066: Move Status Note And Dock Rules To mission.yaml (Stage 5 Slice 4)](done/0066-move-status-note-and-dock-rules-to-mission-yaml-stage-5-slice-4.md)
+- [Task 0067: Move Runtime Retry Hint To mission.yaml (Stage 5 Slice 5)](done/0067-move-runtime-retry-hint-to-mission-yaml-stage-5-slice-5.md)

@@ -25,6 +25,7 @@ public record MissionBehaviorConfig(int version,
     }
 
     public record MissionValidationSettings(String runtimeExpectation,
+                                            String runtimeRetryHint,
                                             Map<String, String> messages) {
         public MissionValidationSettings {
             messages = Map.copyOf(messages);

@@ -75,6 +75,7 @@ public final class MissionBehaviorLoader {
         final Map<?, ?> validationMap = requireMap(root, "validation", sourceName);
         final MissionBehaviorConfig.MissionValidationSettings validation = new MissionBehaviorConfig.MissionValidationSettings(
                 requireString(validationMap, "runtimeExpectation", sourceName),
+                requireString(validationMap, "runtimeRetryHint", sourceName),
                 requireStringMap(validationMap, "messages", sourceName)
         );
 

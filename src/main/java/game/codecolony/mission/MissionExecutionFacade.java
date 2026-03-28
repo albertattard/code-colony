@@ -133,6 +133,7 @@ public final class MissionExecutionFacade {
     private static String encodeValidationPayload(final MissionBehaviorConfig.MissionValidationSettings validation) {
         final StringBuilder builder = new StringBuilder();
         builder.append("runtimeExpectation=").append(validation.runtimeExpectation()).append('\n');
+        builder.append("runtimeRetryHint=").append(validation.runtimeRetryHint()).append('\n');
         validation.messages().forEach((key, value) -> builder.append(key).append('=').append(value).append('\n'));
         return Base64.getEncoder().encodeToString(builder.toString().getBytes(StandardCharsets.UTF_8));
     }

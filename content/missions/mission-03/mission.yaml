@@ -15,6 +15,7 @@ objective:
   successCondition: Move CORE-01 to repair station and repair to full health.
 validation:
   runtimeExpectation: Mission 03 expects one successful Core.connect() call, movement to B3, then core.repair().
+  runtimeRetryHint: Fix the runtime problem and run the code again.
   messages:
     successHeadline: CORE Repaired
     successSummary: CORE-01 reached the repair station and restored full structural health.

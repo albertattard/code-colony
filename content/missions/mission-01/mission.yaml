@@ -13,6 +13,7 @@ objective:
   successCondition: Establish a control link to CORE-01.
 validation:
   runtimeExpectation: Mission 01 allows the CORE to be connected once.
+  runtimeRetryHint: Fix the runtime problem and run the code again.
   messages:
     successHeadline: CORE Online
     successSummary: Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.

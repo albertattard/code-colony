@@ -3,6 +3,7 @@ package game.codecolony.mission;
 import java.util.Map;
 
 record GenericMissionValidationCopy(String runtimeExpectation,
+                                    String runtimeRetryHint,
                                     Map<String, String> messages) {
 
     GenericMissionValidationCopy {

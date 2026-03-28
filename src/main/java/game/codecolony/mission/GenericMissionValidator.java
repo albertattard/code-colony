@@ -38,7 +38,7 @@ final class GenericMissionValidator {
                     simulationEvents,
                     List.of(
                             validationCopy.runtimeExpectation(),
-                            "Fix the runtime problem and run the code again."
+                            validationCopy.runtimeRetryHint()
                     ),
                     mission01StatusFor(validationCopy, simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
@@ -101,7 +101,7 @@ final class GenericMissionValidator {
                     simulationEvents,
                     List.of(
                             validationCopy.runtimeExpectation(),
-                            "Fix the runtime problem and run the code again."
+                            validationCopy.runtimeRetryHint()
                     ),
                     mission02StatusFor(validationCopy, simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
@@ -186,7 +186,7 @@ final class GenericMissionValidator {
                     simulationEvents,
                     List.of(
                             validationCopy.runtimeExpectation(),
-                            "Fix the runtime problem and run the code again."
+                            validationCopy.runtimeRetryHint()
                     ),
                     mission03StatusFor(validationCopy, simulation),
                     stdout,

@@ -68,6 +68,7 @@ public final class GenericMissionWorker {
         if (payload == null || payload.isBlank()) {
             return new GenericMissionValidationCopy(
                     "Fix the runtime problem and run the code again.",
+                    "Fix the runtime problem and run the code again.",
                     java.util.Map.of()
             );
         }
@@ -90,7 +91,9 @@ public final class GenericMissionWorker {
         }
 
         final String runtimeExpectation = values.getOrDefault("runtimeExpectation", "Fix the runtime problem and run the code again.");
+        final String runtimeRetryHint = values.getOrDefault("runtimeRetryHint", "Fix the runtime problem and run the code again.");
         values.remove("runtimeExpectation");
-        return new GenericMissionValidationCopy(runtimeExpectation, values);
+        values.remove("runtimeRetryHint");
+        return new GenericMissionValidationCopy(runtimeExpectation, runtimeRetryHint, values);
     }
 }

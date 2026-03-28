@@ -34,6 +34,7 @@ class MissionBehaviorLoaderTest {
         assertThat(behavior.objective().kind()).isEqualTo("connect_once");
         assertThat(behavior.objective().successCondition()).isEqualTo("Establish a control link to CORE-01.");
         assertThat(behavior.validation().runtimeExpectation()).isEqualTo("Mission 01 allows the CORE to be connected once.");
+        assertThat(behavior.validation().runtimeRetryHint()).isEqualTo("Fix the runtime problem and run the code again.");
         assertThat(behavior.validation().messages()).containsKey("successHeadline");
     }
 
@@ -63,6 +64,7 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
                   messages:
                     successHeadline: Success
                 """;
@@ -84,6 +86,7 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
                   messages:
                     successHeadline: Success
                 """;
@@ -111,6 +114,7 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
                   messages:
                     successHeadline: Success
                 """;

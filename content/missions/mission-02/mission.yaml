@@ -14,6 +14,7 @@ objective:
   successCondition: Charge CORE-01 battery to full capacity.
 validation:
   runtimeExpectation: Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.
+  runtimeRetryHint: Fix the runtime problem and run the code again.
   messages:
     successHeadline: CORE Charged
     successSummary: CORE-01 battery restored to full capacity. The unit now has enough power for basic movement.
