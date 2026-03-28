@@ -21,7 +21,7 @@ class MissionBrowserSmokeTest {
     private int port;
 
     @Test
-    void introPageLeadsIntoMissionOneMissionTwoAndMissionThree() {
+    void playAllMissions() {
 
         try (WebApplication application = new WebApplication(port)) {
             application.navigateToHomePage()
