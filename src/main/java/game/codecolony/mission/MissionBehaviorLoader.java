@@ -71,7 +71,12 @@ public final class MissionBehaviorLoader {
                 requireString(objectiveMap, "successCondition", sourceName)
         );
 
-        return new MissionBehaviorConfig(version, missionId, uniqueAllowedCommands.stream().toList(), execution, objective);
+        final Map<?, ?> validationMap = requireMap(root, "validation", sourceName);
+        final MissionBehaviorConfig.MissionValidationSettings validation = new MissionBehaviorConfig.MissionValidationSettings(
+                requireString(validationMap, "runtimeExpectation", sourceName)
+        );
+
+        return new MissionBehaviorConfig(version, missionId, uniqueAllowedCommands.stream().toList(), execution, objective, validation);
     }
 
     private static Map<?, ?> requireMap(final Map<?, ?> source, final String key, final String sourceName) {

@@ -9,19 +9,21 @@ import java.util.List;
 final class GenericMissionValidator {
 
     MissionRunResult validate(final String objectiveKind,
+                              final String runtimeExpectation,
                               final GenericMissionSimulation simulation,
                               final String runtimeError,
                               final String stdout,
                               final String stderr) {
         return switch (objectiveKind) {
-            case "connect_once" -> validateMission01(simulation, runtimeError, stdout, stderr);
-            case "charge_to_full" -> validateMission02(simulation, runtimeError, stdout, stderr);
-            case "repair_to_full" -> validateMission03(simulation, runtimeError, stdout, stderr);
+            case "connect_once" -> validateMission01(runtimeExpectation, simulation, runtimeError, stdout, stderr);
+            case "charge_to_full" -> validateMission02(runtimeExpectation, simulation, runtimeError, stdout, stderr);
+            case "repair_to_full" -> validateMission03(runtimeExpectation, simulation, runtimeError, stdout, stderr);
             default -> throw new IllegalStateException("Unsupported objective kind for validation: " + objectiveKind);
         };
     }
 
-    private MissionRunResult validateMission01(final GenericMissionSimulation simulation,
+    private MissionRunResult validateMission01(final String runtimeExpectation,
+                                               final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
                                                final String stderr) {
@@ -35,7 +37,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            "Mission 01 allows the CORE to be connected once.",
+                            runtimeExpectation,
                             "Fix the runtime problem and run the code again."
                     ),
                     mission01StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
@@ -83,7 +85,8 @@ final class GenericMissionValidator {
         );
     }
 
-    private MissionRunResult validateMission02(final GenericMissionSimulation simulation,
+    private MissionRunResult validateMission02(final String runtimeExpectation,
+                                               final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
                                                final String stderr) {
@@ -97,7 +100,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            "Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.",
+                            runtimeExpectation,
                             "Fix the runtime problem and run the code again."
                     ),
                     mission02StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
@@ -165,7 +168,8 @@ final class GenericMissionValidator {
         );
     }
 
-    private MissionRunResult validateMission03(final GenericMissionSimulation simulation,
+    private MissionRunResult validateMission03(final String runtimeExpectation,
+                                               final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
                                                final String stderr) {
@@ -179,7 +183,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            "Mission 03 expects one successful Core.connect() call, movement to B3, then core.repair().",
+                            runtimeExpectation,
                             "Fix the runtime problem and run the code again."
                     ),
                     mission03StatusFor(simulation),

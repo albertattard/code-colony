@@ -54,6 +54,7 @@ public final class MissionExecutionFacade {
                             resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
+                            context.behavior().validation().runtimeExpectation(),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -70,6 +71,7 @@ public final class MissionExecutionFacade {
                             resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
+                            context.behavior().validation().runtimeExpectation(),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -92,6 +94,7 @@ public final class MissionExecutionFacade {
                         final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
                         return List.of(
                                 context.behavior().objective().kind(),
+                                context.behavior().validation().runtimeExpectation(),
                                 context.coreSpawn().at(),
                                 dockPosition,
                                 repairPosition,

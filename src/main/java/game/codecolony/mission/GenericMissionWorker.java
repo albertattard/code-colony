@@ -17,37 +17,38 @@ public final class GenericMissionWorker {
 
     public static void main(final String[] args) throws Exception {
         final String objectiveKind = argumentOrDefault(args, 1, DEFAULT_OBJECTIVE_KIND);
+        final String runtimeExpectation = argumentOrDefault(args, 2, "Fix the runtime problem and run the code again.");
         final GenericMissionSimulator simulator = simulatorFor(objectiveKind, args);
         final GenericMissionValidator validator = new GenericMissionValidator();
 
         MissionWorkerRunner.run(args, simulator, simulator::finish,
                 (simulation, runtimeError, stdout, stderr)
-                        -> validator.validate(objectiveKind, simulation, runtimeError, stdout, stderr));
+                        -> validator.validate(objectiveKind, runtimeExpectation, simulation, runtimeError, stdout, stderr));
     }
 
     private static GenericMissionSimulator simulatorFor(final String objectiveKind, final String[] args) {
         return switch (objectiveKind) {
             case "connect_once", "charge_to_full" -> new GenericMissionSimulator(
                     objectiveKind,
-                    argumentOrDefault(args, 2, DEFAULT_START_POSITION),
+                    argumentOrDefault(args, 3, DEFAULT_START_POSITION),
                     DEFAULT_DOCK_POSITION,
                     DEFAULT_REPAIR_POSITION,
                     DEFAULT_MAX_COLUMN,
-                    integerArgumentOrDefault(args, 3, DEFAULT_BATTERY_LEVEL),
-                    integerArgumentOrDefault(args, 4, DEFAULT_BATTERY_CAPACITY),
-                    integerArgumentOrDefault(args, 5, DEFAULT_HEALTH_LEVEL),
-                    integerArgumentOrDefault(args, 6, DEFAULT_HEALTH_CAPACITY)
+                    integerArgumentOrDefault(args, 4, DEFAULT_BATTERY_LEVEL),
+                    integerArgumentOrDefault(args, 5, DEFAULT_BATTERY_CAPACITY),
+                    integerArgumentOrDefault(args, 6, DEFAULT_HEALTH_LEVEL),
+                    integerArgumentOrDefault(args, 7, DEFAULT_HEALTH_CAPACITY)
             );
             case "repair_to_full" -> new GenericMissionSimulator(
                     objectiveKind,
-                    argumentOrDefault(args, 2, DEFAULT_START_POSITION),
-                    argumentOrDefault(args, 3, DEFAULT_DOCK_POSITION),
-                    argumentOrDefault(args, 4, DEFAULT_REPAIR_POSITION),
-                    integerArgumentOrDefault(args, 5, DEFAULT_MAX_COLUMN),
-                    integerArgumentOrDefault(args, 6, DEFAULT_BATTERY_LEVEL),
-                    integerArgumentOrDefault(args, 7, DEFAULT_BATTERY_CAPACITY),
-                    integerArgumentOrDefault(args, 8, DEFAULT_HEALTH_LEVEL),
-                    integerArgumentOrDefault(args, 9, DEFAULT_HEALTH_CAPACITY)
+                    argumentOrDefault(args, 3, DEFAULT_START_POSITION),
+                    argumentOrDefault(args, 4, DEFAULT_DOCK_POSITION),
+                    argumentOrDefault(args, 5, DEFAULT_REPAIR_POSITION),
+                    integerArgumentOrDefault(args, 6, DEFAULT_MAX_COLUMN),
+                    integerArgumentOrDefault(args, 7, DEFAULT_BATTERY_LEVEL),
+                    integerArgumentOrDefault(args, 8, DEFAULT_BATTERY_CAPACITY),
+                    integerArgumentOrDefault(args, 9, DEFAULT_HEALTH_LEVEL),
+                    integerArgumentOrDefault(args, 10, DEFAULT_HEALTH_CAPACITY)
             );
             default -> throw new IllegalStateException("Unsupported objective kind for worker: " + objectiveKind);
         };

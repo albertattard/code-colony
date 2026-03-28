@@ -33,6 +33,7 @@ class MissionBehaviorLoaderTest {
                 .isEqualTo("No telemetry available while offline.");
         assertThat(behavior.objective().kind()).isEqualTo("connect_once");
         assertThat(behavior.objective().successCondition()).isEqualTo("Establish a control link to CORE-01.");
+        assertThat(behavior.validation().runtimeExpectation()).isEqualTo("Mission 01 allows the CORE to be connected once.");
     }
 
     @Test
@@ -59,6 +60,8 @@ class MissionBehaviorLoaderTest {
                 objective:
                   kind: connect_once
                   successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
@@ -76,6 +79,8 @@ class MissionBehaviorLoaderTest {
                 objective:
                   kind: connect_once
                   successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
@@ -99,6 +104,8 @@ class MissionBehaviorLoaderTest {
                 objective:
                   kind: connect_once
                   successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYamlForMission(yaml, "inline", "mission-01"))

@@ -11,3 +11,5 @@ execution:
 objective:
   kind: connect_once
   successCondition: Establish a control link to CORE-01.
+validation:
+  runtimeExpectation: Mission 01 allows the CORE to be connected once.

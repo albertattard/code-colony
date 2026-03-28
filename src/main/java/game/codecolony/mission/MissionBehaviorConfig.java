@@ -6,7 +6,8 @@ public record MissionBehaviorConfig(int version,
                                     String missionId,
                                     List<String> allowedCommands,
                                     MissionExecutionSettings execution,
-                                    MissionObjectiveSettings objective) {
+                                    MissionObjectiveSettings objective,
+                                    MissionValidationSettings validation) {
 
     public MissionBehaviorConfig {
         allowedCommands = List.copyOf(allowedCommands);
@@ -20,5 +21,8 @@ public record MissionBehaviorConfig(int version,
     }
 
     public record MissionObjectiveSettings(String kind, String successCondition) {
+    }
+
+    public record MissionValidationSettings(String runtimeExpectation) {
     }
 }
