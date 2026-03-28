@@ -150,6 +150,49 @@ class NarrativeContentServiceTest {
     }
 
     @Test
+    void loadsMissionTwoInitialRunContentFromMarkdown() {
+        final NarrativeContentService.MissionInitialRunContent initialRunContent =
+                narrativeContentService.loadMissionInitialRunContent("mission-02");
+
+        assertThat(initialRunContent.headline()).isEqualTo("Awaiting Run");
+        assertThat(initialRunContent.summary())
+                .isEqualTo("CORE-01 remains online. Re-establish control for this run with Core.connect(), then charge it to full power.");
+        assertThat(initialRunContent.events()).containsExactly(
+                "CORE-01 is still docked in Maintenance Room B-1049 and remains online from the previous recovery step.",
+                "The docking station can restore one power segment per successful charge command.",
+                "Mission 02 is complete when the battery reaches {batteryCapacity} / {batteryCapacity}."
+        );
+        assertThat(initialRunContent.feedback()).containsExactly(
+                "Start this run with Core.connect() so you can control CORE-01 in code.",
+                "Rewrite the carried code so you keep the returned Core in a variable.",
+                "Call core.charge(); enough times to fill all five battery segments."
+        );
+        assertThat(initialRunContent.statusNote())
+                .isEqualTo("CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit.");
+    }
+
+    @Test
+    void loadsMissionThreeInitialRunContentFromMarkdown() {
+        final NarrativeContentService.MissionInitialRunContent initialRunContent =
+                narrativeContentService.loadMissionInitialRunContent("mission-03");
+
+        assertThat(initialRunContent.headline()).isEqualTo("Awaiting Run");
+        assertThat(initialRunContent.summary())
+                .isEqualTo("Move CORE-01 to the repair station at {repairPosition} and repair it.");
+        assertThat(initialRunContent.events()).containsExactly(
+                "CORE-01 is online, charged, and docked at {dockPosition}.",
+                "Repair station is located at {repairPosition}.",
+                "Mission success requires reaching {repairPosition} and calling core.repair();."
+        );
+        assertThat(initialRunContent.feedback()).containsExactly(
+                "Connect to CORE-01 and keep the returned Core in a variable.",
+                "Use two moves to reach B3, then call core.repair();."
+        );
+        assertThat(initialRunContent.statusNote())
+                .isEqualTo("CORE-01 is charged but damaged. Repair station available at {repairPosition}.");
+    }
+
+    @Test
     void loadsMissionExplanationFromMarkdownContent() {
         final NarrativeContentService.MissionExplanationContent explanation =
                 narrativeContentService.loadMissionExplanation("mission-01");

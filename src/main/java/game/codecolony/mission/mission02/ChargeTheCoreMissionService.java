@@ -2,6 +2,7 @@ package game.codecolony.mission.mission02;
 
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
+import game.codecolony.content.NarrativeContentService.MissionInitialRunContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
@@ -87,20 +88,16 @@ public final class ChargeTheCoreMissionService {
     }
 
     private MissionRunResult initialRunResult() {
+        final MissionInitialRunContent initialRunContent = narrativeContentService.loadMissionInitialRunContent("mission-02");
         return new MissionRunResult(
-                "Awaiting Run",
-                "CORE-01 remains online. Re-establish control for this run with Core.connect(), then charge it to full power.",
-                List.of(
-                        "CORE-01 is still docked in Maintenance Room B-1049 and remains online from the previous recovery step.",
-                        "The docking station can restore one power segment per successful charge command.",
-                        "Mission 02 is complete when the battery reaches %d / %d."
-                                .formatted(CORE_SPAWN.battery().capacity(), CORE_SPAWN.battery().capacity())
-                ),
-                List.of(
-                        "Start this run with Core.connect() so you can control CORE-01 in code.",
-                        "Rewrite the carried code so you keep the returned Core in a variable.",
-                        "Call core.charge(); enough times to fill all five battery segments."
-                ),
+                resolveTemplate(initialRunContent.headline()),
+                resolveTemplate(initialRunContent.summary()),
+                initialRunContent.events().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
+                initialRunContent.feedback().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
                 new MissionCoreStatus("CORE-01", CORE_STATE,
                         CORE_SPAWN.battery().level(),
                         CORE_SPAWN.battery().capacity(),
@@ -108,11 +105,17 @@ public final class ChargeTheCoreMissionService {
                         CORE_SPAWN.health().capacity(),
                         "Connected",
                         CORE_SPAWN.at(),
-                        "CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit."),
+                        resolveTemplate(initialRunContent.statusNote())),
                 "",
                 "",
                 false
         );
+    }
+
+    private String resolveTemplate(final String value) {
+        return value
+                .replace("{batteryCapacity}", String.valueOf(CORE_SPAWN.battery().capacity()))
+                .replace("{corePosition}", CORE_SPAWN.at());
     }
 
     private String normalizeInitialCode(final String initialCode) {

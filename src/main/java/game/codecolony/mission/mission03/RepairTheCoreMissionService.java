@@ -2,6 +2,7 @@ package game.codecolony.mission.mission03;
 
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
+import game.codecolony.content.NarrativeContentService.MissionInitialRunContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
@@ -89,18 +90,16 @@ public final class RepairTheCoreMissionService {
     }
 
     private MissionRunResult initialRunResult() {
+        final MissionInitialRunContent initialRunContent = narrativeContentService.loadMissionInitialRunContent("mission-03");
         return new MissionRunResult(
-                "Awaiting Run",
-                "Move CORE-01 to the repair station at B3 and repair it.",
-                List.of(
-                        "CORE-01 is online, charged, and docked at " + DOCK_POSITION + ".",
-                        "Repair station is located at " + REPAIR_POSITION + ".",
-                        "Mission success requires reaching " + REPAIR_POSITION + " and calling core.repair()."
-                ),
-                List.of(
-                        "Connect to CORE-01 and keep the returned Core in a variable.",
-                        "Use two moves to reach B3, then call core.repair()."
-                ),
+                resolveTemplate(initialRunContent.headline()),
+                resolveTemplate(initialRunContent.summary()),
+                initialRunContent.events().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
+                initialRunContent.feedback().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
                 new MissionCoreStatus("CORE-01", CORE_STATE,
                         CORE_SPAWN.battery().level(),
                         CORE_SPAWN.battery().capacity(),
@@ -108,11 +107,17 @@ public final class RepairTheCoreMissionService {
                         CORE_SPAWN.health().capacity(),
                         "Connected",
                         CORE_SPAWN.at(),
-                        "CORE-01 is charged but damaged. Repair station available at %s.".formatted(REPAIR_POSITION)),
+                        resolveTemplate(initialRunContent.statusNote())),
                 "",
                 "",
                 false
         );
+    }
+
+    private String resolveTemplate(final String value) {
+        return value
+                .replace("{dockPosition}", DOCK_POSITION)
+                .replace("{repairPosition}", REPAIR_POSITION);
     }
 
     private String normalizeInitialCode(final String initialCode) {

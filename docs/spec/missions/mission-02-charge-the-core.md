@@ -107,6 +107,8 @@ Each successful `core.charge()` call on the docking station should increase the 
 
 The battery display should stop at `5/5`. There is no overcharging state in this mission.
 
+Mission 02 initial pre-run feedback copy (headline, summary, simulation events, feedback hints, and status note) should be authored in mission markdown content rather than hardcoded in the mission service.
+
 ## Available Commands
 
 Required commands:

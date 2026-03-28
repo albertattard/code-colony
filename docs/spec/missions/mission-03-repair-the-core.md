@@ -90,6 +90,8 @@ The mission fails when:
 
 ## UI Expectations
 
+Mission 03 initial pre-run feedback copy (headline, summary, simulation events, feedback hints, and status note) should be authored in mission markdown content rather than hardcoded in the mission service.
+
 After Mission 03 succeeds:
 
 - code becomes read-only

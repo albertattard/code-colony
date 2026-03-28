@@ -21,3 +21,22 @@ Start by writing code like `var core = Core.connect();` and then call `core.char
 - CORE-01 remains online from Mission 01.
 - At the start of each run, call `Core.connect()` to re-establish control and get a CORE reference.
 - Each successful `core.charge();` call fills one power segment. Mission 02 needs 5 / 5.
+
+## Initial Run Headline
+Awaiting Run
+
+## Initial Run Summary
+CORE-01 remains online. Re-establish control for this run with `Core.connect()`, then charge it to full power.
+
+## Initial Run Events
+- CORE-01 is still docked in Maintenance Room B-1049 and remains online from the previous recovery step.
+- The docking station can restore one power segment per successful charge command.
+- Mission 02 is complete when the battery reaches {batteryCapacity} / {batteryCapacity}.
+
+## Initial Run Feedback
+- Start this run with `Core.connect()` so you can control CORE-01 in code.
+- Rewrite the carried code so you keep the returned Core in a variable.
+- Call `core.charge();` enough times to fill all five battery segments.
+
+## Initial Run Status Note
+CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit.

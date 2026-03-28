@@ -48,3 +48,4 @@ Task files should:
 - [Task 0041: Load Mission 01 Console Text From Markdown](done/0041-load-mission-01-console-text-from-markdown.md)
 - [Task 0043: Require Mission Console Content From Markdown](done/0043-require-mission-console-content-from-markdown.md)
 - [Task 0044: Load Mission 01 Initial Run Copy From Markdown](done/0044-load-mission-01-initial-run-copy-from-markdown.md)
+- [Task 0045: Load Mission 02 And 03 Initial Run Copy From Markdown](done/0045-load-mission-02-and-03-initial-run-copy-from-markdown.md)

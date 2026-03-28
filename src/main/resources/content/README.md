@@ -39,7 +39,7 @@ For current missions, briefing files are required to include code-panel copy sec
 - `## Available Commands` with one entry per line in `<signature> | <description>` form
 - `## Hints` with one hint per line (optionally as Markdown bullet items)
 
-Mission briefing files can also include mission start-state feedback sections:
+For current missions, briefing files are required to include mission start-state feedback sections:
 
 - `## Initial Run Headline`
 - `## Initial Run Summary`
