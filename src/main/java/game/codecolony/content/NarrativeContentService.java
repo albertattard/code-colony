@@ -49,6 +49,17 @@ public final class NarrativeContentService {
         );
     }
 
+    public MissionInitialRunContent loadMissionInitialRunContent(final String missionId) {
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
+        return new MissionInitialRunContent(
+                document.requiredPlainText("initial run headline"),
+                document.requiredPlainText("initial run summary"),
+                document.requiredPlainTextList("initial run events"),
+                document.requiredPlainTextList("initial run feedback"),
+                document.requiredPlainText("initial run status note")
+        );
+    }
+
     public MissionExplanationContent loadMissionExplanation(final String missionId) {
         final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/explain.md");
         return new MissionExplanationContent(
@@ -80,6 +91,14 @@ public final class NarrativeContentService {
         public MissionConsoleContent {
             hints = List.copyOf(hints);
             commands = List.copyOf(commands);
+        }
+    }
+
+    public record MissionInitialRunContent(String headline, String summary, List<String> events, List<String> feedback,
+                                           String statusNote) {
+        public MissionInitialRunContent {
+            events = List.copyOf(events);
+            feedback = List.copyOf(feedback);
         }
     }
 

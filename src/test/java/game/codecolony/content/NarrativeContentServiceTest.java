@@ -129,6 +129,27 @@ class NarrativeContentServiceTest {
     }
 
     @Test
+    void loadsMissionOneInitialRunContentFromMarkdown() {
+        final NarrativeContentService.MissionInitialRunContent initialRunContent =
+                narrativeContentService.loadMissionInitialRunContent("mission-01");
+
+        assertThat(initialRunContent.headline()).isEqualTo("Awaiting Run");
+        assertThat(initialRunContent.summary()).isEqualTo("Enter Core.connect(); and click Run to bring CORE-01 online.");
+        assertThat(initialRunContent.events()).containsExactly(
+                "CORE-01 is docked in Maintenance Room B-1049.",
+                "The control link is offline.",
+                "Docking station is located at {dockPosition}.",
+                "Repair station is located at {repairPosition}.",
+                "Running code will update the CORE status and feedback panels."
+        );
+        assertThat(initialRunContent.feedback()).containsExactly(
+                "Mission 01 expects a single method call: Core.connect();",
+                "The first successful run should bring CORE-01 online."
+        );
+        assertThat(initialRunContent.statusNote()).isEqualTo("No telemetry available while offline.");
+    }
+
+    @Test
     void loadsMissionExplanationFromMarkdownContent() {
         final NarrativeContentService.MissionExplanationContent explanation =
                 narrativeContentService.loadMissionExplanation("mission-01");
@@ -204,5 +225,23 @@ class NarrativeContentServiceTest {
         assertThatThrownBy(() -> document.requiredPlainTextList("available commands"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Missing content section: available commands");
+    }
+
+    @Test
+    void missionInitialRunSectionsAreRequired() {
+        final NarrativeContentService.StructuredMarkdownDocument document =
+                NarrativeContentService.StructuredMarkdownDocument.parse("""
+                        # Sample
+
+                        ## Briefing
+                        Some briefing text.
+                        """, "inline-test.md");
+
+        assertThatThrownBy(() -> document.requiredPlainText("initial run headline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing content section: initial run headline");
+        assertThatThrownBy(() -> document.requiredPlainTextList("initial run events"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing content section: initial run events");
     }
 }

@@ -157,6 +157,8 @@ Suggested initial state:
 - no health telemetry shown
 - no dock or position telemetry shown
 
+Mission 01 initial pre-run feedback copy (headline, summary, simulation events, feedback hints, and offline status note) should be authored in mission markdown content rather than hardcoded in the mission service.
+
 After the learner executes `Core.connect()`, the panel should visibly change state.
 
 Suggested connected state:

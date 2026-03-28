@@ -2,6 +2,7 @@ package game.codecolony.mission.mission01;
 
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
+import game.codecolony.content.NarrativeContentService.MissionInitialRunContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
@@ -88,25 +89,37 @@ public final class WakeTheCoreMissionService {
     }
 
     private MissionRunResult initialRunResult() {
+        final MissionInitialRunContent initialRunContent = narrativeContentService.loadMissionInitialRunContent("mission-01");
         return new MissionRunResult(
-                "Awaiting Run",
-                "Enter Core.connect(); and click Run to bring CORE-01 online.",
-                List.of(
-                        "CORE-01 is docked in Maintenance Room B-1049.",
-                        "The control link is offline.",
-                        "Docking station is located at " + DOCK_POSITION + ".",
-                        "Repair station is located at " + REPAIR_POSITION + ".",
-                        "Running code will update the CORE status and feedback panels."
+                resolveTemplate(initialRunContent.headline()),
+                resolveTemplate(initialRunContent.summary()),
+                initialRunContent.events().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
+                initialRunContent.feedback().stream()
+                        .map(this::resolveTemplate)
+                        .toList(),
+                new MissionCoreStatus(
+                        "CORE-01",
+                        CORE_STATE,
+                        null,
+                        null,
+                        null,
+                        null,
+                        "",
+                        "",
+                        resolveTemplate(initialRunContent.statusNote())
                 ),
-                List.of(
-                        "Mission 01 expects a single method call: Core.connect();",
-                        "The first successful run should bring CORE-01 online."
-                ),
-                new MissionCoreStatus("CORE-01", CORE_STATE, null, null, null, null, "", "", "No telemetry available while offline."),
                 "",
                 "",
                 false
         );
+    }
+
+    private String resolveTemplate(final String value) {
+        return value
+                .replace("{dockPosition}", DOCK_POSITION)
+                .replace("{repairPosition}", REPAIR_POSITION);
     }
 
     private String nextMissionPath(final String code) {
