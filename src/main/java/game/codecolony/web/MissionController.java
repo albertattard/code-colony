@@ -5,10 +5,8 @@ import game.codecolony.mission.CodeExplanationService;
 import game.codecolony.mission.MissionManifestEntry;
 import game.codecolony.mission.MissionNotFoundException;
 import game.codecolony.mission.MissionPage;
+import game.codecolony.mission.MissionPageFacade;
 import game.codecolony.mission.MissionRouteCatalog;
-import game.codecolony.mission.mission01.WakeTheCoreMissionService;
-import game.codecolony.mission.mission02.ChargeTheCoreMissionService;
-import game.codecolony.mission.mission03.RepairTheCoreMissionService;
 import game.codecolony.session.GameSessionNotFoundException;
 import game.codecolony.session.GameSessionService;
 
@@ -36,22 +34,16 @@ public class MissionController {
     private static final String MISSION_VIEW = "mission";
     private static final String RESULT_FRAGMENT = "fragments/mission-panels :: resultPanels";
 
-    private final WakeTheCoreMissionService wakeTheCoreMissionService;
-    private final ChargeTheCoreMissionService chargeTheCoreMissionService;
-    private final RepairTheCoreMissionService repairTheCoreMissionService;
+    private final MissionPageFacade missionPageFacade;
     private final CodeExplanationService codeExplanationService;
     private final GameSessionService gameSessionService;
     private final MissionRouteCatalog missionRouteCatalog;
 
-    public MissionController(final WakeTheCoreMissionService wakeTheCoreMissionService,
-                             final ChargeTheCoreMissionService chargeTheCoreMissionService,
-                             final RepairTheCoreMissionService repairTheCoreMissionService,
+    public MissionController(final MissionPageFacade missionPageFacade,
                              final CodeExplanationService codeExplanationService,
                              final GameSessionService gameSessionService,
                              final MissionRouteCatalog missionRouteCatalog) {
-        this.wakeTheCoreMissionService = wakeTheCoreMissionService;
-        this.chargeTheCoreMissionService = chargeTheCoreMissionService;
-        this.repairTheCoreMissionService = repairTheCoreMissionService;
+        this.missionPageFacade = missionPageFacade;
         this.codeExplanationService = codeExplanationService;
         this.gameSessionService = gameSessionService;
         this.missionRouteCatalog = missionRouteCatalog;
@@ -161,30 +153,15 @@ public class MissionController {
     }
 
     private String defaultCodeForMission(final String missionId) {
-        return switch (missionId) {
-            case "mission-01" -> "";
-            case "mission-02" -> "Core.connect();";
-            case "mission-03" -> "var core = Core.connect();";
-            default -> throw new IllegalStateException("Unsupported mission content id: " + missionId);
-        };
+        return missionPageFacade.defaultCodeForMission(missionId);
     }
 
     private MissionPage initialPageForMission(final String missionId, final String startCode) {
-        return switch (missionId) {
-            case "mission-01" -> wakeTheCoreMissionService.initialPage();
-            case "mission-02" -> chargeTheCoreMissionService.initialPage(startCode);
-            case "mission-03" -> repairTheCoreMissionService.initialPage(startCode);
-            default -> throw new IllegalStateException("Unsupported mission content id: " + missionId);
-        };
+        return missionPageFacade.initialPageForMission(missionId, startCode);
     }
 
     private MissionPage pageForCode(final String missionId, final String code, final String startCode) {
-        return switch (missionId) {
-            case "mission-01" -> wakeTheCoreMissionService.pageForCode(code);
-            case "mission-02" -> chargeTheCoreMissionService.pageForCode(code, startCode);
-            case "mission-03" -> repairTheCoreMissionService.pageForCode(code, startCode);
-            default -> throw new IllegalStateException("Unsupported mission content id: " + missionId);
-        };
+        return missionPageFacade.pageForCode(missionId, code, startCode);
     }
 
     private MissionPage scopeMissionPage(final UUID gameSessionId,
