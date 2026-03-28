@@ -59,3 +59,4 @@ Task files should:
 - [Task 0052: Introduce Dynamic Mission Discovery (Stage 1)](done/0052-introduce-dynamic-mission-discovery.md)
 - [Task 0053: Add Mission Manifest Loader (Stage 2A)](done/0053-add-mission-manifest-loader.md)
 - [Task 0054: Manifest-Driven Mission Routing (Stage 2B)](done/0054-manifest-driven-mission-routing.md)
+- [Task 0055: Introduce Generic Mission Execution Service (Stage 3A)](done/0055-introduce-generic-mission-execution-service-stage-3a.md)
