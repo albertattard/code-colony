@@ -61,7 +61,8 @@ public final class MissionBehaviorLoader {
                 requireString(executionMap, "temporaryDirectoryPrefix", sourceName),
                 requireString(executionMap, "resultFileName", sourceName),
                 requireString(executionMap, "compilationFailureSummary", sourceName),
-                requireString(executionMap, "executionStoppedSummary", sourceName)
+                requireString(executionMap, "executionStoppedSummary", sourceName),
+                requireString(executionMap, "initialStatusNoteTemplate", sourceName)
         );
 
         final Map<?, ?> objectiveMap = requireMap(root, "objective", sourceName);

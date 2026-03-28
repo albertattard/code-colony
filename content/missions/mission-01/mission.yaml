@@ -7,6 +7,7 @@ execution:
   resultFileName: wake-the-core-result.properties
   compilationFailureSummary: The code could not be compiled for Mission 01.
   executionStoppedSummary: Execution stopped before Mission 01 could be evaluated.
+  initialStatusNoteTemplate: No telemetry available while offline.
 objective:
   kind: connect_once
   successCondition: Establish a control link to CORE-01.

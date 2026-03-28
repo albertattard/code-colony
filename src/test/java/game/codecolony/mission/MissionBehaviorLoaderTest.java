@@ -29,6 +29,8 @@ class MissionBehaviorLoaderTest {
                 .isEqualTo("The code could not be compiled for Mission 01.");
         assertThat(behavior.execution().executionStoppedSummary())
                 .isEqualTo("Execution stopped before Mission 01 could be evaluated.");
+        assertThat(behavior.execution().initialStatusNoteTemplate())
+                .isEqualTo("No telemetry available while offline.");
         assertThat(behavior.objective().kind()).isEqualTo("connect_once");
         assertThat(behavior.objective().successCondition()).isEqualTo("Establish a control link to CORE-01.");
     }
@@ -53,6 +55,7 @@ class MissionBehaviorLoaderTest {
                   resultFileName: wake-the-core-result.properties
                   compilationFailureSummary: failed
                   executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
                 objective:
                   kind: connect_once
                   successCondition: Connect.
@@ -92,6 +95,7 @@ class MissionBehaviorLoaderTest {
                   resultFileName: wake-the-core-result.properties
                   compilationFailureSummary: failed
                   executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
                 objective:
                   kind: connect_once
                   successCondition: Connect.

@@ -15,7 +15,8 @@ public record MissionBehaviorConfig(int version,
     public record MissionExecutionSettings(String temporaryDirectoryPrefix,
                                            String resultFileName,
                                            String compilationFailureSummary,
-                                           String executionStoppedSummary) {
+                                           String executionStoppedSummary,
+                                           String initialStatusNoteTemplate) {
     }
 
     public record MissionObjectiveSettings(String kind, String successCondition) {

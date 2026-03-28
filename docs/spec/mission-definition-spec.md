@@ -101,6 +101,7 @@ Owns behavior configuration:
 - mission id and metadata (for routing and progression)
 - allowed command set for the mission UI
 - objective definition (for example: connect once, battery target, health target, required position)
+- execution-facing learner copy needed by runtime bootstrap (for example initial status note templates)
 - per-mission action rules (for example overcharge behavior, charge/repair semantics if mission-specific)
 - completion/unlock behavior (next mission id)
 

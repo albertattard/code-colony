@@ -8,6 +8,7 @@ execution:
   resultFileName: charge-the-core-result.properties
   compilationFailureSummary: The code could not be compiled for Mission 02.
   executionStoppedSummary: Execution stopped before Mission 02 could be evaluated.
+  initialStatusNoteTemplate: CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit.
 objective:
   kind: charge_to_full
   successCondition: Charge CORE-01 battery to full capacity.

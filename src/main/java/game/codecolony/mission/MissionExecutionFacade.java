@@ -51,7 +51,7 @@ public final class MissionExecutionFacade {
                     genericSupportClasses(),
                     context -> MissionInitialStatusFactory.withoutTelemetry(
                             context.coreSpawn(),
-                            "No telemetry available while offline."),
+                            resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
                             context.coreSpawn().at(),
@@ -67,7 +67,7 @@ public final class MissionExecutionFacade {
                             context.coreSpawn(),
                             "Connected",
                             context.coreSpawn().at(),
-                            "CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit."),
+                            resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
                             context.coreSpawn().at(),
@@ -80,13 +80,11 @@ public final class MissionExecutionFacade {
                     GenericMissionWorker.class,
                     genericSupportClasses(),
                     context -> {
-                        final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
                         return MissionInitialStatusFactory.withTelemetry(
                                 context.coreSpawn(),
                                 "Connected",
                                 context.coreSpawn().at(),
-                                "CORE-01 is stable and charged. Move to %s and repair structural damage."
-                                        .formatted(repairPosition)
+                                resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())
                         );
                     },
                     context -> {
@@ -114,6 +112,16 @@ public final class MissionExecutionFacade {
                 GenericMissionSimulation.class,
                 GenericMissionValidator.class
         );
+    }
+
+    private static String resolveExecutionTemplate(final MissionExecutionConfigFactory.MissionExecutionContext context,
+                                                   final String template) {
+        final String dockPosition = context.missionMap().requireFirstCoordinateByType("dock");
+        final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
+        return template
+                .replace("{dockPosition}", dockPosition)
+                .replace("{repairPosition}", repairPosition)
+                .replace("{corePosition}", context.coreSpawn().at());
     }
 
     private record ObjectiveExecutionProfile(Class<?> workerClass,
