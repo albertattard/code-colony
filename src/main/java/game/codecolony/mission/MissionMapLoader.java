@@ -15,7 +15,6 @@ import java.util.Set;
 public final class MissionMapLoader {
 
     private static final String MAP_RESOURCE_PATH_TEMPLATE = "content/missions/%s/map.yaml";
-    private static final Set<String> CURRENT_MISSIONS = Set.of("mission-01", "mission-02", "mission-03");
 
     public MissionMap load(final String missionId) {
         final String resourcePath = MAP_RESOURCE_PATH_TEMPLATE.formatted(missionId);
@@ -71,7 +70,7 @@ public final class MissionMapLoader {
     }
 
     private static void validateMissionRules(final MissionMap map, final String missionId, final String sourceName) {
-        if (!CURRENT_MISSIONS.contains(missionId)) {
+        if (!MissionCatalog.isCurrentMission(missionId)) {
             return;
         }
 

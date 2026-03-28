@@ -1,0 +1,13 @@
+version: 1
+missionId: mission-02
+allowedCommands:
+  - Core.connect()
+  - core.charge()
+execution:
+  temporaryDirectoryPrefix: charge-the-core-
+  resultFileName: charge-the-core-result.properties
+  compilationFailureSummary: The code could not be compiled for Mission 02.
+  executionStoppedSummary: Execution stopped before Mission 02 could be evaluated.
+objective:
+  kind: charge_to_full
+  successCondition: Charge CORE-01 battery to full capacity.

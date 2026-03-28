@@ -18,8 +18,6 @@ Task files should:
 
 ### In Progress
 
-- [Task 0047: Introduce Data-Driven Mission Runtime (Stage 1)](in-progress/0047-introduce-data-driven-mission-runtime-stage-1.md)
-
 ### Backlog
 
 ### Done
@@ -52,3 +50,4 @@ Task files should:
 - [Task 0044: Load Mission 01 Initial Run Copy From Markdown](done/0044-load-mission-01-initial-run-copy-from-markdown.md)
 - [Task 0045: Load Mission 02 And 03 Initial Run Copy From Markdown](done/0045-load-mission-02-and-03-initial-run-copy-from-markdown.md)
 - [Task 0046: Merge Mission Markdown Into content.md](done/0046-merge-mission-briefing-and-explain-markdown.md)
+- [Task 0047: Introduce Data-Driven Mission Runtime (Stage 1)](done/0047-introduce-data-driven-mission-runtime-stage-1.md)

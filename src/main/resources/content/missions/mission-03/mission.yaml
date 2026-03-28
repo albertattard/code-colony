@@ -1,0 +1,14 @@
+version: 1
+missionId: mission-03
+allowedCommands:
+  - Core.connect()
+  - core.move()
+  - core.repair()
+execution:
+  temporaryDirectoryPrefix: repair-the-core-
+  resultFileName: repair-the-core-result.properties
+  compilationFailureSummary: The code could not be compiled for Mission 03.
+  executionStoppedSummary: Execution stopped before Mission 03 could be evaluated.
+objective:
+  kind: repair_to_full
+  successCondition: Move CORE-01 to repair station and repair to full health.

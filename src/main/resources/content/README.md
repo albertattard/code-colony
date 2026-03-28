@@ -29,7 +29,7 @@ This keeps the content readable for authors, renderable in the browser, and easy
 ## Current Layout
 
 - `intro/` for game-level entry content
-- `missions/<mission-id>/` for mission-local markdown content and mission map data
+- `missions/<mission-id>/` for mission-local markdown content, mission map data, and mission behavior config
 - `lore/` reserved for future logs, fragments, and other narrative material
 
 ## Mission Content Sections

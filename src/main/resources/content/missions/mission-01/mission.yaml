@@ -1,0 +1,12 @@
+version: 1
+missionId: mission-01
+allowedCommands:
+  - Core.connect()
+execution:
+  temporaryDirectoryPrefix: wake-the-core-
+  resultFileName: wake-the-core-result.properties
+  compilationFailureSummary: The code could not be compiled for Mission 01.
+  executionStoppedSummary: Execution stopped before Mission 01 could be evaluated.
+objective:
+  kind: connect_once
+  successCondition: Establish a control link to CORE-01.

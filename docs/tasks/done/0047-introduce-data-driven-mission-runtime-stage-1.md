@@ -27,7 +27,7 @@ Mission behavior should be authored through mission files so adding new missions
 
 ## Acceptance Criteria
 
-- [ ] Each current mission has a valid `mission.yaml`.
-- [ ] Mission behavior loader validates required fields and fails fast with clear diagnostics.
-- [ ] Existing mission behavior remains unchanged.
-- [ ] `./mvnw clean verify` passes.
+- [x] Each current mission has a valid `mission.yaml`.
+- [x] Mission behavior loader validates required fields and fails fast with clear diagnostics.
+- [x] Existing mission behavior remains unchanged.
+- [x] `./mvnw clean verify` passes.

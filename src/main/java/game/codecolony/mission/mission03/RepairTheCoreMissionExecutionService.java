@@ -3,6 +3,8 @@ package game.codecolony.mission.mission03;
 import game.codecolony.mission.MissionExecutionConfig;
 import game.codecolony.mission.MissionExecutionRunner;
 import game.codecolony.mission.MissionInitialStatusFactory;
+import game.codecolony.mission.MissionBehaviorConfig;
+import game.codecolony.mission.MissionBehaviorRegistry;
 import game.codecolony.mission.MissionMap;
 import game.codecolony.mission.MissionMapLoader;
 import game.codecolony.mission.MissionMapSpawn;
@@ -16,16 +18,17 @@ import org.springframework.stereotype.Service;
 public final class RepairTheCoreMissionExecutionService {
 
     private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
+    private static final MissionBehaviorConfig BEHAVIOR = new MissionBehaviorRegistry().get("mission-03");
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-03");
     private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
     private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
-            .temporaryDirectoryPrefix("repair-the-core-")
-            .resultFileName("repair-the-core-result.properties")
+            .temporaryDirectoryPrefix(BEHAVIOR.execution().temporaryDirectoryPrefix())
+            .resultFileName(BEHAVIOR.execution().resultFileName())
             .workerClass(RepairTheCoreMissionWorker.class)
-            .compilationFailureSummary("The code could not be compiled for Mission 03.")
-            .executionStoppedSummary("Execution stopped before Mission 03 could be evaluated.")
+            .compilationFailureSummary(BEHAVIOR.execution().compilationFailureSummary())
+            .executionStoppedSummary(BEHAVIOR.execution().executionStoppedSummary())
             .missionInitialStatus(MissionInitialStatusFactory.withTelemetry(
                     CORE_SPAWN,
                     "Connected",

@@ -3,6 +3,8 @@ package game.codecolony.mission.mission02;
 import game.codecolony.mission.MissionExecutionConfig;
 import game.codecolony.mission.MissionInitialStatusFactory;
 import game.codecolony.mission.MissionExecutionRunner;
+import game.codecolony.mission.MissionBehaviorConfig;
+import game.codecolony.mission.MissionBehaviorRegistry;
 import game.codecolony.mission.MissionMap;
 import game.codecolony.mission.MissionMapLoader;
 import game.codecolony.mission.MissionMapSpawn;
@@ -16,14 +18,15 @@ import org.springframework.stereotype.Service;
 public final class ChargeTheCoreMissionExecutionService {
 
     private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
+    private static final MissionBehaviorConfig BEHAVIOR = new MissionBehaviorRegistry().get("mission-02");
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-02");
     private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
-            .temporaryDirectoryPrefix("charge-the-core-")
-            .resultFileName("charge-the-core-result.properties")
+            .temporaryDirectoryPrefix(BEHAVIOR.execution().temporaryDirectoryPrefix())
+            .resultFileName(BEHAVIOR.execution().resultFileName())
             .workerClass(ChargeTheCoreMissionWorker.class)
-            .compilationFailureSummary("The code could not be compiled for Mission 02.")
-            .executionStoppedSummary("Execution stopped before Mission 02 could be evaluated.")
+            .compilationFailureSummary(BEHAVIOR.execution().compilationFailureSummary())
+            .executionStoppedSummary(BEHAVIOR.execution().executionStoppedSummary())
             .missionInitialStatus(MissionInitialStatusFactory.withTelemetry(
                     CORE_SPAWN,
                     "Connected",
