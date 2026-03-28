@@ -3,6 +3,7 @@ package game.codecolony.mission;
 public final class GenericMissionWorker {
 
     private static final String DEFAULT_OBJECTIVE_KIND = "connect_once";
+    private static final String DEFAULT_VALIDATION_PAYLOAD = "";
     private static final String DEFAULT_START_POSITION = "B1";
     private static final String DEFAULT_DOCK_POSITION = "B1";
     private static final String DEFAULT_REPAIR_POSITION = "B3";
@@ -17,13 +18,14 @@ public final class GenericMissionWorker {
 
     public static void main(final String[] args) throws Exception {
         final String objectiveKind = argumentOrDefault(args, 1, DEFAULT_OBJECTIVE_KIND);
-        final String runtimeExpectation = argumentOrDefault(args, 2, "Fix the runtime problem and run the code again.");
+        final String validationPayload = argumentOrDefault(args, 2, DEFAULT_VALIDATION_PAYLOAD);
+        final GenericMissionValidationCopy validationCopy = decodeValidationPayload(validationPayload);
         final GenericMissionSimulator simulator = simulatorFor(objectiveKind, args);
         final GenericMissionValidator validator = new GenericMissionValidator();
 
         MissionWorkerRunner.run(args, simulator, simulator::finish,
                 (simulation, runtimeError, stdout, stderr)
-                        -> validator.validate(objectiveKind, runtimeExpectation, simulation, runtimeError, stdout, stderr));
+                        -> validator.validate(objectiveKind, validationCopy, simulation, runtimeError, stdout, stderr));
     }
 
     private static GenericMissionSimulator simulatorFor(final String objectiveKind, final String[] args) {
@@ -60,5 +62,35 @@ public final class GenericMissionWorker {
 
     private static int integerArgumentOrDefault(final String[] args, final int index, final int defaultValue) {
         return args.length > index ? Integer.parseInt(args[index]) : defaultValue;
+    }
+
+    private static GenericMissionValidationCopy decodeValidationPayload(final String payload) {
+        if (payload == null || payload.isBlank()) {
+            return new GenericMissionValidationCopy(
+                    "Fix the runtime problem and run the code again.",
+                    java.util.Map.of()
+            );
+        }
+
+        final String decoded = new String(java.util.Base64.getDecoder().decode(payload), java.nio.charset.StandardCharsets.UTF_8);
+        final java.util.Map<String, String> values = new java.util.HashMap<>();
+        for (final String line : decoded.lines().toList()) {
+            if (line.isBlank()) {
+                continue;
+            }
+            final int separator = line.indexOf('=');
+            if (separator <= 0) {
+                continue;
+            }
+            final String key = line.substring(0, separator).trim();
+            final String value = line.substring(separator + 1).trim();
+            if (!key.isBlank() && !value.isBlank()) {
+                values.put(key, value);
+            }
+        }
+
+        final String runtimeExpectation = values.getOrDefault("runtimeExpectation", "Fix the runtime problem and run the code again.");
+        values.remove("runtimeExpectation");
+        return new GenericMissionValidationCopy(runtimeExpectation, values);
     }
 }

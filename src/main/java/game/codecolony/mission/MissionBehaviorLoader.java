@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class MissionBehaviorLoader {
 
@@ -73,7 +74,8 @@ public final class MissionBehaviorLoader {
 
         final Map<?, ?> validationMap = requireMap(root, "validation", sourceName);
         final MissionBehaviorConfig.MissionValidationSettings validation = new MissionBehaviorConfig.MissionValidationSettings(
-                requireString(validationMap, "runtimeExpectation", sourceName)
+                requireString(validationMap, "runtimeExpectation", sourceName),
+                requireStringMap(validationMap, "messages", sourceName)
         );
 
         return new MissionBehaviorConfig(version, missionId, uniqueAllowedCommands.stream().toList(), execution, objective, validation);
@@ -115,6 +117,45 @@ public final class MissionBehaviorLoader {
                     .formatted(sourceName, key));
         }
         return stringValue;
+    }
+
+    private static Map<String, String> requireStringMap(final Map<?, ?> source, final String key, final String sourceName) {
+        final Object value = source.get(key);
+        if (!(value instanceof Map<?, ?> mapValue) || mapValue.isEmpty()) {
+            throw new IllegalStateException("Invalid mission behavior %s: '%s' must be a non-empty mapping"
+                    .formatted(sourceName, key));
+        }
+
+        final Map<String, String> result = mapValue.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> {
+                            final Object rawKey = entry.getKey();
+                            if (rawKey instanceof String stringKey && !stringKey.isBlank()) {
+                                return stringKey;
+                            }
+                            throw new IllegalStateException(
+                                    "Invalid mission behavior %s: '%s' keys must be non-blank strings"
+                                            .formatted(sourceName, key)
+                            );
+                        },
+                        entry -> {
+                            final Object rawValue = entry.getValue();
+                            if (rawValue instanceof String stringValue && !stringValue.isBlank()) {
+                                return stringValue;
+                            }
+                            throw new IllegalStateException(
+                                    "Invalid mission behavior %s: '%s' values must be non-blank strings"
+                                            .formatted(sourceName, key)
+                            );
+                        }
+                ));
+
+        if (result.size() != mapValue.size()) {
+            throw new IllegalStateException("Invalid mission behavior %s: '%s' must not contain duplicate keys"
+                    .formatted(sourceName, key));
+        }
+
+        return result;
     }
 
     private static int requireInt(final Map<?, ?> source, final String key, final String sourceName) {

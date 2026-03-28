@@ -34,6 +34,7 @@ class MissionBehaviorLoaderTest {
         assertThat(behavior.objective().kind()).isEqualTo("connect_once");
         assertThat(behavior.objective().successCondition()).isEqualTo("Establish a control link to CORE-01.");
         assertThat(behavior.validation().runtimeExpectation()).isEqualTo("Mission 01 allows the CORE to be connected once.");
+        assertThat(behavior.validation().messages()).containsKey("successHeadline");
     }
 
     @Test
@@ -62,6 +63,8 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  messages:
+                    successHeadline: Success
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
@@ -81,6 +84,8 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  messages:
+                    successHeadline: Success
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
@@ -106,6 +111,8 @@ class MissionBehaviorLoaderTest {
                   successCondition: Connect.
                 validation:
                   runtimeExpectation: Connect once.
+                  messages:
+                    successHeadline: Success
                 """;
 
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYamlForMission(yaml, "inline", "mission-01"))

@@ -15,3 +15,21 @@ objective:
   successCondition: Move CORE-01 to repair station and repair to full health.
 validation:
   runtimeExpectation: Mission 03 expects one successful Core.connect() call, movement to B3, then core.repair().
+  messages:
+    successHeadline: CORE Repaired
+    successSummary: CORE-01 reached the repair station and restored full structural health.
+    successFeedback1: Mission objective completed.
+    successFeedback2: Movement sequence reached B3.
+    successFeedback3: Repair station restored CORE-01 to 5 / 5 health.
+    incompleteNoConnectionHeadline: Mission Incomplete
+    incompleteNoConnectionSummary: CORE-01 is online, but your program did not obtain a control reference.
+    incompleteNoConnectionFeedback1: Call Core.connect() and store the returned Core in a variable before movement and repair.
+    incompleteNoConnectionFeedback2: Mission 03 is solved when CORE-01 is repaired at station B3.
+    incompleteNotAtRepairHeadline: Mission Incomplete
+    incompleteNotAtRepairSummary: CORE-01 has not reached the repair station yet.
+    incompleteNotAtRepairFeedback1: Use core.move(); to move from B1 to B3.
+    incompleteNotAtRepairFeedback2Template: "Current position: {position}. Target position: {targetPosition}."
+    incompleteRepairHeadline: Mission Incomplete
+    incompleteRepairSummary: CORE-01 is at the repair station, but repair was not completed.
+    incompleteRepairFeedback1: Call core.repair(); while CORE-01 is on B3 until health reaches 5 / 5.
+    incompleteRepairFeedback2: Repair is complete when health reaches 5 / 5.

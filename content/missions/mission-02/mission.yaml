@@ -14,3 +14,17 @@ objective:
   successCondition: Charge CORE-01 battery to full capacity.
 validation:
   runtimeExpectation: Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.
+  messages:
+    successHeadline: CORE Charged
+    successSummary: CORE-01 battery restored to full capacity. The unit now has enough power for basic movement.
+    successFeedback1: Mission objective completed.
+    successFeedback2: Core.connect() returned a Core instance you could reuse.
+    successFeedback3: Each successful core.charge(); call restored one power segment.
+    incompleteNoConnectionHeadline: Mission Incomplete
+    incompleteNoConnectionSummary: CORE-01 is online, but your program did not obtain a control reference.
+    incompleteNoConnectionFeedback1: Call Core.connect() and store the returned Core in a variable before charging it.
+    incompleteNoConnectionFeedback2Template: Mission 02 is solved when the battery reaches {batteryCapacity} / {batteryCapacity}.
+    incompleteChargingHeadline: Mission Incomplete
+    incompleteChargingSummary: CORE-01 is online, but the battery is not full yet.
+    incompleteChargingFeedback1: Store the connected CORE in a variable so you can call core.charge(); repeatedly.
+    incompleteChargingFeedback2Template: Charge CORE-01 {remainingCharge} more time(s) to reach {batteryCapacity} / {batteryCapacity}.

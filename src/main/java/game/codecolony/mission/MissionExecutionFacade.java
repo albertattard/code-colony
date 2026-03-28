@@ -2,6 +2,8 @@ package game.codecolony.mission;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.stereotype.Service;
 
@@ -54,7 +56,7 @@ public final class MissionExecutionFacade {
                             resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
-                            context.behavior().validation().runtimeExpectation(),
+                            encodeValidationPayload(context.behavior().validation()),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -71,7 +73,7 @@ public final class MissionExecutionFacade {
                             resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
                     context -> List.of(
                             context.behavior().objective().kind(),
-                            context.behavior().validation().runtimeExpectation(),
+                            encodeValidationPayload(context.behavior().validation()),
                             context.coreSpawn().at(),
                             Integer.toString(context.coreSpawn().battery().level()),
                             Integer.toString(context.coreSpawn().battery().capacity()),
@@ -94,7 +96,7 @@ public final class MissionExecutionFacade {
                         final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
                         return List.of(
                                 context.behavior().objective().kind(),
-                                context.behavior().validation().runtimeExpectation(),
+                                encodeValidationPayload(context.behavior().validation()),
                                 context.coreSpawn().at(),
                                 dockPosition,
                                 repairPosition,
@@ -113,7 +115,8 @@ public final class MissionExecutionFacade {
                 GenericMissionWorker.class,
                 GenericMissionSimulator.class,
                 GenericMissionSimulation.class,
-                GenericMissionValidator.class
+                GenericMissionValidator.class,
+                GenericMissionValidationCopy.class
         );
     }
 
@@ -125,6 +128,13 @@ public final class MissionExecutionFacade {
                 .replace("{dockPosition}", dockPosition)
                 .replace("{repairPosition}", repairPosition)
                 .replace("{corePosition}", context.coreSpawn().at());
+    }
+
+    private static String encodeValidationPayload(final MissionBehaviorConfig.MissionValidationSettings validation) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("runtimeExpectation=").append(validation.runtimeExpectation()).append('\n');
+        validation.messages().forEach((key, value) -> builder.append(key).append('=').append(value).append('\n'));
+        return Base64.getEncoder().encodeToString(builder.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     private record ObjectiveExecutionProfile(Class<?> workerClass,

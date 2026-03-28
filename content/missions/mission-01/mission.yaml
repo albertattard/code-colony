@@ -13,3 +13,13 @@ objective:
   successCondition: Establish a control link to CORE-01.
 validation:
   runtimeExpectation: Mission 01 allows the CORE to be connected once.
+  messages:
+    successHeadline: CORE Online
+    successSummary: Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.
+    successFeedback1: Mission objective completed.
+    successFeedback2: Core.connect(); changed the visible state of the world.
+    successFeedback3: The CORE still needs charging and repair before it can return to field work.
+    incompleteHeadline: Mission Incomplete
+    incompleteSummary: CORE-01 is still offline.
+    incompleteFeedback1: Call Core.connect(); to bring the CORE online.
+    incompleteFeedback2: Mission 01 only expects a single successful connection.

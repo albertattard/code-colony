@@ -71,3 +71,4 @@ Task files should:
 - [Task 0062: Remove Mission-Specific Runtime Classes (Stage 4D)](done/0062-remove-mission-specific-runtime-classes-stage-4d.md)
 - [Task 0063: Move Initial Status Note To mission.yaml (Stage 5 Slice 1)](done/0063-move-initial-status-note-to-mission-yaml-stage-5-slice-1.md)
 - [Task 0064: Move Runtime Failure Guidance To mission.yaml (Stage 5 Slice 2)](done/0064-move-runtime-failure-guidance-to-mission-yaml-stage-5-slice-2.md)
+- [Task 0065: Move Validation Outcome Copy To mission.yaml (Stage 5 Slice 3)](done/0065-move-validation-outcome-copy-to-mission-yaml-stage-5-slice-3.md)

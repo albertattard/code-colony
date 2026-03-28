@@ -9,20 +9,20 @@ import java.util.List;
 final class GenericMissionValidator {
 
     MissionRunResult validate(final String objectiveKind,
-                              final String runtimeExpectation,
+                              final GenericMissionValidationCopy validationCopy,
                               final GenericMissionSimulation simulation,
                               final String runtimeError,
                               final String stdout,
                               final String stderr) {
         return switch (objectiveKind) {
-            case "connect_once" -> validateMission01(runtimeExpectation, simulation, runtimeError, stdout, stderr);
-            case "charge_to_full" -> validateMission02(runtimeExpectation, simulation, runtimeError, stdout, stderr);
-            case "repair_to_full" -> validateMission03(runtimeExpectation, simulation, runtimeError, stdout, stderr);
+            case "connect_once" -> validateMission01(validationCopy, simulation, runtimeError, stdout, stderr);
+            case "charge_to_full" -> validateMission02(validationCopy, simulation, runtimeError, stdout, stderr);
+            case "repair_to_full" -> validateMission03(validationCopy, simulation, runtimeError, stdout, stderr);
             default -> throw new IllegalStateException("Unsupported objective kind for validation: " + objectiveKind);
         };
     }
 
-    private MissionRunResult validateMission01(final String runtimeExpectation,
+    private MissionRunResult validateMission01(final GenericMissionValidationCopy validationCopy,
                                                final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
@@ -37,7 +37,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            runtimeExpectation,
+                            validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
                     mission01StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
@@ -55,28 +55,28 @@ final class GenericMissionValidator {
 
         if (successfulConnections == 1 && !rejectedConnection) {
             return new MissionRunResult(
-                    "CORE Online",
-                    "Control link established. CORE-01 is online, but telemetry shows a depleted battery and structural damage.",
-                    simulationEvents,
-                    List.of(
-                            "Mission objective completed.",
-                            "Core.connect(); changed the visible state of the world.",
-                            "The CORE still needs charging and repair before it can return to field work."
-                    ),
-                    mission01StatusFor(true, simulation.connectAttempts(), simulation),
-                    stdout,
-                    stderr,
-                    true
-            );
+                validationCopy.requireMessage("successHeadline"),
+                validationCopy.requireMessage("successSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("successFeedback1"),
+                        validationCopy.requireMessage("successFeedback2"),
+                        validationCopy.requireMessage("successFeedback3")
+                ),
+                mission01StatusFor(true, simulation.connectAttempts(), simulation),
+                stdout,
+                stderr,
+                true
+        );
         }
 
         return new MissionRunResult(
-                "Mission Incomplete",
-                "CORE-01 is still offline.",
+                validationCopy.requireMessage("incompleteHeadline"),
+                validationCopy.requireMessage("incompleteSummary"),
                 simulationEvents,
                 List.of(
-                        "Call Core.connect(); to bring the CORE online.",
-                        "Mission 01 only expects a single successful connection."
+                        validationCopy.requireMessage("incompleteFeedback1"),
+                        validationCopy.requireMessage("incompleteFeedback2")
                 ),
                 mission01StatusFor(false, simulation.connectAttempts(), simulation),
                 stdout,
@@ -85,7 +85,7 @@ final class GenericMissionValidator {
         );
     }
 
-    private MissionRunResult validateMission02(final String runtimeExpectation,
+    private MissionRunResult validateMission02(final GenericMissionValidationCopy validationCopy,
                                                final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
@@ -100,7 +100,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            runtimeExpectation,
+                            validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
                     mission02StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
@@ -119,47 +119,49 @@ final class GenericMissionValidator {
         if (successfulConnections == 1 && !rejectedConnection
                 && simulation.batteryLevel() == simulation.batteryCapacity()) {
             return new MissionRunResult(
-                    "CORE Charged",
-                    "CORE-01 battery restored to full capacity. The unit now has enough power for basic movement.",
-                    simulationEvents,
-                    List.of(
-                            "Mission objective completed.",
-                            "Core.connect() returned a Core instance you could reuse.",
-                            "Each successful core.charge(); call restored one power segment."
-                    ),
-                    mission02StatusFor(true, simulation.connectAttempts(), simulation),
-                    stdout,
-                    stderr,
-                    true
+                validationCopy.requireMessage("successHeadline"),
+                validationCopy.requireMessage("successSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("successFeedback1"),
+                        validationCopy.requireMessage("successFeedback2"),
+                        validationCopy.requireMessage("successFeedback3")
+                ),
+                mission02StatusFor(true, simulation.connectAttempts(), simulation),
+                stdout,
+                stderr,
+                true
             );
         }
 
         if (!simulation.connected()) {
             return new MissionRunResult(
-                    "Mission Incomplete",
-                    "CORE-01 is online, but your program did not obtain a control reference.",
-                    simulationEvents,
-                    List.of(
-                            "Call Core.connect() and store the returned Core in a variable before charging it.",
-                            "Mission 02 is solved when the battery reaches %d / %d."
-                                    .formatted(simulation.batteryCapacity(), simulation.batteryCapacity())
-                    ),
-                    mission02StatusFor(false, simulation.connectAttempts(), simulation),
-                    stdout,
-                    stderr,
-                    false
+                validationCopy.requireMessage("incompleteNoConnectionHeadline"),
+                validationCopy.requireMessage("incompleteNoConnectionSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("incompleteNoConnectionFeedback1"),
+                        applyTokens(validationCopy.requireMessage("incompleteNoConnectionFeedback2Template"), simulation)
+                ),
+                mission02StatusFor(false, simulation.connectAttempts(), simulation),
+                stdout,
+                stderr,
+                false
             );
         }
 
         final int remainingCharge = simulation.batteryCapacity() - simulation.batteryLevel();
         return new MissionRunResult(
-                "Mission Incomplete",
-                "CORE-01 is online, but the battery is not full yet.",
+                validationCopy.requireMessage("incompleteChargingHeadline"),
+                validationCopy.requireMessage("incompleteChargingSummary"),
                 simulationEvents,
                 List.of(
-                        "Store the connected CORE in a variable so you can call core.charge(); repeatedly.",
-                        "Charge CORE-01 %d more time(s) to reach %d / %d."
-                                .formatted(remainingCharge, simulation.batteryCapacity(), simulation.batteryCapacity())
+                        validationCopy.requireMessage("incompleteChargingFeedback1"),
+                        applyTokens(
+                                validationCopy.requireMessage("incompleteChargingFeedback2Template"),
+                                simulation,
+                                "remainingCharge", Integer.toString(remainingCharge)
+                        )
                 ),
                 mission02StatusFor(true, simulation.connectAttempts(), simulation),
                 stdout,
@@ -168,7 +170,7 @@ final class GenericMissionValidator {
         );
     }
 
-    private MissionRunResult validateMission03(final String runtimeExpectation,
+    private MissionRunResult validateMission03(final GenericMissionValidationCopy validationCopy,
                                                final GenericMissionSimulation simulation,
                                                final String runtimeError,
                                                final String stdout,
@@ -183,7 +185,7 @@ final class GenericMissionValidator {
                     runtimeError,
                     simulationEvents,
                     List.of(
-                            runtimeExpectation,
+                            validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
                     mission03StatusFor(simulation),
@@ -201,66 +203,85 @@ final class GenericMissionValidator {
 
         if (successfulConnections == 1 && !rejectedConnection && simulation.healthLevel() >= simulation.healthCapacity()) {
             return new MissionRunResult(
-                    "CORE Repaired",
-                    "CORE-01 reached the repair station and restored full structural health.",
-                    simulationEvents,
-                    List.of(
-                            "Mission objective completed.",
-                            "Movement sequence reached B3.",
-                            "Repair station restored CORE-01 to 5 / 5 health."
-                    ),
-                    mission03StatusFor(simulation),
-                    stdout,
-                    stderr,
-                    true
+                validationCopy.requireMessage("successHeadline"),
+                validationCopy.requireMessage("successSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("successFeedback1"),
+                        validationCopy.requireMessage("successFeedback2"),
+                        validationCopy.requireMessage("successFeedback3")
+                ),
+                mission03StatusFor(simulation),
+                stdout,
+                stderr,
+                true
             );
         }
 
         if (!simulation.connected()) {
             return new MissionRunResult(
-                    "Mission Incomplete",
-                    "CORE-01 is online, but your program did not obtain a control reference.",
-                    simulationEvents,
-                    List.of(
-                            "Call Core.connect() and store the returned Core in a variable before movement and repair.",
-                            "Mission 03 is solved when CORE-01 is repaired at station B3."
-                    ),
-                    mission03StatusFor(simulation),
-                    stdout,
-                    stderr,
-                    false
+                validationCopy.requireMessage("incompleteNoConnectionHeadline"),
+                validationCopy.requireMessage("incompleteNoConnectionSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("incompleteNoConnectionFeedback1"),
+                        validationCopy.requireMessage("incompleteNoConnectionFeedback2")
+                ),
+                mission03StatusFor(simulation),
+                stdout,
+                stderr,
+                false
             );
         }
 
         if (!"B3".equals(simulation.position())) {
             return new MissionRunResult(
-                    "Mission Incomplete",
-                    "CORE-01 has not reached the repair station yet.",
-                    simulationEvents,
-                    List.of(
-                            "Use core.move(); to move from B1 to B3.",
-                            "Current position: " + simulation.position() + ". Target position: B3."
-                    ),
-                    mission03StatusFor(simulation),
-                    stdout,
-                    stderr,
-                    false
+                validationCopy.requireMessage("incompleteNotAtRepairHeadline"),
+                validationCopy.requireMessage("incompleteNotAtRepairSummary"),
+                simulationEvents,
+                List.of(
+                        validationCopy.requireMessage("incompleteNotAtRepairFeedback1"),
+                        applyTokens(
+                                validationCopy.requireMessage("incompleteNotAtRepairFeedback2Template"),
+                                simulation,
+                                "targetPosition", "B3"
+                        )
+                ),
+                mission03StatusFor(simulation),
+                stdout,
+                stderr,
+                false
             );
         }
 
         return new MissionRunResult(
-                "Mission Incomplete",
-                "CORE-01 is at the repair station, but repair was not completed.",
+                validationCopy.requireMessage("incompleteRepairHeadline"),
+                validationCopy.requireMessage("incompleteRepairSummary"),
                 simulationEvents,
                 List.of(
-                        "Call core.repair(); while CORE-01 is on B3 until health reaches 5 / 5.",
-                        "Repair is complete when health reaches 5 / 5."
+                        validationCopy.requireMessage("incompleteRepairFeedback1"),
+                        validationCopy.requireMessage("incompleteRepairFeedback2")
                 ),
                 mission03StatusFor(simulation),
                 stdout,
                 stderr,
                 false
         );
+    }
+
+    private String applyTokens(final String template,
+                               final GenericMissionSimulation simulation,
+                               final String... extraPairs) {
+        String resolved = template
+                .replace("{batteryCapacity}", Integer.toString(simulation.batteryCapacity()))
+                .replace("{healthCapacity}", Integer.toString(simulation.healthCapacity()))
+                .replace("{position}", simulation.position());
+
+        for (int i = 0; i + 1 < extraPairs.length; i += 2) {
+            resolved = resolved.replace("{" + extraPairs[i] + "}", extraPairs[i + 1]);
+        }
+
+        return resolved;
     }
 
     private MissionCoreStatus mission01StatusFor(final boolean connected,

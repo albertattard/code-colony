@@ -1,6 +1,7 @@
 package game.codecolony.mission;
 
 import java.util.List;
+import java.util.Map;
 
 public record MissionBehaviorConfig(int version,
                                     String missionId,
@@ -23,6 +24,10 @@ public record MissionBehaviorConfig(int version,
     public record MissionObjectiveSettings(String kind, String successCondition) {
     }
 
-    public record MissionValidationSettings(String runtimeExpectation) {
+    public record MissionValidationSettings(String runtimeExpectation,
+                                            Map<String, String> messages) {
+        public MissionValidationSettings {
+            messages = Map.copyOf(messages);
+        }
     }
 }
