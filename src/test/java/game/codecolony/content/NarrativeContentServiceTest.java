@@ -1,6 +1,7 @@
 package game.codecolony.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import game.codecolony.mission.CommandReference;
 import org.junit.jupiter.api.Test;
@@ -185,5 +186,23 @@ class NarrativeContentServiceTest {
         assertThat(html).contains("<blockquote>");
         assertThat(html).contains("<strong>Can we call <code>charge()</code> on the <code>Core</code> class instead?</strong>");
         assertThat(html).contains("<p>No. You call <code>charge()</code> on a connected unit.</p>");
+    }
+
+    @Test
+    void missionConsoleSectionsAreRequired() {
+        final NarrativeContentService.StructuredMarkdownDocument document =
+                NarrativeContentService.StructuredMarkdownDocument.parse("""
+                        # Sample
+
+                        ## Briefing
+                        Some briefing text.
+                        """, "inline-test.md");
+
+        assertThatThrownBy(() -> document.requiredHtmlList("hints"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing content section: hints");
+        assertThatThrownBy(() -> document.requiredPlainTextList("available commands"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing content section: available commands");
     }
 }

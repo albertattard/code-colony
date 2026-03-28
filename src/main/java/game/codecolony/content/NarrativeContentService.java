@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +44,8 @@ public final class NarrativeContentService {
     public MissionConsoleContent loadMissionConsoleContent(final String missionId) {
         final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
         return new MissionConsoleContent(
-                document.optionalHtmlList("hints"),
-                parseCommandReferences(document.optionalPlainTextList("available commands"), missionId)
+                document.requiredHtmlList("hints"),
+                parseCommandReferences(document.requiredPlainTextList("available commands"), missionId)
         );
     }
 
@@ -188,12 +187,8 @@ public final class NarrativeContentService {
             return renderMarkdown(markdown);
         }
 
-        List<String> optionalPlainTextList(final String sectionName) {
-            final String markdown = sections.get(normalizeSectionName(sectionName));
-            if (markdown == null || markdown.isBlank()) {
-                return List.of();
-            }
-
+        List<String> requiredPlainTextList(final String sectionName) {
+            final String markdown = requiredSection(sectionName);
             final List<String> values = new ArrayList<>();
             for (final String line : markdown.split("\\R", -1)) {
                 final String normalized = toPlainTextLine(line);
@@ -201,15 +196,14 @@ public final class NarrativeContentService {
                     values.add(normalized);
                 }
             }
-            return Collections.unmodifiableList(values);
+            if (values.isEmpty()) {
+                throw new IllegalStateException("Missing content section: " + sectionName);
+            }
+            return List.copyOf(values);
         }
 
-        List<String> optionalHtmlList(final String sectionName) {
-            final String markdown = sections.get(normalizeSectionName(sectionName));
-            if (markdown == null || markdown.isBlank()) {
-                return List.of();
-            }
-
+        List<String> requiredHtmlList(final String sectionName) {
+            final String markdown = requiredSection(sectionName);
             final List<String> values = new ArrayList<>();
             for (final String line : markdown.split("\\R", -1)) {
                 final String normalized = stripListPrefix(line);
@@ -217,7 +211,10 @@ public final class NarrativeContentService {
                     values.add(renderInlineMarkdown(normalized));
                 }
             }
-            return Collections.unmodifiableList(values);
+            if (values.isEmpty()) {
+                throw new IllegalStateException("Missing content section: " + sectionName);
+            }
+            return List.copyOf(values);
         }
 
         private String requiredSection(final String sectionName) {

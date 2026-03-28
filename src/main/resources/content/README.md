@@ -34,7 +34,7 @@ This keeps the content readable for authors, renderable in the browser, and easy
 
 ## Mission Briefing Sections
 
-Mission briefing files can also carry code-panel copy for the same mission, including:
+For current missions, briefing files are required to include code-panel copy sections:
 
 - `## Available Commands` with one entry per line in `<signature> | <description>` form
 - `## Hints` with one hint per line (optionally as Markdown bullet items)

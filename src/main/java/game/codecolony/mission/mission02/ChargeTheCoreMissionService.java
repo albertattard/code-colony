@@ -3,7 +3,6 @@ package game.codecolony.mission.mission02;
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
-import game.codecolony.mission.CommandReference;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
 import game.codecolony.mission.MissionMap;
@@ -29,15 +28,6 @@ public final class ChargeTheCoreMissionService {
     private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
-    private static final List<String> DEFAULT_HINTS = List.of(
-            "CORE-01 remains online from Mission 01.",
-            "At the start of each run, call Core.connect() to re-establish control and get a CORE reference.",
-            "Each successful <code>core.charge();</code> call fills one power segment. Mission 02 needs 5 / 5."
-    );
-    private static final List<CommandReference> DEFAULT_COMMANDS = List.of(
-            new CommandReference("Core.connect()", "Re-establishes control for this run and returns the available CORE unit."),
-            new CommandReference("core.charge()", "Restores one battery segment while the CORE is on the docking station.")
-    );
 
     private final ChargeTheCoreMissionExecutionService missionExecutionService;
     private final NarrativeContentService narrativeContentService;
@@ -59,8 +49,8 @@ public final class ChargeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                missionHints(missionConsole),
-                availableCommands(missionConsole),
+                missionConsole.hints(),
+                missionConsole.commands(),
                 gridForPosition(runResult.coreStatus().position()),
                 initialCode,
                 initialCode,
@@ -83,8 +73,8 @@ public final class ChargeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                missionHints(missionConsole),
-                availableCommands(missionConsole),
+                missionConsole.hints(),
+                missionConsole.commands(),
                 gridForPosition(runResult.coreStatus().position()),
                 code,
                 normalizedInitialCode,
@@ -131,14 +121,6 @@ public final class ChargeTheCoreMissionService {
 
     private String missionPathWithCode(final String initialCode) {
         return MISSION_PATH + "?code=" + URLEncoder.encode(initialCode, StandardCharsets.UTF_8);
-    }
-
-    private List<String> missionHints(final MissionConsoleContent missionConsole) {
-        return missionConsole.hints().isEmpty() ? DEFAULT_HINTS : missionConsole.hints();
-    }
-
-    private List<CommandReference> availableCommands(final MissionConsoleContent missionConsole) {
-        return missionConsole.commands().isEmpty() ? DEFAULT_COMMANDS : missionConsole.commands();
     }
 
     private List<GridTile> gridForPosition(final String position) {

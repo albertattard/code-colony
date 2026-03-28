@@ -3,7 +3,6 @@ package game.codecolony.mission.mission01;
 import game.codecolony.content.NarrativeContentService;
 import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
-import game.codecolony.mission.CommandReference;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
 import game.codecolony.mission.MissionMap;
@@ -31,14 +30,6 @@ public final class WakeTheCoreMissionService {
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
     private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
-    private static final List<String> DEFAULT_HINTS = List.of(
-            "Mission 01 expects a single method call.",
-            "You do not need a variable yet.",
-            "When <code>Core.connect();</code> works, the status panel should change from Offline to Online and reveal the CORE's condition."
-    );
-    private static final List<CommandReference> DEFAULT_COMMANDS = List.of(
-            new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit.")
-    );
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
 
     private final WakeTheCoreMissionExecutionService missionExecutionService;
@@ -60,8 +51,8 @@ public final class WakeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                missionHints(missionConsole),
-                availableCommands(missionConsole),
+                missionConsole.hints(),
+                missionConsole.commands(),
                 gridForPosition(runResult.coreStatus().position()),
                 DEFAULT_CODE,
                 DEFAULT_CODE,
@@ -83,8 +74,8 @@ public final class WakeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                missionHints(missionConsole),
-                availableCommands(missionConsole),
+                missionConsole.hints(),
+                missionConsole.commands(),
                 gridForPosition(runResult.coreStatus().position()),
                 code,
                 DEFAULT_CODE,
@@ -120,14 +111,6 @@ public final class WakeTheCoreMissionService {
 
     private String nextMissionPath(final String code) {
         return NEXT_MISSION_PATH + "?code=" + URLEncoder.encode(code, StandardCharsets.UTF_8);
-    }
-
-    private List<String> missionHints(final MissionConsoleContent missionConsole) {
-        return missionConsole.hints().isEmpty() ? DEFAULT_HINTS : missionConsole.hints();
-    }
-
-    private List<CommandReference> availableCommands(final MissionConsoleContent missionConsole) {
-        return missionConsole.commands().isEmpty() ? DEFAULT_COMMANDS : missionConsole.commands();
     }
 
     private List<GridTile> gridForPosition(final String position) {
