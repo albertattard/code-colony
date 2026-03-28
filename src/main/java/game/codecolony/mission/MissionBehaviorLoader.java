@@ -5,6 +5,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +18,8 @@ public final class MissionBehaviorLoader {
 
     public MissionBehaviorConfig load(final String missionId) {
         final String resourcePath = BEHAVIOR_RESOURCE_PATH_TEMPLATE.formatted(missionId);
-        try (InputStream inputStream = MissionBehaviorLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
-            if (inputStream == null) {
-                throw new IllegalStateException("Unable to load mission behavior: " + resourcePath);
-            }
-
-            final String yaml = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            return parseYamlForMission(yaml, resourcePath, missionId);
-        } catch (IOException ioException) {
-            throw new IllegalStateException("Unable to load mission behavior: " + resourcePath, ioException);
-        }
+        final String yaml = loadText(resourcePath);
+        return parseYamlForMission(yaml, resourcePath, missionId);
     }
 
     static MissionBehaviorConfig parseYamlForMission(final String yamlText, final String sourceName, final String missionId) {
@@ -124,5 +118,25 @@ public final class MissionBehaviorLoader {
         }
 
         throw new IllegalStateException("Invalid mission behavior %s: '%s' must be an integer".formatted(sourceName, key));
+    }
+
+    private static String loadText(final String resourcePath) {
+        final Path workingDirectoryPath = Path.of(resourcePath);
+        if (Files.exists(workingDirectoryPath)) {
+            try {
+                return Files.readString(workingDirectoryPath, StandardCharsets.UTF_8);
+            } catch (IOException ioException) {
+                throw new IllegalStateException("Unable to load mission behavior: " + workingDirectoryPath, ioException);
+            }
+        }
+
+        try (InputStream inputStream = MissionBehaviorLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Unable to load mission behavior: " + resourcePath);
+            }
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException ioException) {
+            throw new IllegalStateException("Unable to load mission behavior: " + resourcePath, ioException);
+        }
     }
 }

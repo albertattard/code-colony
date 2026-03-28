@@ -5,6 +5,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -18,16 +20,8 @@ public final class MissionMapLoader {
 
     public MissionMap load(final String missionId) {
         final String resourcePath = MAP_RESOURCE_PATH_TEMPLATE.formatted(missionId);
-        try (InputStream inputStream = MissionMapLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
-            if (inputStream == null) {
-                throw new IllegalStateException("Unable to load mission map: " + resourcePath);
-            }
-
-            final String yaml = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            return parseYamlForMission(yaml, resourcePath, missionId);
-        } catch (IOException ioException) {
-            throw new IllegalStateException("Unable to load mission map: " + resourcePath, ioException);
-        }
+        final String yaml = loadText(resourcePath);
+        return parseYamlForMission(yaml, resourcePath, missionId);
     }
 
     static MissionMap parseYamlForMission(final String yamlText, final String sourceName, final String missionId) {
@@ -291,5 +285,25 @@ public final class MissionMapLoader {
         }
 
         throw new IllegalStateException("Invalid map %s: '%s' must be an integer".formatted(sourceName, key));
+    }
+
+    private static String loadText(final String resourcePath) {
+        final Path workingDirectoryPath = Path.of(resourcePath);
+        if (Files.exists(workingDirectoryPath)) {
+            try {
+                return Files.readString(workingDirectoryPath, StandardCharsets.UTF_8);
+            } catch (IOException ioException) {
+                throw new IllegalStateException("Unable to load mission map: " + workingDirectoryPath, ioException);
+            }
+        }
+
+        try (InputStream inputStream = MissionMapLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Unable to load mission map: " + resourcePath);
+            }
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException ioException) {
+            throw new IllegalStateException("Unable to load mission map: " + resourcePath, ioException);
+        }
     }
 }

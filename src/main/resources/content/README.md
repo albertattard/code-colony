@@ -7,6 +7,13 @@ This content is separate from `docs/spec/`:
 - `docs/spec/` defines what the content must communicate
 - `src/main/resources/content/` stores the text shown to the player
 
+Runtime lookup order is:
+
+1. `./content/` in the current working directory
+2. classpath fallback under `src/main/resources/content/`
+
+This allows local content edits without recompiling code when running from source.
+
 ## MVP Markdown Format
 
 The first version supports a small Markdown subset:

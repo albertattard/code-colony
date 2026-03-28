@@ -4,6 +4,8 @@ import game.codecolony.mission.CommandReference;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -69,12 +71,25 @@ public final class NarrativeContentService {
     }
 
     private StructuredMarkdownDocument loadDocument(final String classpathLocation) {
-        final ClassPathResource resource = new ClassPathResource(classpathLocation);
-        try (InputStream inputStream = resource.getInputStream()) {
-            final String markdown = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            return StructuredMarkdownDocument.parse(markdown, classpathLocation);
+        final String markdown = loadText(classpathLocation);
+        return StructuredMarkdownDocument.parse(markdown, classpathLocation);
+    }
+
+    private String loadText(final String resourcePath) {
+        final Path workingDirectoryPath = Path.of(resourcePath);
+        if (Files.exists(workingDirectoryPath)) {
+            try {
+                return Files.readString(workingDirectoryPath, StandardCharsets.UTF_8);
+            } catch (IOException exception) {
+                throw new IllegalStateException("Failed to load narrative content from " + workingDirectoryPath, exception);
+            }
+        }
+
+        final ClassPathResource classPathResource = new ClassPathResource(resourcePath);
+        try (InputStream inputStream = classPathResource.getInputStream()) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException exception) {
-            throw new IllegalStateException("Failed to load narrative content from " + classpathLocation, exception);
+            throw new IllegalStateException("Failed to load narrative content from " + resourcePath, exception);
         }
     }
 
