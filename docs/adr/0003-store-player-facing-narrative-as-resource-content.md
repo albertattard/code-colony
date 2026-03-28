@@ -30,7 +30,7 @@ Use Markdown as the default authoring format for narrative content unless a late
 Use a content structure organized by gameplay surface, for example:
 
 - `src/main/resources/content/intro/briefing.md`
-- `src/main/resources/content/missions/mission-01/briefing.md`
+- `src/main/resources/content/missions/mission-01/content.md`
 - `src/main/resources/content/missions/mission-01/objective.md`
 - `src/main/resources/content/lore/...`
 

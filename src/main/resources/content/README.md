@@ -29,20 +29,25 @@ This keeps the content readable for authors, renderable in the browser, and easy
 ## Current Layout
 
 - `intro/` for game-level entry content
-- `missions/<mission-id>/` for mission-local briefings, explain-dialog content, and future mission content
+- `missions/<mission-id>/` for mission-local markdown content and mission map data
 - `lore/` reserved for future logs, fragments, and other narrative material
 
-## Mission Briefing Sections
+## Mission Content Sections
 
-For current missions, briefing files are required to include code-panel copy sections:
+For current missions, `content.md` files are required to include code-panel copy sections:
 
 - `## Available Commands` with one entry per line in `<signature> | <description>` form
 - `## Hints` with one hint per line (optionally as Markdown bullet items)
 
-For current missions, briefing files are required to include mission start-state feedback sections:
+For current missions, `content.md` files are required to include mission start-state feedback sections:
 
 - `## Initial Run Headline`
 - `## Initial Run Summary`
 - `## Initial Run Events`
 - `## Initial Run Feedback`
 - `## Initial Run Status Note`
+
+For current missions, `content.md` files are also required to include explain-dialog sections:
+
+- `## Headline`
+- `## Explanation`

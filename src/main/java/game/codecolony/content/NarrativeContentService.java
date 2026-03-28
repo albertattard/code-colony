@@ -32,7 +32,7 @@ public final class NarrativeContentService {
     }
 
     public MissionNarrativeContent loadMissionNarrative(final String missionId) {
-        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/content.md");
         return new MissionNarrativeContent(
                 document.title(),
                 document.requiredPlainText("summary"),
@@ -42,7 +42,7 @@ public final class NarrativeContentService {
     }
 
     public MissionConsoleContent loadMissionConsoleContent(final String missionId) {
-        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/content.md");
         return new MissionConsoleContent(
                 document.requiredHtmlList("hints"),
                 parseCommandReferences(document.requiredPlainTextList("available commands"), missionId)
@@ -50,7 +50,7 @@ public final class NarrativeContentService {
     }
 
     public MissionInitialRunContent loadMissionInitialRunContent(final String missionId) {
-        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/briefing.md");
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/content.md");
         return new MissionInitialRunContent(
                 document.requiredPlainText("initial run headline"),
                 document.requiredPlainText("initial run summary"),
@@ -61,7 +61,7 @@ public final class NarrativeContentService {
     }
 
     public MissionExplanationContent loadMissionExplanation(final String missionId) {
-        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/explain.md");
+        final StructuredMarkdownDocument document = loadDocument("content/missions/" + missionId + "/content.md");
         return new MissionExplanationContent(
                 document.requiredPlainText("headline"),
                 document.requiredHtml("explanation")
