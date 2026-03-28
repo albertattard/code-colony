@@ -65,7 +65,17 @@ class MissionBrowserSmokeTest {
                     .assertThatPageShowsMission02CompletedState()
                     .clickOnNext()
                     .waitForMission03Page()
-                    .assertThatPageShowsMission03InitialState();
+                    .assertThatPageShowsMission03InitialState()
+                    .closeBriefingModalIfVisible()
+                    .fillCode("""
+                            var core = Core.connect();
+                            core.move();
+                            core.move();
+                            core.repair();
+                            System.out.println("Repaired");
+                            """)
+                    .clickRunAndWaitForRepairTheCoreRunResponse()
+                    .assertThatPageShowsMission03CompletedState();
         }
     }
 
@@ -117,6 +127,10 @@ class MissionBrowserSmokeTest {
 
         private WebApplication clickRunAndWaitForChargeTheCoreRunResponse() {
             return clickRunAndWaitForResponse("charge-the-core");
+        }
+
+        private WebApplication clickRunAndWaitForRepairTheCoreRunResponse() {
+            return clickRunAndWaitForResponse("repair-the-core");
         }
 
         private WebApplication clickRunAndWaitForResponse(final String name) {
@@ -276,6 +290,25 @@ class MissionBrowserSmokeTest {
             assertThat(page.locator("h1").textContent()).contains("Mission 03: Repair The CORE");
             assertThat(page.locator(".code-panel").textContent()).contains("core.repair()");
             assertThat(page.locator("textarea[name='code']").inputValue()).contains("var core = Core.connect();");
+            return this;
+        }
+
+        private WebApplication assertThatPageShowsMission03CompletedState() {
+            assertThat(page.locator(".feedback-panel").textContent()).contains("CORE Repaired");
+            assertThat(page.locator(".status-panel").textContent()).contains("5 / 5");
+            assertThat(page.locator(".output-panel").textContent()).contains("Repaired");
+            assertThat(page.locator(".tile-core-repair").count()).isEqualTo(1);
+            assertThat(page.locator("textarea[name='code']").getAttribute("readonly")).isEqualTo("readonly");
+            assertThat(page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Run")).count()).isZero();
+            assertThat(page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Reset")).count()).isZero();
+            return this;
+        }
+
+        private WebApplication closeBriefingModalIfVisible() {
+            if (page.locator("[data-briefing-modal]").isVisible()) {
+                clickOnClose();
+                waitForBriefingModalToBeHidden();
+            }
             return this;
         }
 
