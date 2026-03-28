@@ -39,7 +39,7 @@ The emotional tone should be:
 
 Suggested briefing:
 
-> CORE-01 is responding, but its battery is empty. The unit remains docked in Maintenance Room B-1049, and the charging station is active. Use Java commands to connect to the CORE, keep the returned unit reference, and restore power until the battery is full.
+> CORE-01 remains online from Mission 01, but the battery is still empty. The unit is docked in Maintenance Room B-1049, and the charging station is active. For this run, call `Core.connect()` to re-establish your control session, keep the returned unit reference, and restore power until the battery is full.
 
 For the first playable version, the briefing should present:
 
@@ -101,7 +101,7 @@ The status panel should communicate:
 
 This is important because Mission 02 should look like a continuation of Mission 01 rather than a reset back to an unknown state.
 
-In Mission 02, `Core.connect()` should still be required in learner code, but its role is to obtain a usable `CORE` reference for that run, not to visually bring the unit online for the first time.
+In Mission 02, `Core.connect()` should still be required in learner code, but its role is to re-establish the control session and obtain a usable `CORE` reference for that run, not to visually bring the unit online for the first time.
 
 Each successful `core.charge()` call on the docking station should increase the battery by one segment.
 
@@ -116,7 +116,7 @@ Required commands:
 
 The command reference should explain that:
 
-- `Core.connect()` returns a `CORE`
+- `Core.connect()` re-establishes control for the current run and returns a `CORE`
 - `core.charge()` restores one battery segment when the CORE is on the docking station
 
 ## Programming Model

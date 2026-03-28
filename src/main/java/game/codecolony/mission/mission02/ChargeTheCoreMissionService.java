@@ -28,12 +28,12 @@ public final class ChargeTheCoreMissionService {
     private static final MissionMapSpawn CORE_SPAWN = MissionMapAdapter.requireCoreSpawn(MISSION_MAP, "core_01");
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
     private static final List<String> HINTS = List.of(
-            "Mission 02 starts from the connected CORE state you reached at the end of Mission 01.",
-            "Call Core.connect() to obtain a CORE reference you can reuse in code.",
+            "CORE-01 remains online from Mission 01.",
+            "At the start of each run, call Core.connect() to re-establish control and get a CORE reference.",
             "Each successful core.charge(); call fills one power segment. Mission 02 needs 5 / 5."
     );
     private static final List<CommandReference> COMMANDS = List.of(
-            new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit and returns it."),
+            new CommandReference("Core.connect()", "Re-establishes control for this run and returns the available CORE unit."),
             new CommandReference("core.charge()", "Restores one battery segment while the CORE is on the docking station.")
     );
 
@@ -95,7 +95,7 @@ public final class ChargeTheCoreMissionService {
     private MissionRunResult initialRunResult() {
         return new MissionRunResult(
                 "Awaiting Run",
-                "CORE-01 remains online. Obtain a CORE reference with Core.connect(), then charge it to full power.",
+                "CORE-01 remains online. Re-establish control for this run with Core.connect(), then charge it to full power.",
                 List.of(
                         "CORE-01 is still docked in Maintenance Room B-1049 and remains online from the previous recovery step.",
                         "The docking station can restore one power segment per successful charge command.",
@@ -103,6 +103,7 @@ public final class ChargeTheCoreMissionService {
                                 .formatted(CORE_SPAWN.battery().capacity(), CORE_SPAWN.battery().capacity())
                 ),
                 List.of(
+                        "Start this run with Core.connect() so you can control CORE-01 in code.",
                         "Rewrite the carried code so you keep the returned Core in a variable.",
                         "Call core.charge(); enough times to fill all five battery segments."
                 ),
@@ -113,7 +114,7 @@ public final class ChargeTheCoreMissionService {
                         CORE_SPAWN.health().capacity(),
                         "Connected",
                         CORE_SPAWN.at(),
-                        "Control link remains stable from Mission 01. Battery depleted. Structural damage still detected."),
+                        "CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit."),
                 "",
                 "",
                 false

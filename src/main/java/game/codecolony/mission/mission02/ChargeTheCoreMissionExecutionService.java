@@ -32,7 +32,7 @@ public final class ChargeTheCoreMissionExecutionService {
                     CORE_SPAWN.health().capacity(),
                     "Connected",
                     CORE_SPAWN.at(),
-                    "Control link remains stable from Mission 01. Battery depleted. Structural damage still detected."))
+                    "CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit."))
             .missionSupportClasses(List.of(
                     ChargeTheCoreMissionSimulation.class,
                     ChargeTheCoreMissionSimulator.class,
