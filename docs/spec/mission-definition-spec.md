@@ -24,6 +24,10 @@ Each mission must be represented by one directory:
 
 - `content/missions/mission-##/`
 
+Mission order, routing slug, and mission inclusion should be defined in:
+
+- `content/missions/missions.yaml`
+
 Required files:
 
 - `content.md` for learner-facing narrative, hints, explain content, and initial run copy
@@ -31,6 +35,19 @@ Required files:
 - `mission.yaml` for mission behavior configuration and completion rules
 
 Goal: adding a new mission should primarily require adding one new directory with these files and no mission-specific Java classes.
+
+## Mission Manifest Contract
+
+`content/missions/missions.yaml` should define ordered mission entries.
+
+Each entry should provide:
+
+- `name`: URL-safe mission slug used by routing/presentation layers
+- `content`: mission content directory id (for example `mission-01`)
+- `enabled`: whether the mission is active (default `true`)
+
+The mission runtime should treat manifest order as canonical mission order.
+Disabled missions should be excluded from the active mission set.
 
 ### No-Code Mission Addition Rule
 

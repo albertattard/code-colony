@@ -1,0 +1,11 @@
+version: 1
+missions:
+  - name: wake-the-core
+    content: mission-01
+    enabled: true
+  - name: charge-the-core
+    content: mission-02
+    enabled: true
+  - name: repair-the-core
+    content: mission-03
+    enabled: true

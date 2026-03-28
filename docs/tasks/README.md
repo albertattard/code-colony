@@ -57,3 +57,4 @@ Task files should:
 - [Task 0049: Move Runtime Content Out Of Classpath](done/0049-move-content-out-of-classpath.md)
 - [Task 0051: Lock No-Code Mission Contract (Stage 0)](done/0051-lock-no-code-mission-contract.md)
 - [Task 0052: Introduce Dynamic Mission Discovery (Stage 1)](done/0052-introduce-dynamic-mission-discovery.md)
+- [Task 0053: Add Mission Manifest Loader (Stage 2A)](done/0053-add-mission-manifest-loader.md)

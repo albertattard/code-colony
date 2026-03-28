@@ -1,34 +1,23 @@
 package game.codecolony.mission;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public final class MissionCatalog {
 
     private static final Path MISSIONS_DIRECTORY = Path.of("content", "missions");
     private static final Set<String> REQUIRED_FILES = Set.of("content.md", "map.yaml", "mission.yaml");
+    private static final MissionManifestLoader MANIFEST_LOADER = new MissionManifestLoader();
 
     private MissionCatalog() {
     }
 
     public static List<String> currentMissionIds() {
-        try (Stream<Path> stream = Files.list(MISSIONS_DIRECTORY)) {
-            return stream
-                    .filter(Files::isDirectory)
-                    .map(path -> path.getFileName().toString())
-                    .sorted(Comparator.naturalOrder())
-                    .toList();
-        } catch (IOException exception) {
-            throw new IllegalStateException(
-                    "Unable to discover missions under " + MISSIONS_DIRECTORY.toAbsolutePath(),
-                    exception
-            );
-        }
+        return MANIFEST_LOADER.load().enabledMissions().stream()
+                .map(MissionManifestEntry::content)
+                .toList();
     }
 
     public static boolean isCurrentMission(final String missionId) {

@@ -15,9 +15,9 @@ class MissionCatalogTest {
     private static final Path MISSIONS_DIRECTORY = Path.of("content", "missions");
 
     @Test
-    void discoversCurrentMissionIdsFromFilesystem() {
+    void discoversCurrentMissionIdsFromManifestOrder() {
         assertThat(MissionCatalog.currentMissionIds())
-                .contains("mission-01", "mission-02", "mission-03");
+                .containsExactly("mission-01", "mission-02", "mission-03");
     }
 
     @Test

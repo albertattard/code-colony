@@ -100,6 +100,8 @@ Each mission should include:
 - a learner-editable code area
 - a feedback area for compile, runtime, and mission results
 
+Active mission order and mission slugs should be driven by `content/missions/missions.yaml`, not hardcoded controller constants.
+
 Mission briefings may also include optional voiced playback, provided that the written text remains visible and readable on screen.
 
 Where practical, mission briefing text should come from runtime content files rather than being hardcoded in templates. This keeps the written briefing as the canonical source for both on-screen presentation and derived audio.

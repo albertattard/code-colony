@@ -31,6 +31,7 @@ This keeps the content readable for authors, renderable in the browser, and easy
 
 ## Current Layout
 
+- `missions/missions.yaml` for mission order, route slugs, and mission-to-content mapping
 - `intro/` for game-level entry content
 - `missions/<mission-id>/` for mission-local markdown content, mission map data, and mission behavior config
 - `lore/` reserved for future logs, fragments, and other narrative material
