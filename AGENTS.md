@@ -188,6 +188,13 @@ Examples:
 - Prefer `final` for variables, parameters, and fields unless mutation is required.
 - For intentionally unused exception variables in catch blocks, use `_` instead of names like `ignored` (for example `catch (IOException _)`).
 
+### Type Safety Rules
+
+- Prefer type-safe references over string identifiers when referring to code symbols.
+- Do not represent classes, method names, enum values, or package paths as raw strings unless interoperability requires it.
+- If runtime APIs require strings (for example process launch arguments), keep typed values in the model and convert to strings only at the boundary.
+- During reviews/refactors, proactively replace fragile string-based symbol references with typed alternatives.
+
 ## Refactoring Heuristics
 
 Prefer small, behavior-preserving refactors over large rewrites.
