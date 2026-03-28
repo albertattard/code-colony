@@ -2,18 +2,17 @@ package game.codecolony.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import game.codecolony.mission.mission01.WakeTheCoreMissionExecutionService;
 import org.junit.jupiter.api.Test;
 
 class WakeTheCoreMissionExecutionServiceTest {
 
-    private final WakeTheCoreMissionExecutionService missionExecutionService = new WakeTheCoreMissionExecutionService();
+    private final MissionExecutionFacade missionExecutionFacade = new MissionExecutionFacade();
     private final MissionMapLoader missionMapLoader = new MissionMapLoader();
 
     @Test
     void successfulConnectRunBringsCoreOnline() {
         final MissionMapSpawn coreSpawn = missionMapLoader.load("mission-01").requireCoreSpawn("core_01");
-        final MissionRunResult runResult = missionExecutionService.execute("Core.connect();");
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", "Core.connect();");
 
         assertThat(runResult.success()).isTrue();
         assertThat(runResult.headline()).isEqualTo("CORE Online");
@@ -31,7 +30,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void successfulConnectCanAlsoShowLearnerStdout() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", """
                 Core.connect();
                 System.out.println("Hello!!");
                 """);
@@ -43,7 +42,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void runtimeFailureCanAlsoShowLearnerStderr() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", """
                 System.err.println("before-failure");
                 throw new RuntimeException("boom");
                 """);
@@ -55,7 +54,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void missingConnectLeavesCoreOffline() {
-        final MissionRunResult runResult = missionExecutionService.execute("");
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", "");
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Mission Incomplete");
@@ -68,7 +67,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void duplicateConnectShowsRuntimeFailure() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", """
                 Core.connect();
                 Core.connect();
                 """);
@@ -82,7 +81,7 @@ class WakeTheCoreMissionExecutionServiceTest {
 
     @Test
     void compileFailureReturnsLearnerFacingFeedback() {
-        final MissionRunResult runResult = missionExecutionService.execute("core.connect();");
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-01", "core.connect();");
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Compilation Failed");

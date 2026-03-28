@@ -2,17 +2,15 @@ package game.codecolony.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import game.codecolony.mission.mission03.RepairTheCoreMissionExecutionService;
 import org.junit.jupiter.api.Test;
 
 class RepairTheCoreMissionExecutionServiceTest {
 
-    private final RepairTheCoreMissionExecutionService missionExecutionService =
-            new RepairTheCoreMissionExecutionService();
+    private final MissionExecutionFacade missionExecutionFacade = new MissionExecutionFacade();
 
     @Test
     void movingToRepairStationAndRepairingCompletesMissionThree() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", """
                 var core = Core.connect();
                 core.move();
                 core.move();
@@ -31,7 +29,7 @@ class RepairTheCoreMissionExecutionServiceTest {
 
     @Test
     void reachingRepairStationWithoutRepairIsIncomplete() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", """
                 var core = Core.connect();
                 core.move();
                 core.move();
@@ -47,7 +45,7 @@ class RepairTheCoreMissionExecutionServiceTest {
 
     @Test
     void missionTwoChargeSequenceStillAllowsMovementAndConsumesBattery() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", """
                 var core = Core.connect();
                 core.charge();
                 core.charge();
@@ -65,7 +63,7 @@ class RepairTheCoreMissionExecutionServiceTest {
 
     @Test
     void repairAwayFromStationFailsRun() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", """
                 var core = Core.connect();
                 core.repair();
                 """);
@@ -77,7 +75,7 @@ class RepairTheCoreMissionExecutionServiceTest {
 
     @Test
     void compileFailureReturnsLearnerFacingFeedback() {
-        final MissionRunResult runResult = missionExecutionService.execute("for int i = 0;");
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", "for int i = 0;");
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Compilation Failed");

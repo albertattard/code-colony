@@ -6,6 +6,7 @@ import game.codecolony.content.NarrativeContentService.MissionInitialRunContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
+import game.codecolony.mission.MissionExecutionFacade;
 import game.codecolony.mission.MissionMap;
 import game.codecolony.mission.MissionMapAdapter;
 import game.codecolony.mission.MissionMapLoader;
@@ -32,12 +33,12 @@ public final class RepairTheCoreMissionService {
     private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
 
-    private final RepairTheCoreMissionExecutionService missionExecutionService;
+    private final MissionExecutionFacade missionExecutionFacade;
     private final NarrativeContentService narrativeContentService;
 
-    public RepairTheCoreMissionService(final RepairTheCoreMissionExecutionService missionExecutionService,
+    public RepairTheCoreMissionService(final MissionExecutionFacade missionExecutionFacade,
                                        final NarrativeContentService narrativeContentService) {
-        this.missionExecutionService = missionExecutionService;
+        this.missionExecutionFacade = missionExecutionFacade;
         this.narrativeContentService = narrativeContentService;
     }
 
@@ -69,7 +70,7 @@ public final class RepairTheCoreMissionService {
         final String normalizedInitialCode = normalizeInitialCode(initialCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-03");
         final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-03");
-        final MissionRunResult runResult = missionExecutionService.execute(code);
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-03", code);
         return new MissionPage(
                 missionNarrative.title(),
                 missionNarrative.summary(),

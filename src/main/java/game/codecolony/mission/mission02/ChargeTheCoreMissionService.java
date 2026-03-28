@@ -6,6 +6,7 @@ import game.codecolony.content.NarrativeContentService.MissionInitialRunContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.GridTile;
 import game.codecolony.mission.MissionCoreStatus;
+import game.codecolony.mission.MissionExecutionFacade;
 import game.codecolony.mission.MissionMap;
 import game.codecolony.mission.MissionMapAdapter;
 import game.codecolony.mission.MissionMapLoader;
@@ -30,12 +31,12 @@ public final class ChargeTheCoreMissionService {
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
 
-    private final ChargeTheCoreMissionExecutionService missionExecutionService;
+    private final MissionExecutionFacade missionExecutionFacade;
     private final NarrativeContentService narrativeContentService;
 
-    public ChargeTheCoreMissionService(final ChargeTheCoreMissionExecutionService missionExecutionService,
+    public ChargeTheCoreMissionService(final MissionExecutionFacade missionExecutionFacade,
                                        final NarrativeContentService narrativeContentService) {
-        this.missionExecutionService = missionExecutionService;
+        this.missionExecutionFacade = missionExecutionFacade;
         this.narrativeContentService = narrativeContentService;
     }
 
@@ -67,7 +68,7 @@ public final class ChargeTheCoreMissionService {
         final String normalizedInitialCode = normalizeInitialCode(initialCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-02");
         final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-02");
-        final MissionRunResult runResult = missionExecutionService.execute(code);
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-02", code);
         return new MissionPage(
                 missionNarrative.title(),
                 missionNarrative.summary(),

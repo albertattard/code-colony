@@ -2,18 +2,17 @@ package game.codecolony.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import game.codecolony.mission.mission02.ChargeTheCoreMissionExecutionService;
 import org.junit.jupiter.api.Test;
 
 class ChargeTheCoreMissionExecutionServiceTest {
 
-    private final ChargeTheCoreMissionExecutionService missionExecutionService = new ChargeTheCoreMissionExecutionService();
+    private final MissionExecutionFacade missionExecutionFacade = new MissionExecutionFacade();
     private final MissionMapLoader missionMapLoader = new MissionMapLoader();
 
     @Test
     void chargingToFullCompletesMissionTwo() {
         final MissionMapSpawn coreSpawn = missionMapLoader.load("mission-02").requireCoreSpawn("core_01");
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-02", """
                 var core = Core.connect();
                 core.charge();
                 core.charge();
@@ -36,7 +35,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
 
     @Test
     void partialChargeLeavesMissionIncomplete() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-02", """
                 var core = Core.connect();
                 core.charge();
                 """);
@@ -50,7 +49,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
 
     @Test
     void missingConnectLeavesCoreVisibleButWithoutReference() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-02", """
                 System.out.println("No reference");
                 """);
 
@@ -65,7 +64,7 @@ class ChargeTheCoreMissionExecutionServiceTest {
 
     @Test
     void chargingAfterFullDoesNotFailMission() {
-        final MissionRunResult runResult = missionExecutionService.execute("""
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-02", """
                 var core = Core.connect();
                 core.charge();
                 core.charge();
