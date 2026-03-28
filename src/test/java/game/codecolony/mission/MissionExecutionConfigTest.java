@@ -27,6 +27,15 @@ class MissionExecutionConfigTest {
     }
 
     @Test
+    void buildFailsWhenWorkerClassIsMissing() {
+        assertThatThrownBy(() -> baseBuilder()
+                .workerClass(null)
+                .build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("workerClass is required");
+    }
+
+    @Test
     void buildFailsWhenMissionSupportClassesAreMissing() {
         assertThatThrownBy(() -> baseBuilder()
                 .missionSupportClasses(List.of())
@@ -39,7 +48,7 @@ class MissionExecutionConfigTest {
         return MissionExecutionConfig.builder()
                 .temporaryDirectoryPrefix("mission-")
                 .resultFileName("result.properties")
-                .workerClassName("game.codecolony.mission.TestWorker")
+                .workerClass(MissionExecutionConfig.class)
                 .compilationFailureSummary("compile failed")
                 .executionStoppedSummary("stopped")
                 .missionInitialStatus(new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "n/a"))

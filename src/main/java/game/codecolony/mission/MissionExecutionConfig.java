@@ -7,7 +7,7 @@ public final class MissionExecutionConfig {
 
     private final String temporaryDirectoryPrefix;
     private final String resultFileName;
-    private final String workerClassName;
+    private final Class<?> workerClass;
     private final String compilationFailureSummary;
     private final String executionStoppedSummary;
     private final MissionCoreStatus missionInitialStatus;
@@ -17,7 +17,7 @@ public final class MissionExecutionConfig {
     private MissionExecutionConfig(final Builder builder) {
         this.temporaryDirectoryPrefix = requireNonBlank(builder.temporaryDirectoryPrefix, "temporaryDirectoryPrefix");
         this.resultFileName = requireNonBlank(builder.resultFileName, "resultFileName");
-        this.workerClassName = requireNonBlank(builder.workerClassName, "workerClassName");
+        this.workerClass = requireNonNull(builder.workerClass, "workerClass");
         this.compilationFailureSummary = requireNonBlank(builder.compilationFailureSummary, "compilationFailureSummary");
         this.executionStoppedSummary = requireNonBlank(builder.executionStoppedSummary, "executionStoppedSummary");
         if (builder.missionInitialStatus == null) {
@@ -44,8 +44,8 @@ public final class MissionExecutionConfig {
         return resultFileName;
     }
 
-    public String workerClassName() {
-        return workerClassName;
+    public Class<?> workerClass() {
+        return workerClass;
     }
 
     public String compilationFailureSummary() {
@@ -72,7 +72,7 @@ public final class MissionExecutionConfig {
 
         private String temporaryDirectoryPrefix;
         private String resultFileName;
-        private String workerClassName;
+        private Class<?> workerClass;
         private String compilationFailureSummary;
         private String executionStoppedSummary;
         private MissionCoreStatus missionInitialStatus;
@@ -92,8 +92,8 @@ public final class MissionExecutionConfig {
             return this;
         }
 
-        public Builder workerClassName(final String value) {
-            this.workerClassName = value;
+        public Builder workerClass(final Class<?> value) {
+            this.workerClass = value;
             return this;
         }
 
@@ -135,6 +135,13 @@ public final class MissionExecutionConfig {
 
     private static String requireNonBlank(final String value, final String fieldName) {
         if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " is required");
+        }
+        return value;
+    }
+
+    private static <T> T requireNonNull(final T value, final String fieldName) {
+        if (value == null) {
             throw new IllegalArgumentException(fieldName + " is required");
         }
         return value;

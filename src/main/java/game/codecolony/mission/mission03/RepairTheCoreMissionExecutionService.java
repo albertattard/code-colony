@@ -24,7 +24,7 @@ public final class RepairTheCoreMissionExecutionService {
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
             .temporaryDirectoryPrefix("repair-the-core-")
             .resultFileName("repair-the-core-result.properties")
-            .workerClassName("game.codecolony.mission.mission03.RepairTheCoreMissionWorker")
+            .workerClass(RepairTheCoreMissionWorker.class)
             .compilationFailureSummary("The code could not be compiled for Mission 03.")
             .executionStoppedSummary("Execution stopped before Mission 03 could be evaluated.")
             .missionInitialStatus(new MissionCoreStatus("CORE-01", "Online",

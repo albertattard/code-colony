@@ -22,7 +22,7 @@ public final class ChargeTheCoreMissionExecutionService {
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
             .temporaryDirectoryPrefix("charge-the-core-")
             .resultFileName("charge-the-core-result.properties")
-            .workerClassName("game.codecolony.mission.mission02.ChargeTheCoreMissionWorker")
+            .workerClass(ChargeTheCoreMissionWorker.class)
             .compilationFailureSummary("The code could not be compiled for Mission 02.")
             .executionStoppedSummary("Execution stopped before Mission 02 could be evaluated.")
             .missionInitialStatus(new MissionCoreStatus("CORE-01", "Online",

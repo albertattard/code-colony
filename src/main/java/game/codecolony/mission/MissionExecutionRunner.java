@@ -54,7 +54,7 @@ public final class MissionExecutionRunner {
             final List<String> executionCommand = new ArrayList<>(List.of(
                     javaTool("java").toString(),
                     "-cp", classesDirectory + File.pathSeparator + supportClassesDirectory,
-                    config.workerClassName(),
+                    config.workerClass().getName(),
                     resultFile.toString()
             ));
             executionCommand.addAll(config.workerArguments());

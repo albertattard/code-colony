@@ -22,7 +22,7 @@ public final class WakeTheCoreMissionExecutionService {
     private static final MissionExecutionConfig CONFIG = MissionExecutionConfig.builder()
             .temporaryDirectoryPrefix("wake-the-core-")
             .resultFileName("wake-the-core-result.properties")
-            .workerClassName("game.codecolony.mission.mission01.WakeTheCoreMissionWorker")
+            .workerClass(WakeTheCoreMissionWorker.class)
             .compilationFailureSummary("The code could not be compiled for Mission 01.")
             .executionStoppedSummary("Execution stopped before Mission 01 could be evaluated.")
             .missionInitialStatus(new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "",
