@@ -67,6 +67,8 @@ For this mission:
 - battery should not drop below zero
 - `core.charge()` remains capped at `5/5`
 - `core.charge()` only succeeds while CORE-01 is on docking station tile `B1`
+- each successful `core.repair()` call restores exactly one health segment
+- repair should not increase health beyond `5/5`
 
 ## Success Conditions
 
@@ -74,7 +76,7 @@ The mission succeeds when:
 
 - one successful connect action occurs
 - CORE-01 reaches tile B3
-- `core.repair()` executes successfully at the repair station
+- `core.repair()` executes successfully at the repair station enough times to reach full health
 - health reaches `5/5`
 
 ## Failure Conditions

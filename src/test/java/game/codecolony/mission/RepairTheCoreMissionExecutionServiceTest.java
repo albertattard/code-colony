@@ -17,6 +17,9 @@ class RepairTheCoreMissionExecutionServiceTest {
                 core.move();
                 core.move();
                 core.repair();
+                core.repair();
+                core.repair();
+                core.repair();
                 """);
 
         assertThat(runResult.success()).isTrue();
@@ -32,12 +35,14 @@ class RepairTheCoreMissionExecutionServiceTest {
                 var core = Core.connect();
                 core.move();
                 core.move();
+                core.repair();
                 """);
 
         assertThat(runResult.success()).isFalse();
         assertThat(runResult.headline()).isEqualTo("Mission Incomplete");
         assertThat(runResult.summary()).contains("repair was not completed");
         assertThat(runResult.coreStatus().position()).isEqualTo("B3");
+        assertThat(runResult.coreStatus().healthLevel()).isEqualTo(2);
     }
 
     @Test

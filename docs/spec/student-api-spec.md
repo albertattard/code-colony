@@ -181,6 +181,12 @@ For early battery behavior:
 - charging should stop at the unit's maximum capacity
 - calling `core.charge()` while already full should leave the battery unchanged and should not be treated as an error
 
+For early repair behavior:
+
+- `core.repair()` should restore one health segment per successful call
+- repairing should stop at the unit's maximum health
+- calling `core.repair()` while already fully repaired should leave health unchanged and should not be treated as an error
+
 These actions should not happen automatically when the CORE enters the relevant tile. The learner must call the method explicitly.
 
 If the learner calls a station-dependent action from the wrong location, runtime feedback should explain that the required station is not present on the current tile.

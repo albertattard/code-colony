@@ -270,7 +270,9 @@ class MissionControllerTest {
                                 var core = Core.connect();
                                 core.move();
                                 core.move();
-                                core.repair();
+                                for (int i = 0; i < 4; i++) {
+                                    core.repair();
+                                }
                                 """))
                 .andExpect(status().isOk())
                 .andReturn();

@@ -142,8 +142,10 @@ final class RepairTheCoreMissionSimulator implements MissionSimulator {
         if (!repairPosition.equals(position)) {
             throw new MissionExecutionException("CORE-01 must be on the repair station tile before repair().");
         }
-        healthLevel = healthCapacity;
-        repaired = true;
+        if (healthLevel < healthCapacity) {
+            healthLevel++;
+        }
+        repaired = healthLevel >= healthCapacity;
         events.add(new CoreRepairedEvent(CORE_ID, healthLevel, healthCapacity));
         return new RepairCoreResult(CORE_ID, healthLevel, healthCapacity);
     }

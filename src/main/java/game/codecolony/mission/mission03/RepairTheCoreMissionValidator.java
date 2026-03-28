@@ -40,7 +40,7 @@ final class RepairTheCoreMissionValidator {
         final boolean rejectedConnection = simulation.events().stream()
                 .anyMatch(ConnectionRejectedEvent.class::isInstance);
 
-        if (successfulConnections == 1 && !rejectedConnection && simulation.repaired()) {
+        if (successfulConnections == 1 && !rejectedConnection && simulation.healthLevel() >= simulation.healthCapacity()) {
             return new MissionRunResult(
                     "CORE Repaired",
                     "CORE-01 reached the repair station and restored full structural health.",
@@ -94,7 +94,7 @@ final class RepairTheCoreMissionValidator {
                 "CORE-01 is at the repair station, but repair was not completed.",
                 simulationEvents,
                 List.of(
-                        "Call core.repair(); while CORE-01 is on B3.",
+                        "Call core.repair(); while CORE-01 is on B3 until health reaches 5 / 5.",
                         "Repair is complete when health reaches 5 / 5."
                 ),
                 statusFor(simulation),

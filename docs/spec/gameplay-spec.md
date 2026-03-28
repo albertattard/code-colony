@@ -421,6 +421,12 @@ For early battery behavior:
 - battery charge should be capped at the unit's maximum capacity
 - calling `core.charge()` at full battery should not fail the mission and should not increase the battery beyond full
 
+For early repair behavior:
+
+- `core.repair()` should restore exactly one health segment per successful call
+- health repair should be capped at the unit's maximum health capacity
+- calling `core.repair()` at full health should not fail the mission and should not increase health beyond full
+
 If an action cannot be completed, the game should report that clearly.
 
 Examples:

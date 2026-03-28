@@ -32,12 +32,12 @@ public final class RepairTheCoreMissionService {
     private static final List<String> HINTS = List.of(
             "Mission 03 expects movement from %s to %s before repair.".formatted(DOCK_POSITION, REPAIR_POSITION),
             "Use core.move(); to reach the repair station.",
-            "Call core.repair(); on %s to restore health.".formatted(REPAIR_POSITION)
+            "Call core.repair(); on %s until health reaches 5 / 5.".formatted(REPAIR_POSITION)
     );
     private static final List<CommandReference> COMMANDS = List.of(
             new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit and returns it."),
             new CommandReference("core.move()", "Moves CORE-01 one tile east in this mission room."),
-            new CommandReference("core.repair()", "Repairs CORE-01 when it is on the repair station tile.")
+            new CommandReference("core.repair()", "Repairs one health segment when CORE-01 is on the repair station tile.")
     );
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
 

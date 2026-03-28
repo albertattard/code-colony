@@ -72,6 +72,9 @@ class MissionBrowserSmokeTest {
                             core.move();
                             core.move();
                             core.repair();
+                            core.repair();
+                            core.repair();
+                            core.repair();
                             System.out.println("Repaired");
                             """)
                     .clickRunAndWaitForRepairTheCoreRunResponse()
