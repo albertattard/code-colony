@@ -2,13 +2,13 @@ package game.codecolony.mission.mission02;
 
 import game.codecolony.mission.MissionExecutionConfig;
 import game.codecolony.mission.MissionInitialStatusFactory;
-import game.codecolony.mission.MissionExecutionRunner;
 import game.codecolony.mission.MissionBehaviorConfig;
 import game.codecolony.mission.MissionBehaviorRegistry;
 import game.codecolony.mission.MissionMap;
 import game.codecolony.mission.MissionMapLoader;
 import game.codecolony.mission.MissionMapSpawn;
 import game.codecolony.mission.MissionRunResult;
+import game.codecolony.mission.GenericMissionExecutionService;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public final class ChargeTheCoreMissionExecutionService {
 
-    private static final MissionExecutionRunner RUNNER = new MissionExecutionRunner();
+    private static final GenericMissionExecutionService EXECUTION_SERVICE = new GenericMissionExecutionService();
     private static final MissionBehaviorConfig BEHAVIOR = new MissionBehaviorRegistry().get("mission-02");
     private static final MissionMap MISSION_MAP = new MissionMapLoader().load("mission-02");
     private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
@@ -46,6 +46,6 @@ public final class ChargeTheCoreMissionExecutionService {
             .build();
 
     public MissionRunResult execute(final String code) {
-        return RUNNER.execute(code, CONFIG);
+        return EXECUTION_SERVICE.execute(code, CONFIG);
     }
 }
