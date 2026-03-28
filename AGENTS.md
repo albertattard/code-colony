@@ -154,7 +154,7 @@ When asked to `build`, use this workflow:
 
 When asked to `generate audio for <source>`, use this workflow:
 
-1. Resolve `<source>` to a player-facing Markdown briefing under `src/main/resources/content/`.
+1. Resolve `<source>` to a player-facing Markdown briefing under `content/`.
 2. Invoke `tools/tts.sh` with that Markdown file as input.
 3. Save the generated audio under `src/main/resources/static/audio/briefings/` using a sensible default file name derived from the source.
    If the user explicitly provides an output path, use that instead.

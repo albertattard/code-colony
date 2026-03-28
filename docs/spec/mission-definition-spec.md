@@ -22,7 +22,7 @@ This spec does not define:
 
 Each mission must be represented by one directory:
 
-- `src/main/resources/content/missions/mission-##/`
+- `content/missions/mission-##/`
 
 Required files:
 
@@ -86,7 +86,7 @@ Mission availability should not require hardcoded mission-id lists where practic
 
 Preferred direction:
 
-- discover missions from filesystem/classpath directories that satisfy the required file contract
+- discover missions from filesystem directories that satisfy the required file contract
 - fail fast with clear diagnostics when required files are missing or invalid
 
 ## Validation Rules

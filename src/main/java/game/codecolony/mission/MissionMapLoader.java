@@ -3,7 +3,6 @@ package game.codecolony.mission;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -288,22 +287,11 @@ public final class MissionMapLoader {
     }
 
     private static String loadText(final String resourcePath) {
-        final Path workingDirectoryPath = Path.of(resourcePath);
-        if (Files.exists(workingDirectoryPath)) {
-            try {
-                return Files.readString(workingDirectoryPath, StandardCharsets.UTF_8);
-            } catch (IOException ioException) {
-                throw new IllegalStateException("Unable to load mission map: " + workingDirectoryPath, ioException);
-            }
-        }
-
-        try (InputStream inputStream = MissionMapLoader.class.getClassLoader().getResourceAsStream(resourcePath)) {
-            if (inputStream == null) {
-                throw new IllegalStateException("Unable to load mission map: " + resourcePath);
-            }
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        final Path path = Path.of(resourcePath);
+        try {
+            return Files.readString(path, StandardCharsets.UTF_8);
         } catch (IOException ioException) {
-            throw new IllegalStateException("Unable to load mission map: " + resourcePath, ioException);
+            throw new IllegalStateException("Unable to load mission map: " + path, ioException);
         }
     }
 }

@@ -114,13 +114,13 @@ Mission layout and initial unit state should be defined in mission-scoped map fi
 
 Each mission should provide one map file at:
 
-- `src/main/resources/content/missions/mission-##/map.yaml`
+- `content/missions/mission-##/map.yaml`
 
 Examples:
 
-- `src/main/resources/content/missions/mission-01/map.yaml`
-- `src/main/resources/content/missions/mission-02/map.yaml`
-- `src/main/resources/content/missions/mission-03/map.yaml`
+- `content/missions/mission-01/map.yaml`
+- `content/missions/mission-02/map.yaml`
+- `content/missions/mission-03/map.yaml`
 
 ### Map Schema (YAML)
 

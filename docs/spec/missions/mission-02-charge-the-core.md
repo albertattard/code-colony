@@ -77,7 +77,7 @@ Mission 02 should reuse the same maintenance room and station layout as Mission 
 
 Mission 02 map should be authored in:
 
-- `src/main/resources/content/missions/mission-02/map.yaml`
+- `content/missions/mission-02/map.yaml`
 
 Map semantics follow `docs/spec/gameplay-spec.md` (`base` + `legend` for static tiles, `spawns` for dynamic entities).
 

@@ -52,3 +52,4 @@ Task files should:
 - [Task 0046: Merge Mission Markdown Into content.md](done/0046-merge-mission-briefing-and-explain-markdown.md)
 - [Task 0047: Introduce Data-Driven Mission Runtime (Stage 1)](done/0047-introduce-data-driven-mission-runtime-stage-1.md)
 - [Task 0048: Load Content From Working Directory](done/0048-load-content-from-working-directory.md)
+- [Task 0049: Move Runtime Content Out Of Classpath](done/0049-move-content-out-of-classpath.md)

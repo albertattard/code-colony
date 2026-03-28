@@ -3,7 +3,6 @@ package game.codecolony.content;
 import game.codecolony.mission.CommandReference;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -70,26 +68,17 @@ public final class NarrativeContentService {
         );
     }
 
-    private StructuredMarkdownDocument loadDocument(final String classpathLocation) {
-        final String markdown = loadText(classpathLocation);
-        return StructuredMarkdownDocument.parse(markdown, classpathLocation);
+    private StructuredMarkdownDocument loadDocument(final String resourcePath) {
+        final String markdown = loadText(resourcePath);
+        return StructuredMarkdownDocument.parse(markdown, resourcePath);
     }
 
     private String loadText(final String resourcePath) {
-        final Path workingDirectoryPath = Path.of(resourcePath);
-        if (Files.exists(workingDirectoryPath)) {
-            try {
-                return Files.readString(workingDirectoryPath, StandardCharsets.UTF_8);
-            } catch (IOException exception) {
-                throw new IllegalStateException("Failed to load narrative content from " + workingDirectoryPath, exception);
-            }
-        }
-
-        final ClassPathResource classPathResource = new ClassPathResource(resourcePath);
-        try (InputStream inputStream = classPathResource.getInputStream()) {
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        final Path path = Path.of(resourcePath);
+        try {
+            return Files.readString(path, StandardCharsets.UTF_8);
         } catch (IOException exception) {
-            throw new IllegalStateException("Failed to load narrative content from " + resourcePath, exception);
+            throw new IllegalStateException("Failed to load narrative content from " + path, exception);
         }
     }
 

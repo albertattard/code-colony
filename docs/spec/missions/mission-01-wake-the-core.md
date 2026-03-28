@@ -80,7 +80,7 @@ The room should be represented as a 3x3 top-down grid for clarity.
 
 Mission 01 map should be authored in:
 
-- `src/main/resources/content/missions/mission-01/map.yaml`
+- `content/missions/mission-01/map.yaml`
 
 Map semantics follow `docs/spec/gameplay-spec.md`:
 
@@ -192,7 +192,7 @@ Required commands:
 
 The command list shown in the UI should prioritize only what the player actually needs to solve the mission.
 
-Mission 01 command-reference text and learner hints should be authored in mission Markdown content under `src/main/resources/content/missions/mission-01/` so copy updates do not require Java code changes.
+Mission 01 command-reference text and learner hints should be authored in mission Markdown content under `content/missions/mission-01/` so copy updates do not require Java code changes.
 
 ## Programming Model
 

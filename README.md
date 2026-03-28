@@ -55,7 +55,7 @@ Open `http://localhost:8080`.
   Learner-facing API surface (`Core`).
 - `src/main/resources/templates/`
   Server-rendered mission and layout templates.
-- `src/main/resources/content/`
+- `content/`
   Player-facing markdown content (briefings and explanations).
 
 ## Documentation
