@@ -93,7 +93,7 @@ class MissionControllerTest {
                         .header("HX-Request", "true")
                         .param("code", """
                                 Core.connect();
-                                System.out.println(\"Hello!!\");
+                                System.out.println("Hello!!");
                                 """))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -124,7 +124,7 @@ class MissionControllerTest {
         final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
         runMissionOne(missionOnePath, """
                 Core.connect();
-                System.out.println(\"Hello!!\");
+                System.out.println("Hello!!");
                 """);
 
         final MvcResult result = mockMvc.perform(get(missionTwoPath))
