@@ -33,3 +33,6 @@ validation:
     incompleteRepairSummary: CORE-01 is at the repair station, but repair was not completed.
     incompleteRepairFeedback1: Call core.repair(); while CORE-01 is on B3 until health reaches 5 / 5.
     incompleteRepairFeedback2: Repair is complete when health reaches 5 / 5.
+    statusDockConnectedPosition: B1
+    statusNoteRepaired: Repair complete. CORE-01 structural integrity restored.
+    statusNoteRepairPending: B3 repair station can restore health when repair() is called.

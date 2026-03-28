@@ -40,7 +40,7 @@ final class GenericMissionValidator {
                             validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
-                    mission01StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
+                    mission01StatusFor(validationCopy, simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     false
@@ -63,7 +63,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("successFeedback2"),
                         validationCopy.requireMessage("successFeedback3")
                 ),
-                mission01StatusFor(true, simulation.connectAttempts(), simulation),
+                mission01StatusFor(validationCopy, true, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 true
@@ -78,7 +78,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("incompleteFeedback1"),
                         validationCopy.requireMessage("incompleteFeedback2")
                 ),
-                mission01StatusFor(false, simulation.connectAttempts(), simulation),
+                mission01StatusFor(validationCopy, false, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 false
@@ -103,7 +103,7 @@ final class GenericMissionValidator {
                             validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
-                    mission02StatusFor(simulation.connected(), simulation.connectAttempts(), simulation),
+                    mission02StatusFor(validationCopy, simulation.connected(), simulation.connectAttempts(), simulation),
                     stdout,
                     stderr,
                     false
@@ -127,7 +127,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("successFeedback2"),
                         validationCopy.requireMessage("successFeedback3")
                 ),
-                mission02StatusFor(true, simulation.connectAttempts(), simulation),
+                mission02StatusFor(validationCopy, true, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 true
@@ -143,7 +143,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("incompleteNoConnectionFeedback1"),
                         applyTokens(validationCopy.requireMessage("incompleteNoConnectionFeedback2Template"), simulation)
                 ),
-                mission02StatusFor(false, simulation.connectAttempts(), simulation),
+                mission02StatusFor(validationCopy, false, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 false
@@ -163,7 +163,7 @@ final class GenericMissionValidator {
                                 "remainingCharge", Integer.toString(remainingCharge)
                         )
                 ),
-                mission02StatusFor(true, simulation.connectAttempts(), simulation),
+                mission02StatusFor(validationCopy, true, simulation.connectAttempts(), simulation),
                 stdout,
                 stderr,
                 false
@@ -188,7 +188,7 @@ final class GenericMissionValidator {
                             validationCopy.runtimeExpectation(),
                             "Fix the runtime problem and run the code again."
                     ),
-                    mission03StatusFor(simulation),
+                    mission03StatusFor(validationCopy, simulation),
                     stdout,
                     stderr,
                     false
@@ -211,7 +211,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("successFeedback2"),
                         validationCopy.requireMessage("successFeedback3")
                 ),
-                mission03StatusFor(simulation),
+                mission03StatusFor(validationCopy, simulation),
                 stdout,
                 stderr,
                 true
@@ -227,7 +227,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("incompleteNoConnectionFeedback1"),
                         validationCopy.requireMessage("incompleteNoConnectionFeedback2")
                 ),
-                mission03StatusFor(simulation),
+                mission03StatusFor(validationCopy, simulation),
                 stdout,
                 stderr,
                 false
@@ -247,7 +247,7 @@ final class GenericMissionValidator {
                                 "targetPosition", "B3"
                         )
                 ),
-                mission03StatusFor(simulation),
+                mission03StatusFor(validationCopy, simulation),
                 stdout,
                 stderr,
                 false
@@ -262,7 +262,7 @@ final class GenericMissionValidator {
                         validationCopy.requireMessage("incompleteRepairFeedback1"),
                         validationCopy.requireMessage("incompleteRepairFeedback2")
                 ),
-                mission03StatusFor(simulation),
+                mission03StatusFor(validationCopy, simulation),
                 stdout,
                 stderr,
                 false
@@ -284,13 +284,14 @@ final class GenericMissionValidator {
         return resolved;
     }
 
-    private MissionCoreStatus mission01StatusFor(final boolean connected,
+    private MissionCoreStatus mission01StatusFor(final GenericMissionValidationCopy validationCopy,
+                                                 final boolean connected,
                                                  final int connectAttempts,
                                                  final GenericMissionSimulation simulation) {
         if (connected) {
             final String note = connectAttempts > 1
-                    ? "Connection established, then an invalid duplicate connect was attempted"
-                    : "Telemetry online. Battery depleted. Structural damage detected.";
+                    ? validationCopy.requireMessage("statusNoteDuplicateConnect")
+                    : validationCopy.requireMessage("statusNoteConnected");
             return new MissionCoreStatus(
                     "CORE-01",
                     "Online",
@@ -304,19 +305,22 @@ final class GenericMissionValidator {
             );
         }
 
-        return new MissionCoreStatus("CORE-01", "Offline", null, null, null, null, "", "", "No telemetry available while offline.");
+        return new MissionCoreStatus(
+                "CORE-01", "Offline", null, null, null, null, "", "",
+                validationCopy.requireMessage("statusNoteOffline"));
     }
 
-    private MissionCoreStatus mission02StatusFor(final boolean connected,
+    private MissionCoreStatus mission02StatusFor(final GenericMissionValidationCopy validationCopy,
+                                                 final boolean connected,
                                                  final int connectAttempts,
                                                  final GenericMissionSimulation simulation) {
         final String note = connectAttempts > 1
-                ? "Control reference acquired, then an invalid duplicate connect was attempted."
+                ? validationCopy.requireMessage("statusNoteDuplicateConnect")
                 : connected && simulation.batteryLevel() == simulation.batteryCapacity()
-                ? "Battery restored. CORE-01 is ready for low-power field work."
+                ? validationCopy.requireMessage("statusNoteFullyCharged")
                 : connected
-                ? "Telemetry online. Battery charging in progress. Structural damage still detected."
-                : "CORE-01 remains online from Mission 01. Use Core.connect() to obtain a control reference for this run.";
+                ? validationCopy.requireMessage("statusNoteCharging")
+                : validationCopy.requireMessage("statusNoteNoControlReference");
         return new MissionCoreStatus(
                 "CORE-01",
                 "Online",
@@ -330,11 +334,13 @@ final class GenericMissionValidator {
         );
     }
 
-    private MissionCoreStatus mission03StatusFor(final GenericMissionSimulation simulation) {
-        final String dock = "B1".equals(simulation.position()) ? "Connected" : "";
+    private MissionCoreStatus mission03StatusFor(final GenericMissionValidationCopy validationCopy,
+                                                 final GenericMissionSimulation simulation) {
+        final String dockPosition = validationCopy.requireMessage("statusDockConnectedPosition");
+        final String dock = dockPosition.equals(simulation.position()) ? "Connected" : "";
         final String note = simulation.repaired()
-                ? "Repair complete. CORE-01 structural integrity restored."
-                : "B3 repair station can restore health when repair() is called.";
+                ? validationCopy.requireMessage("statusNoteRepaired")
+                : validationCopy.requireMessage("statusNoteRepairPending");
 
         return new MissionCoreStatus(
                 "CORE-01",

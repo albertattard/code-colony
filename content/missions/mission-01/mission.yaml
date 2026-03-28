@@ -23,3 +23,6 @@ validation:
     incompleteSummary: CORE-01 is still offline.
     incompleteFeedback1: Call Core.connect(); to bring the CORE online.
     incompleteFeedback2: Mission 01 only expects a single successful connection.
+    statusNoteConnected: Telemetry online. Battery depleted. Structural damage detected.
+    statusNoteDuplicateConnect: Connection established, then an invalid duplicate connect was attempted
+    statusNoteOffline: No telemetry available while offline.

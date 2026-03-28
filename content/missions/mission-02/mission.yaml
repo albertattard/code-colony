@@ -28,3 +28,7 @@ validation:
     incompleteChargingSummary: CORE-01 is online, but the battery is not full yet.
     incompleteChargingFeedback1: Store the connected CORE in a variable so you can call core.charge(); repeatedly.
     incompleteChargingFeedback2Template: Charge CORE-01 {remainingCharge} more time(s) to reach {batteryCapacity} / {batteryCapacity}.
+    statusNoteDuplicateConnect: Control reference acquired, then an invalid duplicate connect was attempted.
+    statusNoteFullyCharged: Battery restored. CORE-01 is ready for low-power field work.
+    statusNoteCharging: Telemetry online. Battery charging in progress. Structural damage still detected.
+    statusNoteNoControlReference: CORE-01 remains online from Mission 01. Use Core.connect() to obtain a control reference for this run.

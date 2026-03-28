@@ -104,6 +104,7 @@ Owns behavior configuration:
 - execution-facing learner copy needed by runtime bootstrap (for example initial status note templates)
 - validation-facing learner copy needed during runtime result evaluation (for example mission-specific runtime guidance text)
 - mission validation outcome copy for supported branches (for example success and incomplete summary/feedback templates)
+- validation-facing status panel note templates and mission-specific dock/position label rules
 - per-mission action rules (for example overcharge behavior, charge/repair semantics if mission-specific)
 - completion/unlock behavior (next mission id)
 
