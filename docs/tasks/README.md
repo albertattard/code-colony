@@ -44,4 +44,5 @@ Task files should:
 - [Task 0020: Add Code Explanation Action](done/0020-add-code-explanation-action.md)
 - [Task 0021: Move Explain To Modal And Markdown Content](done/0021-move-explain-to-modal-and-markdown-content.md)
 - [Task 0022: Implement Mission 03 Repair The CORE](done/0022-implement-mission-03-repair-the-core.md)
+- [Task 0042: Migrate Mission 02 And 03 Console Text To Markdown](done/0042-migrate-mission-02-and-03-console-text-to-markdown.md)
 - [Task 0041: Load Mission 01 Console Text From Markdown](done/0041-load-mission-01-console-text-from-markdown.md)

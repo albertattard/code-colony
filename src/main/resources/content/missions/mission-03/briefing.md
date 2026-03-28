@@ -23,3 +23,13 @@ core.repair();
 ```
 
 Mission success requires completing the repair, not just movement.
+
+## Available Commands
+- `Core.connect()` | Establishes a control link to the next available CORE unit and returns it.
+- `core.move()` | Moves CORE-01 one tile east in this mission room.
+- `core.repair()` | Repairs one health segment when CORE-01 is on the repair station tile.
+
+## Hints
+- Mission 03 expects movement from B1 to B3 before repair.
+- Use `core.move();` to reach the repair station.
+- Call `core.repair();` on B3 until health reaches 5 / 5.

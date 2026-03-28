@@ -1,6 +1,7 @@
 package game.codecolony.mission.mission03;
 
 import game.codecolony.content.NarrativeContentService;
+import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.CommandReference;
 import game.codecolony.mission.GridTile;
@@ -29,12 +30,12 @@ public final class RepairTheCoreMissionService {
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final String DOCK_POSITION = MISSION_MAP.requireFirstCoordinateByType("dock");
     private static final String REPAIR_POSITION = MISSION_MAP.requireFirstCoordinateByType("repair");
-    private static final List<String> HINTS = List.of(
+    private static final List<String> DEFAULT_HINTS = List.of(
             "Mission 03 expects movement from %s to %s before repair.".formatted(DOCK_POSITION, REPAIR_POSITION),
-            "Use core.move(); to reach the repair station.",
-            "Call core.repair(); on %s until health reaches 5 / 5.".formatted(REPAIR_POSITION)
+            "Use <code>core.move();</code> to reach the repair station.",
+            "Call <code>core.repair();</code> on %s until health reaches 5 / 5.".formatted(REPAIR_POSITION)
     );
-    private static final List<CommandReference> COMMANDS = List.of(
+    private static final List<CommandReference> DEFAULT_COMMANDS = List.of(
             new CommandReference("Core.connect()", "Establishes a control link to the next available CORE unit and returns it."),
             new CommandReference("core.move()", "Moves CORE-01 one tile east in this mission room."),
             new CommandReference("core.repair()", "Repairs one health segment when CORE-01 is on the repair station tile.")
@@ -53,6 +54,7 @@ public final class RepairTheCoreMissionService {
     public MissionPage initialPage(final String carriedCode) {
         final String initialCode = normalizeInitialCode(carriedCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-03");
+        final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-03");
         final MissionRunResult runResult = initialRunResult();
         return new MissionPage(
                 missionNarrative.title(),
@@ -60,8 +62,8 @@ public final class RepairTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                HINTS,
-                COMMANDS,
+                missionHints(missionConsole),
+                availableCommands(missionConsole),
                 gridForPosition(runResult.coreStatus().position()),
                 initialCode,
                 initialCode,
@@ -76,6 +78,7 @@ public final class RepairTheCoreMissionService {
     public MissionPage pageForCode(final String code, final String initialCode) {
         final String normalizedInitialCode = normalizeInitialCode(initialCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-03");
+        final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-03");
         final MissionRunResult runResult = missionExecutionService.execute(code);
         return new MissionPage(
                 missionNarrative.title(),
@@ -83,8 +86,8 @@ public final class RepairTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                HINTS,
-                COMMANDS,
+                missionHints(missionConsole),
+                availableCommands(missionConsole),
                 gridForPosition(runResult.coreStatus().position()),
                 code,
                 normalizedInitialCode,
@@ -129,6 +132,14 @@ public final class RepairTheCoreMissionService {
 
     private String missionPathWithCode(final String initialCode) {
         return MISSION_PATH + "?code=" + URLEncoder.encode(initialCode, StandardCharsets.UTF_8);
+    }
+
+    private List<String> missionHints(final MissionConsoleContent missionConsole) {
+        return missionConsole.hints().isEmpty() ? DEFAULT_HINTS : missionConsole.hints();
+    }
+
+    private List<CommandReference> availableCommands(final MissionConsoleContent missionConsole) {
+        return missionConsole.commands().isEmpty() ? DEFAULT_COMMANDS : missionConsole.commands();
     }
 
     private List<GridTile> gridForPosition(final String position) {

@@ -1,6 +1,7 @@
 package game.codecolony.mission.mission02;
 
 import game.codecolony.content.NarrativeContentService;
+import game.codecolony.content.NarrativeContentService.MissionConsoleContent;
 import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 import game.codecolony.mission.CommandReference;
 import game.codecolony.mission.GridTile;
@@ -28,12 +29,12 @@ public final class ChargeTheCoreMissionService {
     private static final MissionMapSpawn CORE_SPAWN = MISSION_MAP.requireCoreSpawn("core_01");
     private static final String CORE_STATE = toStatusState(CORE_SPAWN.state());
     private static final List<GridTile> GRID = MissionMapAdapter.toGridTiles(MISSION_MAP);
-    private static final List<String> HINTS = List.of(
+    private static final List<String> DEFAULT_HINTS = List.of(
             "CORE-01 remains online from Mission 01.",
             "At the start of each run, call Core.connect() to re-establish control and get a CORE reference.",
-            "Each successful core.charge(); call fills one power segment. Mission 02 needs 5 / 5."
+            "Each successful <code>core.charge();</code> call fills one power segment. Mission 02 needs 5 / 5."
     );
-    private static final List<CommandReference> COMMANDS = List.of(
+    private static final List<CommandReference> DEFAULT_COMMANDS = List.of(
             new CommandReference("Core.connect()", "Re-establishes control for this run and returns the available CORE unit."),
             new CommandReference("core.charge()", "Restores one battery segment while the CORE is on the docking station.")
     );
@@ -50,6 +51,7 @@ public final class ChargeTheCoreMissionService {
     public MissionPage initialPage(final String carriedCode) {
         final String initialCode = normalizeInitialCode(carriedCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-02");
+        final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-02");
         final MissionRunResult runResult = initialRunResult();
         return new MissionPage(
                 missionNarrative.title(),
@@ -57,8 +59,8 @@ public final class ChargeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                HINTS,
-                COMMANDS,
+                missionHints(missionConsole),
+                availableCommands(missionConsole),
                 gridForPosition(runResult.coreStatus().position()),
                 initialCode,
                 initialCode,
@@ -73,6 +75,7 @@ public final class ChargeTheCoreMissionService {
     public MissionPage pageForCode(final String code, final String initialCode) {
         final String normalizedInitialCode = normalizeInitialCode(initialCode);
         final MissionNarrativeContent missionNarrative = narrativeContentService.loadMissionNarrative("mission-02");
+        final MissionConsoleContent missionConsole = narrativeContentService.loadMissionConsoleContent("mission-02");
         final MissionRunResult runResult = missionExecutionService.execute(code);
         return new MissionPage(
                 missionNarrative.title(),
@@ -80,8 +83,8 @@ public final class ChargeTheCoreMissionService {
                 missionNarrative.objective(),
                 missionNarrative.briefingHtml(),
                 BRIEFING_AUDIO_PATH,
-                HINTS,
-                COMMANDS,
+                missionHints(missionConsole),
+                availableCommands(missionConsole),
                 gridForPosition(runResult.coreStatus().position()),
                 code,
                 normalizedInitialCode,
@@ -128,6 +131,14 @@ public final class ChargeTheCoreMissionService {
 
     private String missionPathWithCode(final String initialCode) {
         return MISSION_PATH + "?code=" + URLEncoder.encode(initialCode, StandardCharsets.UTF_8);
+    }
+
+    private List<String> missionHints(final MissionConsoleContent missionConsole) {
+        return missionConsole.hints().isEmpty() ? DEFAULT_HINTS : missionConsole.hints();
+    }
+
+    private List<CommandReference> availableCommands(final MissionConsoleContent missionConsole) {
+        return missionConsole.commands().isEmpty() ? DEFAULT_COMMANDS : missionConsole.commands();
     }
 
     private List<GridTile> gridForPosition(final String position) {

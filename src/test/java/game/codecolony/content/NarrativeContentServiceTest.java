@@ -80,6 +80,54 @@ class NarrativeContentServiceTest {
     }
 
     @Test
+    void loadsMissionTwoConsoleContentFromMarkdown() {
+        final NarrativeContentService.MissionConsoleContent missionConsole =
+                narrativeContentService.loadMissionConsoleContent("mission-02");
+
+        assertThat(missionConsole.hints()).containsExactly(
+                "CORE-01 remains online from Mission 01.",
+                "At the start of each run, call <code>Core.connect()</code> to re-establish control and get a CORE reference.",
+                "Each successful <code>core.charge();</code> call fills one power segment. Mission 02 needs 5 / 5."
+        );
+        assertThat(missionConsole.commands()).containsExactly(
+                new CommandReference(
+                        "Core.connect()",
+                        "Re-establishes control for this run and returns the available CORE unit."
+                ),
+                new CommandReference(
+                        "core.charge()",
+                        "Restores one battery segment while the CORE is on the docking station."
+                )
+        );
+    }
+
+    @Test
+    void loadsMissionThreeConsoleContentFromMarkdown() {
+        final NarrativeContentService.MissionConsoleContent missionConsole =
+                narrativeContentService.loadMissionConsoleContent("mission-03");
+
+        assertThat(missionConsole.hints()).containsExactly(
+                "Mission 03 expects movement from B1 to B3 before repair.",
+                "Use <code>core.move();</code> to reach the repair station.",
+                "Call <code>core.repair();</code> on B3 until health reaches 5 / 5."
+        );
+        assertThat(missionConsole.commands()).containsExactly(
+                new CommandReference(
+                        "Core.connect()",
+                        "Establishes a control link to the next available CORE unit and returns it."
+                ),
+                new CommandReference(
+                        "core.move()",
+                        "Moves CORE-01 one tile east in this mission room."
+                ),
+                new CommandReference(
+                        "core.repair()",
+                        "Repairs one health segment when CORE-01 is on the repair station tile."
+                )
+        );
+    }
+
+    @Test
     void loadsMissionExplanationFromMarkdownContent() {
         final NarrativeContentService.MissionExplanationContent explanation =
                 narrativeContentService.loadMissionExplanation("mission-01");
