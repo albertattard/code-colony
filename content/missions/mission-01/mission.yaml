@@ -13,6 +13,29 @@ execution:
 objective:
   kind: connect_once
   successCondition: Establish a control link to CORE-01.
+runtime:
+  worker: generic-mission-worker
+  simulator: generic-mission-simulator
+  initialStatus:
+    mode: withoutTelemetry
+    noteTemplate: No telemetry available while offline.
+  args:
+    - name: objectiveKind
+      value: "{objective.kind}"
+    - name: validationPayload
+      value: "{validationPayload.base64}"
+    - name: allowedRuntimeCommands
+      value: "{allowedRuntimeCommands.csv}"
+    - name: startPosition
+      value: "{coreSpawn.at}"
+    - name: batteryLevel
+      value: "{coreSpawn.battery.level}"
+    - name: batteryCapacity
+      value: "{coreSpawn.battery.capacity}"
+    - name: healthLevel
+      value: "{coreSpawn.health.level}"
+    - name: healthCapacity
+      value: "{coreSpawn.health.capacity}"
 validation:
   runtimeExpectation: Mission 01 allows the CORE to be connected once.
   runtimeRetryHint: Fix the runtime problem and run the code again.

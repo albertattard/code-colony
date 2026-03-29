@@ -37,7 +37,11 @@ class MissionBehaviorLoaderTest {
         assertThat(behavior.validation().runtimeExpectation()).isEqualTo("Mission 01 allows the CORE to be connected once.");
         assertThat(behavior.validation().runtimeRetryHint()).isEqualTo("Fix the runtime problem and run the code again.");
         assertThat(behavior.validation().messages()).containsKey("successHeadline");
-        assertThat(behavior.runtime()).isNull();
+        assertThat(behavior.runtime()).isNotNull();
+        assertThat(behavior.runtime().worker()).isEqualTo("generic-mission-worker");
+        assertThat(behavior.runtime().simulator()).isEqualTo("generic-mission-simulator");
+        assertThat(behavior.runtime().initialStatus().mode()).isEqualTo("withoutTelemetry");
+        assertThat(behavior.runtime().args()).hasSize(8);
     }
 
     @Test
