@@ -15,6 +15,31 @@ execution:
 objective:
   kind: charge_to_full
   successCondition: Charge CORE-01 battery to full capacity.
+runtime:
+  worker: generic-mission-worker
+  simulator: generic-mission-simulator
+  initialStatus:
+    mode: withTelemetry
+    state: Connected
+    position: "{coreSpawn.at}"
+    noteTemplate: CORE-01 remains online from Mission 01. Re-establish control for this run to operate the unit.
+  args:
+    - name: objectiveKind
+      value: "{objective.kind}"
+    - name: validationPayload
+      value: "{validationPayload.base64}"
+    - name: allowedRuntimeCommands
+      value: "{allowedRuntimeCommands.csv}"
+    - name: startPosition
+      value: "{coreSpawn.at}"
+    - name: batteryLevel
+      value: "{coreSpawn.battery.level}"
+    - name: batteryCapacity
+      value: "{coreSpawn.battery.capacity}"
+    - name: healthLevel
+      value: "{coreSpawn.health.level}"
+    - name: healthCapacity
+      value: "{coreSpawn.health.capacity}"
 validation:
   runtimeExpectation: Mission 02 expects one successful Core.connect() call to obtain a control reference and enough charge actions to reach full power.
   runtimeRetryHint: Fix the runtime problem and run the code again.

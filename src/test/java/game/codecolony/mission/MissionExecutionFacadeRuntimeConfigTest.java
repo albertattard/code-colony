@@ -80,13 +80,12 @@ class MissionExecutionFacadeRuntimeConfigTest {
     @Test
     void fallbackProfileIsUsedWhenRuntimeConfigIsMissing() {
         final MissionExecutionConfigFactory factory = new MissionExecutionConfigFactory();
-        final MissionExecutionConfigFactory.MissionExecutionContext context = factory.contextFor("mission-02");
+        final MissionExecutionConfigFactory.MissionExecutionContext context = factory.contextFor("mission-03");
 
         final MissionExecutionConfig config = missionExecutionFacade.configForContext(context);
 
         assertThat(config.workerClass()).isEqualTo(GenericMissionWorker.class);
-        assertThat(config.workerArguments().getFirst()).isEqualTo("charge_to_full");
-        assertThat(config.workerArguments().get(2)).isEqualTo("connect,charge");
+        assertThat(config.workerArguments().getFirst()).isEqualTo("repair_to_full");
     }
 
     @Test

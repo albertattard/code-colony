@@ -79,3 +79,4 @@ Task files should:
 - [Task 0070: Parse And Validate Runtime Contract (Stage 5 Slice 8)](done/0070-parse-and-validate-runtime-contract-stage-5-slice-8.md)
 - [Task 0071: Prefer Runtime Config In Execution Facade (Stage 5 Slice 9)](done/0071-prefer-runtime-config-in-execution-facade-stage-5-slice-9.md)
 - [Task 0072: Migrate mission-01 To Runtime Config (Stage 5 Slice 10)](done/0072-migrate-mission-01-to-runtime-config-stage-5-slice-10.md)
+- [Task 0073: Migrate mission-02 To Runtime Config (Stage 5 Slice 11)](done/0073-migrate-mission-02-to-runtime-config-stage-5-slice-11.md)
