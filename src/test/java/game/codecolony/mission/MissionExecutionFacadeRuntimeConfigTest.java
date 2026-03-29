@@ -78,7 +78,7 @@ class MissionExecutionFacadeRuntimeConfigTest {
     }
 
     @Test
-    void fallbackProfileIsUsedWhenRuntimeConfigIsMissing() {
+    void missingRuntimeConfigFailsFast() {
         final MissionMap missionMap = missionMapLoader.load("mission-03");
         final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
         final MissionBehaviorConfig behavior = MissionBehaviorLoader.parseYaml("""
@@ -104,10 +104,10 @@ class MissionExecutionFacadeRuntimeConfigTest {
         final MissionExecutionConfigFactory.MissionExecutionContext context =
                 new MissionExecutionConfigFactory.MissionExecutionContext("mission-03", behavior, missionMap, coreSpawn);
 
-        final MissionExecutionConfig config = missionExecutionFacade.configForContext(context);
-
-        assertThat(config.workerClass()).isEqualTo(GenericMissionWorker.class);
-        assertThat(config.workerArguments().getFirst()).isEqualTo("repair_to_full");
+        assertThatThrownBy(() -> missionExecutionFacade.configForContext(context))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Missing runtime configuration")
+                .hasMessageContaining("mission-03");
     }
 
     @Test

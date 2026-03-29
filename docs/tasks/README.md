@@ -81,3 +81,4 @@ Task files should:
 - [Task 0072: Migrate mission-01 To Runtime Config (Stage 5 Slice 10)](done/0072-migrate-mission-01-to-runtime-config-stage-5-slice-10.md)
 - [Task 0073: Migrate mission-02 To Runtime Config (Stage 5 Slice 11)](done/0073-migrate-mission-02-to-runtime-config-stage-5-slice-11.md)
 - [Task 0074: Migrate mission-03 To Runtime Config (Stage 5 Slice 12)](done/0074-migrate-mission-03-to-runtime-config-stage-5-slice-12.md)
+- [Task 0075: Remove Execution Fallback Bridge (Stage 5 Slice 13)](done/0075-remove-execution-fallback-bridge-stage-5-slice-13.md)

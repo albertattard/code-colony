@@ -1,7 +1,6 @@
 package game.codecolony.mission;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
@@ -33,29 +32,14 @@ public final class MissionExecutionFacade {
     }
 
     MissionExecutionConfig configForContext(final MissionExecutionConfigFactory.MissionExecutionContext context) {
-        if (context.behavior().runtime() != null) {
-            return configForRuntime(context, context.behavior().runtime());
-        }
-
-        return configForObjectiveFallback(context);
-    }
-
-    private MissionExecutionConfig configForObjectiveFallback(final MissionExecutionConfigFactory.MissionExecutionContext context) {
-        final ObjectiveExecutionProfile profile = PROFILE_BY_OBJECTIVE_KIND.get(context.behavior().objective().kind());
-        if (profile == null) {
+        final MissionBehaviorConfig.MissionRuntimeSettings runtime = context.behavior().runtime();
+        if (runtime == null) {
             throw new IllegalStateException(
-                    "Unsupported objective kind for mission execution: %s (%s)"
-                            .formatted(context.behavior().objective().kind(), context.missionId())
+                    "Missing runtime configuration for mission execution: %s".formatted(context.missionId())
             );
         }
 
-        return configFactory.create(
-                context,
-                profile.workerClass(),
-                profile.initialStatusBuilder().build(context),
-                profile.supportClasses(),
-                profile.workerArgumentsBuilder().build(context)
-        );
+        return configForRuntime(context, runtime);
     }
 
     private MissionExecutionConfig configForRuntime(final MissionExecutionConfigFactory.MissionExecutionContext context,
@@ -142,72 +126,6 @@ public final class MissionExecutionFacade {
         };
     }
 
-    private static final Map<String, ObjectiveExecutionProfile> PROFILE_BY_OBJECTIVE_KIND = Map.of(
-            "connect_once", new ObjectiveExecutionProfile(
-                    GenericMissionWorker.class,
-                    genericSupportClasses(),
-                    context -> MissionInitialStatusFactory.withoutTelemetry(
-                            context.coreSpawn(),
-                            resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
-                    context -> List.of(
-                            context.behavior().objective().kind(),
-                            encodeValidationPayload(context.behavior().validation()),
-                            encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
-                            context.coreSpawn().at(),
-                            Integer.toString(context.coreSpawn().battery().level()),
-                            Integer.toString(context.coreSpawn().battery().capacity()),
-                            Integer.toString(context.coreSpawn().health().level()),
-                            Integer.toString(context.coreSpawn().health().capacity()))
-            ),
-            "charge_to_full", new ObjectiveExecutionProfile(
-                    GenericMissionWorker.class,
-                    genericSupportClasses(),
-                    context -> MissionInitialStatusFactory.withTelemetry(
-                            context.coreSpawn(),
-                            "Connected",
-                            context.coreSpawn().at(),
-                            resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())),
-                    context -> List.of(
-                            context.behavior().objective().kind(),
-                            encodeValidationPayload(context.behavior().validation()),
-                            encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
-                            context.coreSpawn().at(),
-                            Integer.toString(context.coreSpawn().battery().level()),
-                            Integer.toString(context.coreSpawn().battery().capacity()),
-                            Integer.toString(context.coreSpawn().health().level()),
-                            Integer.toString(context.coreSpawn().health().capacity()))
-            ),
-            "repair_to_full", new ObjectiveExecutionProfile(
-                    GenericMissionWorker.class,
-                    genericSupportClasses(),
-                    context -> {
-                        return MissionInitialStatusFactory.withTelemetry(
-                                context.coreSpawn(),
-                                "Connected",
-                                context.coreSpawn().at(),
-                                resolveExecutionTemplate(context, context.behavior().execution().initialStatusNoteTemplate())
-                        );
-                    },
-                    context -> {
-                        final String dockPosition = context.missionMap().requireFirstCoordinateByType("dock");
-                        final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
-                        return List.of(
-                                context.behavior().objective().kind(),
-                                encodeValidationPayload(context.behavior().validation()),
-                                encodeAllowedRuntimeCommands(context.behavior().allowedRuntimeCommands()),
-                                context.coreSpawn().at(),
-                                dockPosition,
-                                repairPosition,
-                                Integer.toString(context.missionMap().size().cols()),
-                                Integer.toString(context.coreSpawn().battery().level()),
-                                Integer.toString(context.coreSpawn().battery().capacity()),
-                                Integer.toString(context.coreSpawn().health().level()),
-                                Integer.toString(context.coreSpawn().health().capacity())
-                        );
-                    }
-            )
-    );
-
     private static List<Class<?>> genericSupportClasses() {
         return List.of(
                 GenericMissionWorker.class,
@@ -216,16 +134,6 @@ public final class MissionExecutionFacade {
                 GenericMissionValidator.class,
                 GenericMissionValidationCopy.class
         );
-    }
-
-    private static String resolveExecutionTemplate(final MissionExecutionConfigFactory.MissionExecutionContext context,
-                                                   final String template) {
-        final String dockPosition = context.missionMap().requireFirstCoordinateByType("dock");
-        final String repairPosition = context.missionMap().requireFirstCoordinateByType("repair");
-        return template
-                .replace("{dockPosition}", dockPosition)
-                .replace("{repairPosition}", repairPosition)
-                .replace("{corePosition}", context.coreSpawn().at());
     }
 
     private static String encodeValidationPayload(final MissionBehaviorConfig.MissionValidationSettings validation) {
@@ -244,19 +152,4 @@ public final class MissionExecutionFacade {
         return String.join(",", allowedRuntimeCommands);
     }
 
-    private record ObjectiveExecutionProfile(Class<?> workerClass,
-                                             List<Class<?>> supportClasses,
-                                             InitialStatusBuilder initialStatusBuilder,
-                                             WorkerArgumentsBuilder workerArgumentsBuilder) {
-    }
-
-    @FunctionalInterface
-    private interface InitialStatusBuilder {
-        MissionCoreStatus build(MissionExecutionConfigFactory.MissionExecutionContext context);
-    }
-
-    @FunctionalInterface
-    private interface WorkerArgumentsBuilder {
-        List<String> build(MissionExecutionConfigFactory.MissionExecutionContext context);
-    }
 }
