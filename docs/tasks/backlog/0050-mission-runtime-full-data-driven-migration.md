@@ -94,6 +94,22 @@ Success criteria:
 - per-mission behavior differences are represented in config
 - adding a mission with known mechanics requires no Java changes
 
+Current next slices (capture before refactor):
+
+1. Spec update: add `runtime` contract to `mission.yaml` (`worker`, `simulator`, `initialStatus`, `args`, placeholder rules).
+2. Loader update: parse and validate `runtime` config without changing execution behavior yet.
+3. Dual-path execution: `MissionExecutionFacade` prefers YAML `runtime`; fallback to hardcoded objective profile map when missing.
+4. Incremental migration: move mission-01 runtime profile to YAML and verify.
+5. Incremental migration: move mission-02 runtime profile to YAML and verify.
+6. Incremental migration: move mission-03 runtime profile to YAML and verify.
+7. Bridge removal: delete hardcoded `PROFILE_BY_OBJECTIVE_KIND` after all active missions have YAML runtime profiles.
+
+Checkpoint criteria for this sequence:
+
+- each slice has its own task in `docs/tasks/in-progress/`
+- each slice runs `./mvnw clean verify`
+- each slice preserves mission behavior (no learner-visible regression unless explicitly planned)
+
 ### Stage 6: Prove No-Code Mission Addition
 
 - add a new mission directory (for example mission-04) with no Java changes
