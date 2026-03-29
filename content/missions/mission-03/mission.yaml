@@ -4,6 +4,11 @@ allowedCommands:
   - Core.connect()
   - core.move()
   - core.repair()
+allowedRuntimeCommands:
+  - connect
+  - charge
+  - move
+  - repair
 execution:
   temporaryDirectoryPrefix: repair-the-core-
   resultFileName: repair-the-core-result.properties
@@ -13,6 +18,37 @@ execution:
 objective:
   kind: repair_to_full
   successCondition: Move CORE-01 to repair station and repair to full health.
+runtime:
+  worker: generic-mission-worker
+  simulator: generic-mission-simulator
+  initialStatus:
+    mode: withTelemetry
+    state: Connected
+    position: "{coreSpawn.at}"
+    noteTemplate: CORE-01 is stable and charged. Move to {repairPosition} and repair structural damage.
+  args:
+    - name: objectiveKind
+      value: "{objective.kind}"
+    - name: validationPayload
+      value: "{validationPayload.base64}"
+    - name: allowedRuntimeCommands
+      value: "{allowedRuntimeCommands.csv}"
+    - name: startPosition
+      value: "{coreSpawn.at}"
+    - name: dockPosition
+      value: "{dockPosition}"
+    - name: repairPosition
+      value: "{repairPosition}"
+    - name: maxColumn
+      value: "{map.size.cols}"
+    - name: batteryLevel
+      value: "{coreSpawn.battery.level}"
+    - name: batteryCapacity
+      value: "{coreSpawn.battery.capacity}"
+    - name: healthLevel
+      value: "{coreSpawn.health.level}"
+    - name: healthCapacity
+      value: "{coreSpawn.health.capacity}"
 validation:
   runtimeExpectation: Mission 03 expects one successful Core.connect() call, movement to B3, then core.repair().
   runtimeRetryHint: Fix the runtime problem and run the code again.

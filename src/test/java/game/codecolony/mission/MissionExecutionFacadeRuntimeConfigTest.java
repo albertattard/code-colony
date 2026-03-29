@@ -79,8 +79,30 @@ class MissionExecutionFacadeRuntimeConfigTest {
 
     @Test
     void fallbackProfileIsUsedWhenRuntimeConfigIsMissing() {
-        final MissionExecutionConfigFactory factory = new MissionExecutionConfigFactory();
-        final MissionExecutionConfigFactory.MissionExecutionContext context = factory.contextFor("mission-03");
+        final MissionMap missionMap = missionMapLoader.load("mission-03");
+        final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
+        final MissionBehaviorConfig behavior = MissionBehaviorLoader.parseYaml("""
+                version: 1
+                missionId: mission-03
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: repair-the-core-
+                  resultFileName: repair-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: repair_to_full
+                  successCondition: Repair.
+                validation:
+                  runtimeExpectation: Repair.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                """, "inline");
+        final MissionExecutionConfigFactory.MissionExecutionContext context =
+                new MissionExecutionConfigFactory.MissionExecutionContext("mission-03", behavior, missionMap, coreSpawn);
 
         final MissionExecutionConfig config = missionExecutionFacade.configForContext(context);
 
