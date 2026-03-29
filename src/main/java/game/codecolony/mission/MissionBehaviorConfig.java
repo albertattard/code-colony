@@ -9,7 +9,8 @@ public record MissionBehaviorConfig(int version,
                                     List<String> allowedRuntimeCommands,
                                     MissionExecutionSettings execution,
                                     MissionObjectiveSettings objective,
-                                    MissionValidationSettings validation) {
+                                    MissionValidationSettings validation,
+                                    MissionRuntimeSettings runtime) {
 
     public MissionBehaviorConfig {
         allowedCommands = List.copyOf(allowedCommands);
@@ -32,5 +33,23 @@ public record MissionBehaviorConfig(int version,
         public MissionValidationSettings {
             messages = Map.copyOf(messages);
         }
+    }
+
+    public record MissionRuntimeSettings(String worker,
+                                         String simulator,
+                                         MissionRuntimeInitialStatusSettings initialStatus,
+                                         List<MissionRuntimeArgumentSettings> args) {
+        public MissionRuntimeSettings {
+            args = List.copyOf(args);
+        }
+    }
+
+    public record MissionRuntimeInitialStatusSettings(String mode,
+                                                      String state,
+                                                      String position,
+                                                      String noteTemplate) {
+    }
+
+    public record MissionRuntimeArgumentSettings(String name, String value) {
     }
 }

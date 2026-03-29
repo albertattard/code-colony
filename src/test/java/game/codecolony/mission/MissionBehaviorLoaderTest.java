@@ -37,6 +37,7 @@ class MissionBehaviorLoaderTest {
         assertThat(behavior.validation().runtimeExpectation()).isEqualTo("Mission 01 allows the CORE to be connected once.");
         assertThat(behavior.validation().runtimeRetryHint()).isEqualTo("Fix the runtime problem and run the code again.");
         assertThat(behavior.validation().messages()).containsKey("successHeadline");
+        assertThat(behavior.runtime()).isNull();
     }
 
     @Test
@@ -182,5 +183,164 @@ class MissionBehaviorLoaderTest {
         assertThatThrownBy(() -> MissionBehaviorLoader.parseYamlForMission(yaml, "inline", "mission-01"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("does not match requested mission");
+    }
+
+    @Test
+    void parseYamlParsesRuntimeSectionWhenPresent() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                runtime:
+                  worker: generic-mission-worker
+                  simulator: generic-mission-simulator
+                  initialStatus:
+                    mode: withTelemetry
+                    state: Connected
+                    position: "{coreSpawn.at}"
+                    noteTemplate: "Move to {map.firstByType:repair}."
+                  args:
+                    - name: objectiveKind
+                      value: "{objective.kind}"
+                    - name: startPosition
+                      value: "{coreSpawn.at}"
+                """;
+
+        final MissionBehaviorConfig behavior = MissionBehaviorLoader.parseYaml(yaml, "inline");
+
+        assertThat(behavior.runtime()).isNotNull();
+        assertThat(behavior.runtime().worker()).isEqualTo("generic-mission-worker");
+        assertThat(behavior.runtime().simulator()).isEqualTo("generic-mission-simulator");
+        assertThat(behavior.runtime().initialStatus().mode()).isEqualTo("withTelemetry");
+        assertThat(behavior.runtime().args()).hasSize(2);
+        assertThat(behavior.runtime().args().getFirst().name()).isEqualTo("objectiveKind");
+    }
+
+    @Test
+    void parseYamlFailsWhenRuntimeWorkerIsUnsupported() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                runtime:
+                  worker: unknown-worker
+                  simulator: generic-mission-simulator
+                  initialStatus:
+                    mode: withTelemetry
+                    noteTemplate: note
+                  args:
+                    - name: objectiveKind
+                      value: "{objective.kind}"
+                """;
+
+        assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("runtime.worker");
+    }
+
+    @Test
+    void parseYamlFailsWhenRuntimeArgsContainDuplicateNames() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                runtime:
+                  worker: generic-mission-worker
+                  simulator: generic-mission-simulator
+                  initialStatus:
+                    mode: withTelemetry
+                    noteTemplate: note
+                  args:
+                    - name: objectiveKind
+                      value: "{objective.kind}"
+                    - name: objectiveKind
+                      value: "{objective.kind}"
+                """;
+
+        assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("must not contain duplicate names");
+    }
+
+    @Test
+    void parseYamlFailsWhenRuntimeArgPlaceholderIsMalformed() {
+        final String yaml = """
+                version: 1
+                missionId: mission-01
+                allowedCommands:
+                  - Core.connect()
+                execution:
+                  temporaryDirectoryPrefix: wake-the-core-
+                  resultFileName: wake-the-core-result.properties
+                  compilationFailureSummary: failed
+                  executionStoppedSummary: stopped
+                  initialStatusNoteTemplate: note
+                objective:
+                  kind: connect_once
+                  successCondition: Connect.
+                validation:
+                  runtimeExpectation: Connect once.
+                  runtimeRetryHint: Retry.
+                  messages:
+                    successHeadline: Success
+                runtime:
+                  worker: generic-mission-worker
+                  simulator: generic-mission-simulator
+                  initialStatus:
+                    mode: withTelemetry
+                    noteTemplate: note
+                  args:
+                    - name: objectiveKind
+                      value: "{objective.kind"
+                """;
+
+        assertThatThrownBy(() -> MissionBehaviorLoader.parseYaml(yaml, "inline"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("malformed placeholder syntax");
     }
 }

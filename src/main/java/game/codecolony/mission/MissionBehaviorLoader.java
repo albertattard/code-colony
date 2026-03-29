@@ -11,10 +11,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 public final class MissionBehaviorLoader {
 
     private static final String BEHAVIOR_RESOURCE_PATH_TEMPLATE = "content/missions/%s/mission.yaml";
+    private static final Set<String> SUPPORTED_RUNTIME_WORKERS = Set.of("generic-mission-worker");
+    private static final Set<String> SUPPORTED_RUNTIME_SIMULATORS = Set.of("generic-mission-simulator");
+    private static final Set<String> SUPPORTED_INITIAL_STATUS_MODES = Set.of("withoutTelemetry", "withTelemetry");
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{[^{}]+}");
 
     public MissionBehaviorConfig load(final String missionId) {
         MissionCatalog.requireMissionFiles(missionId);
@@ -84,6 +89,7 @@ public final class MissionBehaviorLoader {
                 requireString(validationMap, "runtimeRetryHint", sourceName),
                 requireStringMap(validationMap, "messages", sourceName)
         );
+        final MissionBehaviorConfig.MissionRuntimeSettings runtime = optionalRuntimeSettings(root, sourceName);
 
         return new MissionBehaviorConfig(
                 version,
@@ -92,8 +98,125 @@ public final class MissionBehaviorLoader {
                 uniqueAllowedRuntimeCommands.stream().toList(),
                 execution,
                 objective,
-                validation
+                validation,
+                runtime
         );
+    }
+
+    private static MissionBehaviorConfig.MissionRuntimeSettings optionalRuntimeSettings(final Map<?, ?> source,
+                                                                                         final String sourceName) {
+        if (!source.containsKey("runtime")) {
+            return null;
+        }
+
+        final Map<?, ?> runtimeMap = requireMap(source, "runtime", sourceName);
+        final String worker = requireString(runtimeMap, "worker", sourceName);
+        if (!SUPPORTED_RUNTIME_WORKERS.contains(worker)) {
+            throw new IllegalStateException(
+                    "Invalid mission behavior %s: 'runtime.worker' must be one of %s"
+                            .formatted(sourceName, SUPPORTED_RUNTIME_WORKERS)
+            );
+        }
+
+        final String simulator = requireString(runtimeMap, "simulator", sourceName);
+        if (!SUPPORTED_RUNTIME_SIMULATORS.contains(simulator)) {
+            throw new IllegalStateException(
+                    "Invalid mission behavior %s: 'runtime.simulator' must be one of %s"
+                            .formatted(sourceName, SUPPORTED_RUNTIME_SIMULATORS)
+            );
+        }
+
+        final Map<?, ?> initialStatusMap = requireMap(runtimeMap, "initialStatus", sourceName);
+        final String initialStatusMode = requireString(initialStatusMap, "mode", sourceName);
+        if (!SUPPORTED_INITIAL_STATUS_MODES.contains(initialStatusMode)) {
+            throw new IllegalStateException(
+                    "Invalid mission behavior %s: 'runtime.initialStatus.mode' must be one of %s"
+                            .formatted(sourceName, SUPPORTED_INITIAL_STATUS_MODES)
+            );
+        }
+
+        final String initialStatusState = optionalString(initialStatusMap, "state", sourceName);
+        final String initialStatusPosition = optionalString(initialStatusMap, "position", sourceName);
+        final String initialStatusNoteTemplate = requireString(initialStatusMap, "noteTemplate", sourceName);
+        validatePlaceholders(initialStatusPosition, sourceName, "runtime.initialStatus.position");
+        validatePlaceholders(initialStatusNoteTemplate, sourceName, "runtime.initialStatus.noteTemplate");
+
+        final List<?> argsRaw = requireList(runtimeMap, "args", sourceName);
+        if (argsRaw.isEmpty()) {
+            throw new IllegalStateException("Invalid mission behavior %s: 'runtime.args' must not be empty".formatted(sourceName));
+        }
+
+        final List<MissionBehaviorConfig.MissionRuntimeArgumentSettings> args = argsRaw.stream()
+                .map(argument -> parseRuntimeArgument(argument, sourceName))
+                .toList();
+        final Set<String> argNames = args.stream()
+                .map(MissionBehaviorConfig.MissionRuntimeArgumentSettings::name)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        if (argNames.size() != args.size()) {
+            throw new IllegalStateException("Invalid mission behavior %s: 'runtime.args' must not contain duplicate names"
+                    .formatted(sourceName));
+        }
+
+        return new MissionBehaviorConfig.MissionRuntimeSettings(
+                worker,
+                simulator,
+                new MissionBehaviorConfig.MissionRuntimeInitialStatusSettings(
+                        initialStatusMode,
+                        initialStatusState,
+                        initialStatusPosition,
+                        initialStatusNoteTemplate
+                ),
+                args
+        );
+    }
+
+    private static MissionBehaviorConfig.MissionRuntimeArgumentSettings parseRuntimeArgument(final Object argumentRaw,
+                                                                                              final String sourceName) {
+        if (!(argumentRaw instanceof Map<?, ?> argumentMap)) {
+            throw new IllegalStateException("Invalid mission behavior %s: 'runtime.args' entries must be mappings"
+                    .formatted(sourceName));
+        }
+
+        final String name = requireString(argumentMap, "name", sourceName);
+        final String value = requireString(argumentMap, "value", sourceName);
+        validatePlaceholders(value, sourceName, "runtime.args[" + name + "].value");
+        return new MissionBehaviorConfig.MissionRuntimeArgumentSettings(name, value);
+    }
+
+    private static void validatePlaceholders(final String text, final String sourceName, final String fieldPath) {
+        if (text == null || text.isBlank()) {
+            return;
+        }
+
+        if (text.contains("{") != text.contains("}")) {
+            throw new IllegalStateException(
+                    "Invalid mission behavior %s: '%s' contains malformed placeholder syntax".formatted(sourceName, fieldPath)
+            );
+        }
+
+        int index = 0;
+        while (index < text.length()) {
+            final int open = text.indexOf('{', index);
+            if (open < 0) {
+                return;
+            }
+            final int close = text.indexOf('}', open + 1);
+            if (close < 0) {
+                throw new IllegalStateException(
+                        "Invalid mission behavior %s: '%s' contains malformed placeholder syntax"
+                                .formatted(sourceName, fieldPath)
+                );
+            }
+
+            final String placeholder = text.substring(open, close + 1);
+            if (!PLACEHOLDER_PATTERN.matcher(placeholder).matches()) {
+                throw new IllegalStateException(
+                        "Invalid mission behavior %s: '%s' contains malformed placeholder syntax"
+                                .formatted(sourceName, fieldPath)
+                );
+            }
+            index = close + 1;
+        }
     }
 
     private static Map<?, ?> requireMap(final Map<?, ?> source, final String key, final String sourceName) {
@@ -130,6 +253,22 @@ public final class MissionBehaviorLoader {
             return List.of();
         }
         return requireStringList(source, key, sourceName);
+    }
+
+    private static String optionalString(final Map<?, ?> source, final String key, final String sourceName) {
+        if (!source.containsKey(key)) {
+            return null;
+        }
+
+        return requireString(source, key, sourceName);
+    }
+
+    private static List<?> requireList(final Map<?, ?> source, final String key, final String sourceName) {
+        final Object value = source.get(key);
+        if (!(value instanceof List<?> listValue)) {
+            throw new IllegalStateException("Invalid mission behavior %s: '%s' must be a list".formatted(sourceName, key));
+        }
+        return listValue;
     }
 
     private static String requireString(final Map<?, ?> source, final String key, final String sourceName) {
