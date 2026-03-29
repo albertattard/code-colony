@@ -110,6 +110,78 @@ Owns behavior configuration:
 - per-mission action rules (for example overcharge behavior, charge/repair semantics if mission-specific)
 - completion/unlock behavior (next mission id)
 
+#### `runtime` Contract
+
+`mission.yaml` may define a `runtime` section that declares how the generic execution pipeline should bootstrap and invoke mission execution.
+
+Purpose:
+
+- remove hardcoded objective-kind execution profile branching from Java
+- keep runtime wiring declarative and mission-local
+
+`runtime` fields:
+
+- `worker`: symbolic worker id (for example `generic-mission-worker`)
+- `simulator`: symbolic simulator id (for example `generic-mission-simulator`)
+- `initialStatus`: initial status assembly settings
+- `args`: ordered execution argument definitions passed to the worker
+
+`initialStatus` fields:
+
+- `mode`: required; one of:
+- `withoutTelemetry`: starts from map spawn but hides battery/health telemetry
+- `withTelemetry`: starts from map spawn and includes telemetry fields
+- `state`: optional explicit initial state label (for example `Connected`)
+- `position`: optional initial position template
+- `noteTemplate`: required learner-facing note template
+
+`args` contract:
+
+- `args` is an ordered list, not a mapping
+- argument order is source-of-truth and must be preserved exactly
+- each entry must define:
+- `name`: logical argument name
+- `value`: template or literal string
+
+Example:
+
+```yaml
+runtime:
+  worker: generic-mission-worker
+  simulator: generic-mission-simulator
+  initialStatus:
+    mode: withTelemetry
+    state: Connected
+    position: "{coreSpawn.at}"
+    noteTemplate: "Move to {repairPosition} and repair structural damage."
+  args:
+    - name: objectiveKind
+      value: "{objective.kind}"
+    - name: validationPayload
+      value: "{validationPayload.base64}"
+    - name: startPosition
+      value: "{coreSpawn.at}"
+    - name: repairPosition
+      value: "{map.firstByType:repair}"
+```
+
+Placeholder rules:
+
+- placeholders use `{token}` format inside string values
+- supported tokens are explicitly defined by runtime loader/execution docs (for example objective, validation payload, map lookups, spawn values)
+- unresolved or unknown placeholders must fail fast with mission id + field path diagnostics
+- map lookup placeholders (for example `{map.firstByType:repair}`) must fail fast when the requested type is missing
+- placeholders are resolved before worker invocation; workers receive plain resolved strings only
+
+Validation rules for `runtime`:
+
+- unknown `worker`/`simulator` symbolic ids must fail fast
+- `initialStatus.mode` must be one of the supported enum values
+- `args` must be non-empty when `runtime` is present
+- `args` entries must have non-blank `name` and `value`
+- duplicate argument names are invalid unless explicitly documented as allowed
+- all diagnostics must include mission id and failing section path (for example `runtime.args[2].value`)
+
 ## Runtime Model
 
 Mission runtime should use mission-generic components:
