@@ -140,7 +140,7 @@ When asked to `commit changes`, use this workflow:
 5. Exclude unrelated pending changes from the commit.
 6. Show the commit message.
 7. Push upstream automatically after committing.
-   In sandboxed environments, request elevated permission before running `git push` when required by the sandbox.
+   Always request elevated permission before running `git push`.
 
 ### `build`
 
