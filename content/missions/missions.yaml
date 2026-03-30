@@ -9,3 +9,6 @@ missions:
   - name: repair-the-core
     content: mission-03
     enabled: true
+  - name: stabilize-the-core
+    content: mission-04
+    enabled: true

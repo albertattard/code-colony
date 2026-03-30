@@ -258,6 +258,7 @@ class MissionControllerTest {
         final String missionOnePath = createSessionAndGetMissionOnePath();
         final String missionTwoPath = missionOnePath.replace("/wake-the-core", "/charge-the-core");
         final String missionThreePath = missionOnePath.replace("/wake-the-core", "/repair-the-core");
+        final String missionFourPath = missionOnePath.replace("/wake-the-core", "/stabilize-the-core");
         runMissionOne(missionOnePath, "Core.connect();");
         runMissionTwo(missionTwoPath, """
                 var core = Core.connect();
@@ -289,7 +290,8 @@ class MissionControllerTest {
         assertThat(body).contains("5 / 5");
         assertThat(body).doesNotContain(">Run</button>");
         assertThat(body).doesNotContain(">Reset</a>");
-        assertThat(body).contains(">Next</button>");
+        assertThat(body).contains(">Next</a>");
+        assertThat(body).contains(missionFourPath);
         assertThat(body).contains("readonly=\"readonly\"");
     }
 

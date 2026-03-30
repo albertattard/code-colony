@@ -17,9 +17,10 @@ class MissionManifestLoaderTest {
         assertThat(manifest.missions()).containsExactly(
                 new MissionManifestEntry("wake-the-core", "mission-01", true),
                 new MissionManifestEntry("charge-the-core", "mission-02", true),
-                new MissionManifestEntry("repair-the-core", "mission-03", true)
+                new MissionManifestEntry("repair-the-core", "mission-03", true),
+                new MissionManifestEntry("stabilize-the-core", "mission-04", true)
         );
-        assertThat(manifest.enabledMissions()).hasSize(3);
+        assertThat(manifest.enabledMissions()).hasSize(4);
     }
 
     @Test

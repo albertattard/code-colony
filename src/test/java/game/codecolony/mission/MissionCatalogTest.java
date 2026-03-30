@@ -17,7 +17,7 @@ class MissionCatalogTest {
     @Test
     void discoversCurrentMissionIdsFromManifestOrder() {
         assertThat(MissionCatalog.currentMissionIds())
-                .containsExactly("mission-01", "mission-02", "mission-03");
+                .containsExactly("mission-01", "mission-02", "mission-03", "mission-04");
     }
 
     @Test

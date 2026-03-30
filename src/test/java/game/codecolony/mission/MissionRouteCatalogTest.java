@@ -27,6 +27,11 @@ class MissionRouteCatalogTest {
 
         assertThat(routeCatalog.previousEnabledMission("repair-the-core"))
                 .contains(new MissionManifestEntry("charge-the-core", "mission-02", true));
-        assertThat(routeCatalog.nextEnabledMission("repair-the-core")).isEmpty();
+        assertThat(routeCatalog.nextEnabledMission("repair-the-core"))
+                .contains(new MissionManifestEntry("stabilize-the-core", "mission-04", true));
+
+        assertThat(routeCatalog.previousEnabledMission("stabilize-the-core"))
+                .contains(new MissionManifestEntry("repair-the-core", "mission-03", true));
+        assertThat(routeCatalog.nextEnabledMission("stabilize-the-core")).isEmpty();
     }
 }

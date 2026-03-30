@@ -1,0 +1,63 @@
+version: 1
+missionId: mission-04
+allowedCommands:
+  - Core.connect()
+  - core.charge()
+allowedRuntimeCommands:
+  - connect
+  - charge
+execution:
+  temporaryDirectoryPrefix: stabilize-the-core-
+  resultFileName: stabilize-the-core-result.properties
+  compilationFailureSummary: The code could not be compiled for Mission 04.
+  executionStoppedSummary: Execution stopped before Mission 04 could be evaluated.
+  initialStatusNoteTemplate: CORE-01 is partially charged. Re-establish control and top up battery reserves.
+objective:
+  kind: charge_to_full
+  successCondition: Charge CORE-01 battery to full capacity.
+runtime:
+  worker: generic-mission-worker
+  simulator: generic-mission-simulator
+  initialStatus:
+    mode: withTelemetry
+    state: Connected
+    position: "{coreSpawn.at}"
+    noteTemplate: CORE-01 is partially charged. Re-establish control and top up battery reserves.
+  args:
+    - name: objectiveKind
+      value: "{objective.kind}"
+    - name: validationPayload
+      value: "{validationPayload.base64}"
+    - name: allowedRuntimeCommands
+      value: "{allowedRuntimeCommands.csv}"
+    - name: startPosition
+      value: "{coreSpawn.at}"
+    - name: batteryLevel
+      value: "{coreSpawn.battery.level}"
+    - name: batteryCapacity
+      value: "{coreSpawn.battery.capacity}"
+    - name: healthLevel
+      value: "{coreSpawn.health.level}"
+    - name: healthCapacity
+      value: "{coreSpawn.health.capacity}"
+validation:
+  runtimeExpectation: Mission 04 expects one successful Core.connect() call and enough charge actions to reach full power.
+  runtimeRetryHint: Fix the runtime problem and run the code again.
+  messages:
+    successHeadline: CORE Stabilized
+    successSummary: CORE-01 power reserves are fully restored for extended field uptime.
+    successFeedback1: Mission objective completed.
+    successFeedback2: Core.connect() re-established the control session for this run.
+    successFeedback3: Charging from 2 / 5 to 5 / 5 completed stabilization.
+    incompleteNoConnectionHeadline: Mission Incomplete
+    incompleteNoConnectionSummary: CORE-01 is online, but your program did not obtain a control reference.
+    incompleteNoConnectionFeedback1: Call Core.connect() and store the returned Core in a variable before charging it.
+    incompleteNoConnectionFeedback2Template: Mission 04 is solved when the battery reaches {batteryCapacity} / {batteryCapacity}.
+    incompleteChargingHeadline: Mission Incomplete
+    incompleteChargingSummary: CORE-01 is online, but the battery is not full yet.
+    incompleteChargingFeedback1: Keep the connected CORE in a variable and continue calling core.charge();.
+    incompleteChargingFeedback2Template: Charge CORE-01 {remainingCharge} more time(s) to reach {batteryCapacity} / {batteryCapacity}.
+    statusNoteDuplicateConnect: Control reference acquired, then an invalid duplicate connect was attempted.
+    statusNoteFullyCharged: Battery restored. CORE-01 stabilization complete.
+    statusNoteCharging: Telemetry online. Power stabilization in progress.
+    statusNoteNoControlReference: CORE-01 is waiting for control handoff. Use Core.connect() for this run.

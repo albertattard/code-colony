@@ -7,34 +7,34 @@ import game.codecolony.content.NarrativeContentService.MissionNarrativeContent;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public final class MissionPageFacade {
 
-    private static final Map<String, MissionViewConfig> CONFIG_BY_MISSION_ID = Map.of(
-            "mission-01", mission01Config(),
-            "mission-02", mission02Config(),
-            "mission-03", mission03Config()
-    );
-
     private final NarrativeContentService narrativeContentService;
     private final MissionExecutionFacade missionExecutionFacade;
+    private final MissionBehaviorRegistry missionBehaviorRegistry;
+    private final MissionMapLoader missionMapLoader;
 
     public MissionPageFacade(final NarrativeContentService narrativeContentService,
                              final MissionExecutionFacade missionExecutionFacade) {
         this.narrativeContentService = narrativeContentService;
         this.missionExecutionFacade = missionExecutionFacade;
+        this.missionBehaviorRegistry = new MissionBehaviorRegistry();
+        this.missionMapLoader = new MissionMapLoader();
     }
 
     public String defaultCodeForMission(final String missionId) {
-        return switch (missionId) {
-            case "mission-01" -> "";
-            case "mission-02" -> "Core.connect();";
-            case "mission-03" -> "var core = Core.connect();";
+        final MissionBehaviorConfig behavior = missionBehaviorRegistry.get(missionId);
+        return switch (behavior.objective().kind()) {
+            case "connect_once" -> "";
+            case "charge_to_full" -> "Core.connect();";
+            case "repair_to_full" -> "var core = Core.connect();";
             default -> throw new IllegalStateException("Unsupported mission content id: " + missionId);
         };
     }
@@ -56,9 +56,9 @@ public final class MissionPageFacade {
                 gridForPosition(config, runResult.coreStatus().position()),
                 initialCode,
                 initialCode,
-                config.missionPath(),
-                missionPathWithCode(config, initialCode),
-                config.nextMissionPath(),
+                "",
+                "",
+                "",
                 true,
                 runResult
         );
@@ -81,9 +81,9 @@ public final class MissionPageFacade {
                 gridForPosition(config, runResult.coreStatus().position()),
                 code,
                 normalizedStartCode,
-                config.missionPath(),
-                missionPathWithCode(config, normalizedStartCode),
-                config.nextMissionPath(),
+                "",
+                "",
+                "",
                 true,
                 runResult
         );
@@ -162,33 +162,21 @@ public final class MissionPageFacade {
     }
 
     private GridTile coreTileAtPosition(final MissionViewConfig config, final GridTile tile, final String position) {
+        final String tileType = tile.cellType();
         final String tilePosition = tile.rowLabel() + tile.columnLabel();
         if (!tilePosition.equals(position)) {
-            if (config.restoreDockOnVacate() && config.dockPosition().equals(tilePosition)) {
-                return new GridTile(tile.rowLabel(), tile.columnLabel(), "dock", "Docking station");
-            }
-            if (config.renderEmptyTilesAsFloor() && !config.repairPosition().equals(tilePosition)) {
-                return new GridTile(tile.rowLabel(), tile.columnLabel(), "floor", "Walkable floor tile");
-            }
             return tile;
         }
 
-        if (config.repairPosition().equals(tilePosition) && config.showRepairOverlayOnCore()) {
+        if ("repair".equals(tileType)) {
             return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-repair", "CORE unit on repair station");
         }
 
-        if (config.dockPosition().equals(tilePosition) || !config.showFloorOverlayOnCore()) {
+        if ("dock".equals(tileType)) {
             return new GridTile(tile.rowLabel(), tile.columnLabel(), "core", "Docked CORE unit");
         }
 
         return new GridTile(tile.rowLabel(), tile.columnLabel(), "core-floor", "CORE unit");
-    }
-
-    private String missionPathWithCode(final MissionViewConfig config, final String initialCode) {
-        if (config.includeCodeInResetPath()) {
-            return config.missionPath() + "?code=" + URLEncoder.encode(initialCode, StandardCharsets.UTF_8);
-        }
-        return config.missionPath();
     }
 
     private String normalizeInitialCode(final MissionViewConfig config, final String initialCode) {
@@ -196,77 +184,26 @@ public final class MissionPageFacade {
     }
 
     private MissionViewConfig requireConfig(final String missionId) {
-        final MissionViewConfig config = CONFIG_BY_MISSION_ID.get(missionId);
-        if (config == null) {
-            throw new IllegalStateException("Unsupported mission content id: " + missionId);
+        final MissionMap missionMap = missionMapLoader.load(missionId);
+        final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
+        return new MissionViewConfig(
+                missionId,
+                defaultCodeForMission(missionId),
+                briefingAudioPathForMission(missionId),
+                missionMap.requireFirstCoordinateByType("dock"),
+                missionMap.requireFirstCoordinateByType("repair"),
+                coreSpawn,
+                MissionMapAdapter.toGridTiles(missionMap),
+                "offline".equalsIgnoreCase(coreSpawn.state())
+        );
+    }
+
+    private String briefingAudioPathForMission(final String missionId) {
+        final Path audioPath = Path.of("src", "main", "resources", "static", "audio", "briefings", missionId + ".mp3");
+        if (Files.exists(audioPath)) {
+            return "/audio/briefings/" + URLEncoder.encode(missionId, StandardCharsets.UTF_8) + ".mp3";
         }
-        return config;
-    }
-
-    private static MissionViewConfig mission01Config() {
-        final MissionMap missionMap = new MissionMapLoader().load("mission-01");
-        final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
-        return new MissionViewConfig(
-                "mission-01",
-                "",
-                "/missions/wake-the-core",
-                "/audio/briefings/mission-01.mp3",
-                "/missions/charge-the-core",
-                missionMap.requireFirstCoordinateByType("dock"),
-                missionMap.requireFirstCoordinateByType("repair"),
-                coreSpawn,
-                MissionMapAdapter.toGridTiles(missionMap),
-                true,
-                true,
-                true,
-                false,
-                false,
-                false
-        );
-    }
-
-    private static MissionViewConfig mission02Config() {
-        final MissionMap missionMap = new MissionMapLoader().load("mission-02");
-        final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
-        return new MissionViewConfig(
-                "mission-02",
-                "Core.connect();",
-                "/missions/charge-the-core",
-                "/audio/briefings/mission-02.mp3",
-                "",
-                missionMap.requireFirstCoordinateByType("dock"),
-                missionMap.requireFirstCoordinateByType("repair"),
-                coreSpawn,
-                MissionMapAdapter.toGridTiles(missionMap),
-                false,
-                false,
-                false,
-                false,
-                true,
-                false
-        );
-    }
-
-    private static MissionViewConfig mission03Config() {
-        final MissionMap missionMap = new MissionMapLoader().load("mission-03");
-        final MissionMapSpawn coreSpawn = missionMap.requireCoreSpawn("core_01");
-        return new MissionViewConfig(
-                "mission-03",
-                "var core = Core.connect();",
-                "/missions/repair-the-core",
-                "",
-                "",
-                missionMap.requireFirstCoordinateByType("dock"),
-                missionMap.requireFirstCoordinateByType("repair"),
-                coreSpawn,
-                MissionMapAdapter.toGridTiles(missionMap),
-                false,
-                true,
-                true,
-                true,
-                true,
-                true
-        );
+        return "";
     }
 
     private static String toStatusState(final String mapState) {
@@ -275,18 +212,11 @@ public final class MissionPageFacade {
 
     private record MissionViewConfig(String missionId,
                                      String defaultCode,
-                                     String missionPath,
                                      String briefingAudioPath,
-                                     String nextMissionPath,
                                      String dockPosition,
                                      String repairPosition,
                                      MissionMapSpawn coreSpawn,
                                      List<GridTile> baseGrid,
-                                     boolean initiallyOffline,
-                                     boolean showFloorOverlayOnCore,
-                                     boolean showRepairOverlayOnCore,
-                                     boolean restoreDockOnVacate,
-                                     boolean includeCodeInResetPath,
-                                     boolean renderEmptyTilesAsFloor) {
+                                     boolean initiallyOffline) {
     }
 }

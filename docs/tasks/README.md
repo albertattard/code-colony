@@ -82,3 +82,4 @@ Task files should:
 - [Task 0073: Migrate mission-02 To Runtime Config (Stage 5 Slice 11)](done/0073-migrate-mission-02-to-runtime-config-stage-5-slice-11.md)
 - [Task 0074: Migrate mission-03 To Runtime Config (Stage 5 Slice 12)](done/0074-migrate-mission-03-to-runtime-config-stage-5-slice-12.md)
 - [Task 0075: Remove Execution Fallback Bridge (Stage 5 Slice 13)](done/0075-remove-execution-fallback-bridge-stage-5-slice-13.md)
+- [Task 0076: Prove No-Code Mission Addition With mission-04 (Stage 6)](done/0076-prove-no-code-mission-addition-with-mission-04-stage-6.md)

@@ -78,4 +78,18 @@ class ChargeTheCoreMissionExecutionServiceTest {
         assertThat(runResult.coreStatus().batteryLevel()).isEqualTo(5);
         assertThat(runResult.simulationEvents()).contains("CORE-01 battery is already full at 5/5.");
     }
+
+    @Test
+    void missionFourCanBeAddedAndCompletedWithoutRuntimeCodeChanges() {
+        final MissionRunResult runResult = missionExecutionFacade.execute("mission-04", """
+                var core = Core.connect();
+                core.charge();
+                core.charge();
+                core.charge();
+                """);
+
+        assertThat(runResult.success()).isTrue();
+        assertThat(runResult.headline()).isEqualTo("CORE Stabilized");
+        assertThat(runResult.coreStatus().batteryLevel()).isEqualTo(5);
+    }
 }

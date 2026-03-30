@@ -14,6 +14,7 @@ class MissionBehaviorLoaderTest {
         assertThat(missionBehaviorLoader.load("mission-01")).isNotNull();
         assertThat(missionBehaviorLoader.load("mission-02")).isNotNull();
         assertThat(missionBehaviorLoader.load("mission-03")).isNotNull();
+        assertThat(missionBehaviorLoader.load("mission-04")).isNotNull();
     }
 
     @Test

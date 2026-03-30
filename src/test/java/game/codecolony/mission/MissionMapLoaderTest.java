@@ -14,6 +14,7 @@ class MissionMapLoaderTest {
         assertThat(missionMapLoader.load("mission-01")).isNotNull();
         assertThat(missionMapLoader.load("mission-02")).isNotNull();
         assertThat(missionMapLoader.load("mission-03")).isNotNull();
+        assertThat(missionMapLoader.load("mission-04")).isNotNull();
     }
 
     @Test
